@@ -13,7 +13,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2023/11/23/ret2dir/"/>
+    <link rel="canonical" href="http://example.com/2023/11/24/ret2dir/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -21,7 +21,7 @@
         <meta name="description" content="ret2dir &amp; physmap spray介绍​	ret2dir 用来绕过 smep、smap、pxn 等用户空间与内核空间隔离的防护手段。 ​	论文链接：http:&#x2F;&#x2F;www.cs.columbia.edu&#x2F;~vpk&#x2F;papers&#x2F;ret2dir.sec14.pdf  ​	x86 下的 linux kernel 的内存布局，存在着一块区域叫做     direct mapping a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ret2dir &amp; physmap spray">
-<meta property="og:url" content="http://example.com/2023/11/23/ret2dir/index.html">
+<meta property="og:url" content="http://example.com/2023/11/24/ret2dir/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="ret2dir &amp; physmap spray介绍​	ret2dir 用来绕过 smep、smap、pxn 等用户空间与内核空间隔离的防护手段。 ​	论文链接：http:&#x2F;&#x2F;www.cs.columbia.edu&#x2F;~vpk&#x2F;papers&#x2F;ret2dir.sec14.pdf  ​	x86 下的 linux kernel 的内存布局，存在着一块区域叫做     direct mapping a">
 <meta property="og:locale" content="en_US">
@@ -46,10 +46,11 @@
 <meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-48-33.png">
 <meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-50-44.png">
 <meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-58-07.png">
-<meta property="article:published_time" content="2023-11-23T06:42:05.000Z">
-<meta property="article:modified_time" content="2023-11-24T06:49:05.589Z">
+<meta property="article:published_time" content="2023-11-24T06:42:05.000Z">
+<meta property="article:modified_time" content="2023-11-24T07:03:55.274Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="kernel">
+<meta property="article:tag" content="rop">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/Snipaste_2023-11-21_18-09-56.png">
     
@@ -409,15 +410,15 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2023-11-23 14:42:05</span>
-        <span class="mobile">2023-11-23 14:42:05</span>
+        <span class="desktop">2023-11-24 14:42:05</span>
+        <span class="mobile">2023-11-24 14:42:05</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2023-11-24 14:49:05</span>
-            <span class="mobile">2023-11-24 14:49:05</span>
+            <span class="desktop">2023-11-24 15:03:55</span>
+            <span class="mobile">2023-11-24 15:03:55</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -448,6 +449,10 @@
                         <a href="/tags/kernel/">kernel</a>&nbsp;
                     </li>
                 
+                    <li>
+                        | <a href="/tags/rop/">rop</a>&nbsp;
+                    </li>
+                
             </ul>
         </span>
     
@@ -474,16 +479,16 @@
             <h1 id="ret2dir-physmap-spray"><a href="#ret2dir-physmap-spray" class="headerlink" title="ret2dir &amp; physmap spray"></a>ret2dir &amp; physmap spray</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​	ret2dir 用来<strong>绕过 smep、smap、pxn 等用户空间与内核空间隔离的防护手段</strong>。</p>
 <p>​	论文链接：<a class="link"   target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf" >http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p>​	x86 下的 linux kernel 的内存布局，存在着一块区域叫做     <code>direct mapping area</code>，即内核的 <code>线性映射区</code>，<strong>线性地直接映射了整个物理内存空间</strong>。</p>
-<p>​	这意味着对于一个被用户进程使用的物理页框，<strong>同时存在着一个用户空间地址与内核空间地址到该物理页框的映射</strong>，即我们利用这两个地址进行内存访问时访问的是同一个物理页框。</p>
-<p>​	当开启了 SMEP、SMAP、PXN 等防护时，内核空间到用户空间的直接访问被禁止，<strong>无法直接使用类似 ret2usr 这样的攻击方式</strong>，但利用内核线性映射区对整个物理地址空间的映射，<strong>可以利用一个内核空间上的地址访问到用户空间的数据，从而绕过 SMEP、SMAP、PXN 等传统的隔绝用户空间与内核空间的防护手段</strong></p>
+<p>这意味着对于一个被用户进程使用的物理页框，<strong>同时存在着一个用户空间地址与内核空间地址到该物理页框的映射</strong>，即我们利用这两个地址进行内存访问时访问的是同一个物理页框。</p>
+<p>当开启了 SMEP、SMAP、PXN 等防护时，内核空间到用户空间的直接访问被禁止，<strong>无法直接使用类似 ret2usr 这样的攻击方式</strong>，但利用内核线性映射区对整个物理地址空间的映射，<strong>可以利用一个内核空间上的地址访问到用户空间的数据，从而绕过 SMEP、SMAP、PXN 等传统的隔绝用户空间与内核空间的防护手段</strong></p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="/images/Snipaste_2023-11-21_18-09-56.png"
                       alt="nipaste_2023-11-21_18-09-5"
                 ></p>
-<p>​	从上图中可以发现，如果我们在用户空间提前布置好 gadget，那么就可以通过 direct mapping area 在内核空间访问到。</p>
-<p>​	但这里需要注意到一个问题就是<strong>新版内核已经不支持直接在线性映射区不在拥有可执行权限</strong>，因此我们可以考虑通过<strong>在用户空间来布置 ROP</strong> 的方继续来进行利用，内容可以见下图：</p>
+<p>从上图中可以发现，如果我们在用户空间提前布置好 gadget，那么就可以通过 direct mapping area 在内核空间访问到。</p>
+<p>但这里需要注意到一个问题就是<strong>新版内核已经不支持直接在线性映射区不在拥有可执行权限</strong>，因此我们可以考虑通过<strong>在用户空间来布置 ROP</strong> 的方继续来进行利用，内容可以见下图：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -492,12 +497,16 @@
                 ></p>
 <p>​	对于 ret2dir 通常的攻击手法是：</p>
 <ul>
-<li>利用 mmap 在用户空间大量喷射内存</li>
-<li>利用漏洞泄露出内核的“堆”上地址（通过 kmalloc 获取到的地址），这个地址直接来自于线性映射区</li>
-<li>利用泄露出的内核线性映射区的地址进行内存搜索，从而找到在用户空间喷射的内存</li>
+<li><p>利用 mmap 在用户空间大量喷射内存</p>
+</li>
+<li><p>利用漏洞泄露出内核的“堆”上地址（通过 kmalloc 获取到的地址），这个地址直接来自于线性映射区</p>
+</li>
+<li><p>利用泄露出的内核线性映射区的地址进行内存搜索，从而找到在用户空间喷射的内存</p>
+<p> ​</p>
+</li>
 </ul>
-<p>​	<strong>此时就获得了一个映射到用户空间的内核空间地址</strong>，通过这个<strong>内核空间地址便能直接访问到用户空间的数据</strong>，从而<strong>避开了传统的隔绝用户空间与内核空间的防护手段</strong></p>
-<p>​	需要注意的是往往没有内存搜索的机会，因此需要<strong>使用 mmap 喷射大量的物理内存写入同样的 payload</strong>，之后再随机挑选一个线性映射区上的地址进行利用，这样就<strong>有很大的概率命中到我们布置的 payload 上</strong>，这种攻击手法也称为 <code>physmap spray</code>。</p>
+<p><strong>此时就获得了一个映射到用户空间的内核空间地址</strong>，通过这个<strong>内核空间地址便能直接访问到用户空间的数据</strong>，从而<strong>避开了传统的隔绝用户空间与内核空间的防护手段</strong></p>
+<p>需要注意的是往往没有内存搜索的机会，因此需要<strong>使用 mmap 喷射大量的物理内存写入同样的 payload</strong>，之后再随机挑选一个线性映射区上的地址进行利用，这样就<strong>有很大的概率命中到我们布置的 payload 上</strong>，这种攻击手法也称为 <code>physmap spray</code>。</p>
 <p>参考链接：<a class="link"   target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.0/source/Documentation/x86/x86_64/mm.txt" >https://elixir.bootlin.com/linux/v5.0/source/Documentation/x86/x86_64/mm.txt <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p><img  
                      lazyload
@@ -508,8 +517,7 @@
 <p>​	如上图所示，我们用mmap申请到的内存，可以在线性映射区看到，</p>
 <p>​	可这里有一个问题，从上图可以看到，线性映射区这里有 64TB 空间，到底去哪里找到 mmap 出来的那一页数据呢，其实这里就会使用到<a class="link"   target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf" >原论文 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>中的一种名为 <code>physmap spray</code> 的攻击手法——<strong>使用 mmap 喷射大量的物理内存写入同样的 payload</strong>，之后再随机挑选一个 direct mapping area 上的地址进行利用，这样我们就<strong>有很大的概率命中到我们布置的 payload 上</strong>。</p>
 <p>​	在喷射的内存页数量达到一定数量级时能够<strong>比较准确的在 direct mapping area 靠中后部的区域命中恶意数据。</strong></p>
-<h2 id="利用-pt-regs"><a href="#利用-pt-regs" class="headerlink" title="利用 pt_regs"></a>利用 pt_regs</h2><pre><code>  首先来看看       `syscall` 这一汇编指令，通常情况下我们在调用 syscall 前会向寄存器中提前设置好参数，然后调用 syscall 时就会通过门结构进入到内核中的 `entry_SYSCALL_64` 这一函数，随后通过系统调用表跳转到对应的函数。
-</code></pre>
+<h2 id="利用-pt-regs"><a href="#利用-pt-regs" class="headerlink" title="利用 pt_regs"></a>利用 pt_regs</h2><p>首先来看看<code>syscall</code> 这一汇编指令，通常情况下我们在调用 syscall 前会向寄存器中提前设置好参数，然后调用 syscall 时就会通过门结构进入到内核中的 <code>entry_SYSCALL_64</code> 这一函数，随后通过系统调用表跳转到对应的函数。</p>
 <p><strong>entry_SYSCALL_64</strong></p>
 <p>​	而这一函数的作用又是什么呢，当我们的程序进入内核态时，这个函数会将此时我们用户态下所有寄存器压入到内核栈上，形成一个 pt_regs 结构体。这里不用具体管 pt_regs 结构体是什么。</p>
 <p>​	<strong>简单来理解就是在进入到内核态时，会将所有寄存器进行压栈，</strong>这就是利用 pt_regs 的核心，从而使得我们可以在栈中一些位置上通过提前构造寄存器中的值来设置栈中的数据。</p>
@@ -713,15 +721,15 @@
         <li><strong>Title:</strong> ret2dir &amp; physmap spray</li>
         <li><strong>Author:</strong> henry</li>
         <li><strong>Created at
-                :</strong> 2023-11-23 14:42:05</li>
+                :</strong> 2023-11-24 14:42:05</li>
         
             <li>
                 <strong>Updated at
-                    :</strong> 2023-11-24 14:49:05
+                    :</strong> 2023-11-24 15:03:55
             </li>
         
         <li>
-            <strong>Link:</strong> https://henrymartin262.github.io/2023/11/23/ret2dir/
+            <strong>Link:</strong> https://henrymartin262.github.io/2023/11/24/ret2dir/
         </li>
         <li>
             <strong>
@@ -746,6 +754,10 @@
                         <a href="/tags/kernel/">#kernel</a>&nbsp;
                     </li>
                 
+                    <li class="tag-item">
+                        <a href="/tags/rop/">#rop</a>&nbsp;
+                    </li>
+                
             </ul>
         
 
@@ -754,21 +766,21 @@
         
             <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
                 
-                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-                        <a class="prev"
-                        rel="prev"
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
                         href="/2023/11/23/hello-world/"
                         >
-                            <span class="left arrow-icon flex justify-center items-center">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
                             <span class="title flex justify-center items-center">
                                 <span class="post-nav-title-item">Hello World</span>
-                                <span class="post-nav-item">Prev posts</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
                             </span>
                         </a>
                     </div>
-                
                 
             </div>
         
