@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/06/16/data_process/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="2.1 数据操作这一部分是直接从 jupyter 里面导出来的，可能观感不太好，可以直接在这里下文件  入门使用 arange 创建一个行向量 x，这个行向量包含以0开始的前12个整数，它们默认创建为整数，也可指定创建类型为浮点数，张量中的每个值都称为张量的元素（element）。基础操作如下所示： 1234567891011121314151617181920212223242526272829">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Learning学习day1-数据操作">
+<meta property="og:url" content="http://example.com/2024/06/16/data_process/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="2.1 数据操作这一部分是直接从 jupyter 里面导出来的，可能观感不太好，可以直接在这里下文件  入门使用 arange 创建一个行向量 x，这个行向量包含以0开始的前12个整数，它们默认创建为整数，也可指定创建类型为浮点数，张量中的每个值都称为张量的元素（element）。基础操作如下所示： 1234567891011121314151617181920212223242526272829">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-06-16T13:11:19.838Z">
+<meta property="article:modified_time" content="2024-06-16T13:32:58.156Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="pytorch">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Deep Learning学习day1-数据操作 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">Deep Learning学习day1-数据操作</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-06-16 21:11:19</span>
+        <span class="mobile">2024-06-16 21:11:19</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-06-16 21:32:58</span>
+            <span class="mobile">2024-06-16 21:32:58</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/AI%EF%BC%8Cdeeplearning/">AI，deeplearning</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/pytorch/">pytorch</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="2-1-数据操作"><a href="#2-1-数据操作" class="headerlink" title="2.1 数据操作"></a>2.1 数据操作</h1><p>这一部分是直接从 jupyter 里面导出来的，可能观感不太好，可以直接在这里下<a class="link"   target="_blank" rel="noopener" href="https://github.com/henrymartin262/DeepLearningDoc/blob/main/Data_Process.ipynb" >文件 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><p>使用 arange 创建一个行向量 x，这个行向量包含以0开始的前12个整数，它们默认创建为整数，也可指定创建类型为浮点数，张量中的每个值都称为张量的元素（element）。<strong>基础操作如下所示：</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch               </span><br><span class="line">x = torch.arange(<span class="number">12</span>)</span><br><span class="line"><span class="comment"># tensor([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11])</span></span><br><span class="line"></span><br><span class="line">x.shape</span><br><span class="line"><span class="comment"># torch.Size([12])</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#改变一个张量的形状而不改变元素数量和元素值，可以调用reshape函数</span></span><br><span class="line">x.reshape(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="comment">#tensor([[ 0,  1,  2,  3],</span></span><br><span class="line"><span class="comment">#        [ 4,  5,  6,  7],</span></span><br><span class="line"><span class="comment">#        [ 8,  9, 10, 11]])</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">torch.zeros((<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)) <span class="comment"># 创建一个指定形状的全0张量</span></span><br><span class="line"><span class="comment"># tensor([[[0., 0., 0., 0.],</span></span><br><span class="line"><span class="comment">#          [0., 0., 0., 0.],</span></span><br><span class="line"><span class="comment">#          [0., 0., 0., 0.]],</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#         [[0., 0., 0., 0.],</span></span><br><span class="line"><span class="comment">#          [0., 0., 0., 0.],</span></span><br><span class="line"><span class="comment">#          [0., 0., 0., 0.]]])</span></span><br><span class="line"></span><br><span class="line">torch.ones((<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)) <span class="comment"># 创建一个指定形状的全1张量</span></span><br><span class="line"><span class="comment"># tensor([[[1., 1., 1., 1.],</span></span><br><span class="line"><span class="comment">#          [1., 1., 1., 1.],</span></span><br><span class="line"><span class="comment">#          [1., 1., 1., 1.]],</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#         [[1., 1., 1., 1.],</span></span><br><span class="line"><span class="comment">#          [1., 1., 1., 1.],</span></span><br><span class="line"><span class="comment">#          [1., 1., 1., 1.]]])</span></span><br><span class="line"></span><br><span class="line">torch.randn(<span class="number">3</span>, <span class="number">4</span>) <span class="comment"># 创建一个形状为（3,4）的张量。 其中的每个元素都从均值为0、标准差为1的标准高斯分布（正态分布）中随机采样</span></span><br><span class="line"><span class="comment"># tensor([[-0.0801,  0.5529, -0.1306, -0.3035],</span></span><br><span class="line"><span class="comment">#         [-0.2284,  1.1712,  0.2000, -1.9476],</span></span><br><span class="line"><span class="comment">#         [ 0.4408, -0.3938, -2.2961, -0.4860]])</span></span><br><span class="line"></span><br><span class="line">torch.tensor([[<span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]]) <span class="comment"># 为张量赋予确定值</span></span><br><span class="line"><span class="comment"># tensor([[2, 1, 4, 3],</span></span><br><span class="line"><span class="comment">#         [1, 2, 3, 4],</span></span><br><span class="line"><span class="comment">#         [4, 3, 2, 1]])</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tensor([[2, 1, 4, 3],</span><br><span class="line">        [1, 2, 3, 4],</span><br><span class="line">        [4, 3, 2, 1]])</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><p>对于任意具有相同形状的张量， 常见的标准算术运算符（+、-、*、&#x2F;和**）都可以被升级为按元素运算</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">x = torch.tensor([<span class="number">1.0</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">8</span>])</span><br><span class="line">y = torch.tensor([<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>])</span><br><span class="line">x + y, x - y, x * y, x / y, x ** y  <span class="comment"># **运算符是求幂运算</span></span><br><span class="line"><span class="comment"># (tensor([ 3.,  4.,  6., 10.]),</span></span><br><span class="line"><span class="comment">#  tensor([-1.,  0.,  2.,  6.]),</span></span><br><span class="line"><span class="comment">#  tensor([ 2.,  4.,  8., 16.]),</span></span><br><span class="line"><span class="comment">#  tensor([0.5000, 1.0000, 2.0000, 4.0000]),</span></span><br><span class="line"><span class="comment">#  tensor([ 1.,  4., 16., 64.]))</span></span><br><span class="line"></span><br><span class="line">torch.exp(x)</span><br><span class="line"><span class="comment"># tensor([2.7183e+00, 7.3891e+00, 5.4598e+01, 2.9810e+03])</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">X = torch.arange(<span class="number">12</span>, dtype=torch.float32).reshape((<span class="number">3</span>,<span class="number">4</span>))</span><br><span class="line">Y = torch.tensor([[<span class="number">2.0</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]])</span><br><span class="line"><span class="comment"># 将两个张量按照不同维度进行连结</span></span><br><span class="line">torch.cat((X, Y), dim=<span class="number">0</span>), torch.cat((X, Y), dim=<span class="number">1</span>) </span><br><span class="line"><span class="comment"># (tensor([[ 0.,  1.,  2.,  3.],</span></span><br><span class="line"><span class="comment">#          [ 4.,  5.,  6.,  7.],</span></span><br><span class="line"><span class="comment">#          [ 8.,  9., 10., 11.],</span></span><br><span class="line"><span class="comment">#          [ 2.,  1.,  4.,  3.],</span></span><br><span class="line"><span class="comment">#          [ 1.,  2.,  3.,  4.],</span></span><br><span class="line"><span class="comment">#          [ 4.,  3.,  2.,  1.]]),</span></span><br><span class="line"><span class="comment">#  tensor([[ 0.,  1.,  2.,  3.,  2.,  1.,  4.,  3.],</span></span><br><span class="line"><span class="comment">#          [ 4.,  5.,  6.,  7.,  1.,  2.,  3.,  4.],</span></span><br><span class="line"><span class="comment">#          [ 8.,  9., 10., 11.,  4.,  3.,  2.,  1.]]))</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(tensor([[ 0.,  1.,  2.,  3.],</span><br><span class="line">         [ 4.,  5.,  6.,  7.],</span><br><span class="line">         [ 8.,  9., 10., 11.],</span><br><span class="line">         [ 2.,  1.,  4.,  3.],</span><br><span class="line">         [ 1.,  2.,  3.,  4.],</span><br><span class="line">         [ 4.,  3.,  2.,  1.]]),</span><br><span class="line"> tensor([[ 0.,  1.,  2.,  3.,  2.,  1.,  4.,  3.],</span><br><span class="line">         [ 4.,  5.,  6.,  7.,  1.,  2.,  3.,  4.],</span><br><span class="line">         [ 8.,  9., 10., 11.,  4.,  3.,  2.,  1.]]))</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="广播机制"><a href="#广播机制" class="headerlink" title="广播机制"></a>广播机制</h3><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">a = torch.arange(<span class="number">3</span>).reshape((<span class="number">3</span>, <span class="number">1</span>))</span><br><span class="line">b = torch.arange(<span class="number">2</span>).reshape((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">a, b</span><br><span class="line"><span class="comment"># (tensor([[0],</span></span><br><span class="line"><span class="comment">#          [1],</span></span><br><span class="line"><span class="comment">#          [2]]),</span></span><br><span class="line"><span class="comment">#  tensor([[0, 1]]))</span></span><br><span class="line"></span><br><span class="line">a+b</span><br><span class="line"><span class="comment"># tensor([[0, 1],</span></span><br><span class="line"><span class="comment">#         [1, 2],</span></span><br><span class="line"><span class="comment">#         [2, 3]])</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tensor([[0, 1],</span><br><span class="line">        [1, 2],</span><br><span class="line">        [2, 3]])</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="索引-切片"><a href="#索引-切片" class="headerlink" title="索引&amp;切片"></a>索引&amp;切片</h3><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">X = torch.arange(<span class="number">12</span>, dtype=torch.float32).reshape((<span class="number">3</span>,<span class="number">4</span>))</span><br><span class="line">Y = torch.tensor([[<span class="number">2.0</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]])</span><br><span class="line">X[-<span class="number">1</span>], X[<span class="number">1</span>:<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># (tensor([ 8.,  9., 10., 11.]),</span></span><br><span class="line"><span class="comment">#  tensor([[ 4.,  5.,  6.,  7.],</span></span><br><span class="line"><span class="comment">#          [ 8.,  9., 10., 11.]]))</span></span><br><span class="line"></span><br><span class="line">X[<span class="number">1</span>, <span class="number">2</span>] = <span class="number">9</span> <span class="comment"># 更换单个元素</span></span><br><span class="line"><span class="comment"># tensor([[ 0.,  1.,  2.,  3.],</span></span><br><span class="line"><span class="comment">#         [ 4.,  5.,  9.,  7.],</span></span><br><span class="line"><span class="comment">#         [ 8.,  9., 10., 11.]])</span></span><br><span class="line"></span><br><span class="line">X[<span class="number">0</span>:<span class="number">2</span>, :] = <span class="number">12</span> <span class="comment"># 按行更新元素</span></span><br><span class="line"><span class="comment"># tensor([[12., 12., 12., 12.],</span></span><br><span class="line"><span class="comment">#         [12., 12., 12., 12.],</span></span><br><span class="line"><span class="comment">#         [ 8.,  9., 10., 11.]])</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tensor([[12., 12., 12., 12.],</span><br><span class="line">        [12., 12., 12., 12.],</span><br><span class="line">        [ 8.,  9., 10., 11.]])</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="转换其它对象"><a href="#转换其它对象" class="headerlink" title="转换其它对象"></a>转换其它对象</h3><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">A = X.numpy()</span><br><span class="line">B = torch.tensor(A)</span><br><span class="line"><span class="built_in">type</span>(A), <span class="built_in">type</span>(B)</span><br><span class="line"><span class="comment"># (numpy.ndarray, torch.Tensor)</span></span><br><span class="line"></span><br><span class="line">a = torch.tensor([<span class="number">3.5</span>])</span><br><span class="line">a, a.item(), <span class="built_in">float</span>(a), <span class="built_in">int</span>(a)</span><br><span class="line"><span class="comment"># (tensor([3.5000]), 3.5, 3.5, 3)</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(tensor([3.5000]), 3.5, 3.5, 3)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="数据集预处理"><a href="#数据集预处理" class="headerlink" title="数据集预处理"></a>数据集预处理</h2><h3 id="读取数据集"><a href="#读取数据集" class="headerlink" title="读取数据集"></a>读取数据集</h3><p>创建一个人工数据集，并存储在CSV（逗号分隔值）文件 ..&#x2F;data&#x2F;house_tiny.csv中。 以其他格式存储的数据也可以通过类似的方式进行处理</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">os.makedirs(os.path.join(<span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;data&#x27;</span>), exist_ok = <span class="literal">True</span>)</span><br><span class="line">data_file = os.path.join(<span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;data&#x27;</span>, <span class="string">&#x27;house_tiny.csv&#x27;</span>)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(data_file, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="string">&#x27;NumRooms,Alley,Price\n&#x27;</span>)  <span class="comment"># 列名</span></span><br><span class="line">    f.write(<span class="string">&#x27;NA,Pave,127500\n&#x27;</span>)  <span class="comment"># 每行表示一个数据样本</span></span><br><span class="line">    f.write(<span class="string">&#x27;2,NA,106000\n&#x27;</span>)</span><br><span class="line">    f.write(<span class="string">&#x27;4,NA,178100\n&#x27;</span>)</span><br><span class="line">    f.write(<span class="string">&#x27;NA,NA,140000\n&#x27;</span>)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">data = pd.read_csv(data_file)</span><br><span class="line"><span class="built_in">print</span>(data)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   NumRooms Alley   Price</span><br><span class="line">0       NaN  Pave  127500</span><br><span class="line">1       2.0   NaN  106000</span><br><span class="line">2       4.0   NaN  178100</span><br><span class="line">3       NaN   NaN  140000</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="处理缺失值"><a href="#处理缺失值" class="headerlink" title="处理缺失值"></a>处理缺失值</h3><p>“NaN”项代表缺失值。 为了处理缺失的数据，典型的方法包括插值法和删除法， 其中插值法用一个替代值弥补缺失值，而删除法则直接忽略缺失值</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">inputs, outputs = data.iloc[:, <span class="number">0</span>:<span class="number">2</span>], data.iloc[:, <span class="number">2</span>]</span><br><span class="line">numeric_cols = inputs.select_dtypes(include=[<span class="string">&#x27;number&#x27;</span>]).columns </span><br><span class="line"><span class="comment"># 这里使用均值来替代缺失的数据</span></span><br><span class="line">inputs[numeric_cols] = inputs[numeric_cols].fillna(inputs[numeric_cols].mean())</span><br><span class="line"><span class="built_in">print</span>(inputs)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   NumRooms Alley</span><br><span class="line">0       3.0  Pave</span><br><span class="line">1       2.0   NaN</span><br><span class="line">2       4.0   NaN</span><br><span class="line">3       3.0   NaN</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dummy_na=True: 指定是否将缺失值（NaN）作为一个单独的类别进行编码。如果设置为 True，那么缺失值会被转换为一个额外的哑变量列,哑变量是指用 0 和 1 表示的二进制变量</span></span><br><span class="line">inputs = pd.get_dummies(inputs, dummy_na = <span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(inputs)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   NumRooms  Alley_Pave  Alley_nan</span><br><span class="line">0       3.0        True      False</span><br><span class="line">1       2.0       False       True</span><br><span class="line">2       4.0       False       True</span><br><span class="line">3       3.0       False       True</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="转换为张量格式"><a href="#转换为张量格式" class="headerlink" title="转换为张量格式"></a>转换为张量格式</h3><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">x = torch.tensor(inputs.to_numpy(dtype=<span class="built_in">float</span>))</span><br><span class="line">y = torch.tensor(outputs.to_numpy(dtype=<span class="built_in">float</span>))</span><br><span class="line">x, y</span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(tensor([[3., 1., 0.],</span><br><span class="line">         [2., 0., 1.],</span><br><span class="line">         [4., 0., 1.],</span><br><span class="line">         [3., 0., 1.]], dtype=torch.float64),</span><br><span class="line"> tensor([127500., 106000., 178100., 140000.], dtype=torch.float64))</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h3><p>删除缺失值最多的列</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">data = pd.DataFrame(&#123;</span><br><span class="line">    <span class="string">&#x27;A&#x27;</span>: [<span class="number">1</span>, <span class="number">2</span>, np.nan, <span class="number">4</span>],</span><br><span class="line">    <span class="string">&#x27;B&#x27;</span>: [np.nan, <span class="number">2</span>, np.nan, <span class="number">4</span>],</span><br><span class="line">    <span class="string">&#x27;C&#x27;</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;before delete&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算每一列缺失值数量</span></span><br><span class="line">missing_counts = data.isnull().<span class="built_in">sum</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找到缺失值最多的列</span></span><br><span class="line">col_to_drop = missing_counts.idxmax()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除缺失值最多的列</span></span><br><span class="line">data = data.drop(columns=col_to_drop)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;after delete&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(data)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">before delete</span><br><span class="line">     A    B  C</span><br><span class="line">0  1.0  NaN  1</span><br><span class="line">1  2.0  2.0  2</span><br><span class="line">2  NaN  NaN  3</span><br><span class="line">3  4.0  4.0  4</span><br><span class="line">after delete</span><br><span class="line">     A  C</span><br><span class="line">0  1.0  1</span><br><span class="line">1  2.0  2</span><br><span class="line">2  NaN  3</span><br><span class="line">3  4.0  4</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="线性代数"><a href="#线性代数" class="headerlink" title="线性代数"></a>线性代数</h2><p>两个矩阵的按元素乘法称为Hadamard积（Hadamard product）。</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">A = torch.arange(<span class="number">20</span>, dtype=torch.float32).reshape(<span class="number">5</span>,<span class="number">4</span>)</span><br><span class="line">B = A.clone()</span><br><span class="line">A, A*B <span class="comment"># Hadamard积</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(tensor([[ 0.,  1.,  2.,  3.],</span><br><span class="line">         [ 4.,  5.,  6.,  7.],</span><br><span class="line">         [ 8.,  9., 10., 11.],</span><br><span class="line">         [12., 13., 14., 15.],</span><br><span class="line">         [16., 17., 18., 19.]]),</span><br><span class="line"> tensor([[  0.,   1.,   4.,   9.],</span><br><span class="line">         [ 16.,  25.,  36.,  49.],</span><br><span class="line">         [ 64.,  81., 100., 121.],</span><br><span class="line">         [144., 169., 196., 225.],</span><br><span class="line">         [256., 289., 324., 361.]]))</span><br></pre></td></tr></table></figure></div>
+
+<p>将张量乘以或加上一个标量不会改变张量的形状，其中张量的每个元素都将与标量相加或相乘</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">2</span></span><br><span class="line">A+a</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tensor([[ 2.,  3.,  4.,  5.],</span><br><span class="line">        [ 6.,  7.,  8.,  9.],</span><br><span class="line">        [10., 11., 12., 13.],</span><br><span class="line">        [14., 15., 16., 17.],</span><br><span class="line">        [18., 19., 20., 21.]])</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="张量降维"><a href="#张量降维" class="headerlink" title="张量降维"></a>张量降维</h3><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.arange(<span class="number">4</span>, dtype = torch.float32)</span><br><span class="line">x, x.<span class="built_in">sum</span>()</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(tensor([0., 1., 2., 3.]), tensor(6.))</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A_sum_axis0 = A.<span class="built_in">sum</span>(axis=<span class="number">0</span>)   <span class="comment">#按列相加</span></span><br><span class="line">A_sum_axis0, A_sum_axis0.shape</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(tensor([40., 45., 50., 55.]), torch.Size([4]))</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A_sum_axis1 = A.<span class="built_in">sum</span>(axis=<span class="number">1</span>)  <span class="comment">#按行相加</span></span><br><span class="line">A_sum_axis1, A_sum_axis1.shape</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(tensor([ 6., 22., 38., 54., 70.]), torch.Size([5]))</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>通过将总和除以元素总数来计算平均值。 在代码中，我们可以调用函数来计算任意形状张量的平均值。</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A.<span class="built_in">sum</span>() / A.numel()</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor(9.5000)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A.mean(axis=<span class="number">0</span>), A.<span class="built_in">sum</span>(axis=<span class="number">0</span>)/A.shape[<span class="number">0</span>]</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(tensor([ 8.,  9., 10., 11.]), tensor([ 8.,  9., 10., 11.]))</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="非降维求和"><a href="#非降维求和" class="headerlink" title="非降维求和"></a>非降维求和</h3><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sum_A = A.<span class="built_in">sum</span>(axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line">sum_A</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tensor([[ 6.],</span><br><span class="line">        [22.],</span><br><span class="line">        [38.],</span><br><span class="line">        [54.],</span><br><span class="line">        [70.]])</span><br></pre></td></tr></table></figure></div>
+
+<p>通过广播让 A 除以 sum_A</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A/sum_A</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tensor([[0.0000, 0.1667, 0.3333, 0.5000],</span><br><span class="line">        [0.1818, 0.2273, 0.2727, 0.3182],</span><br><span class="line">        [0.2105, 0.2368, 0.2632, 0.2895],</span><br><span class="line">        [0.2222, 0.2407, 0.2593, 0.2778],</span><br><span class="line">        [0.2286, 0.2429, 0.2571, 0.2714]])</span><br></pre></td></tr></table></figure></div>
+
+<p>求累加总和</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A.cumsum(axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tensor([[ 0.,  1.,  2.,  3.],</span><br><span class="line">        [ 4.,  6.,  8., 10.],</span><br><span class="line">        [12., 15., 18., 21.],</span><br><span class="line">        [24., 28., 32., 36.],</span><br><span class="line">        [40., 45., 50., 55.]])</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="点积"><a href="#点积" class="headerlink" title="点积"></a>点积</h3><p>两个向量相同位置元素乘积之和</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y = torch.ones(<span class="number">4</span>, dtype = torch.float32)</span><br><span class="line">x,y,torch.dot(x, y)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(tensor([0., 1., 2., 3.]), tensor([1., 1., 1., 1.]), tensor(6.))</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 矩阵向量积</span></span><br><span class="line">A.shape, x.shape, torch.mv(A, x)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(torch.Size([5, 4]), torch.Size([4]), tensor([ 14.,  38.,  62.,  86., 110.]))</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 矩阵乘法积</span></span><br><span class="line">B = torch.ones(<span class="number">4</span>, <span class="number">3</span>)</span><br><span class="line">torch.mm(A, B)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tensor([[ 6.,  6.,  6.],</span><br><span class="line">        [22., 22., 22.],</span><br><span class="line">        [38., 38., 38.],</span><br><span class="line">        [54., 54., 54.],</span><br><span class="line">        [70., 70., 70.]])</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="范数"><a href="#范数" class="headerlink" title="范数"></a>范数</h3><p>L2 范数<br>对于一个向量来说，它的 L2 范数就是它的各元素平方和的平方根</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">u = torch.tensor([<span class="number">3.0</span>, -<span class="number">4.0</span>])</span><br><span class="line">torch.norm(u)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor(5.)</span><br></pre></td></tr></table></figure></div>
+
+<p>L1 范数对于一个向量来说是各向量元素的绝对值之和</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.<span class="built_in">abs</span>(u).<span class="built_in">sum</span>()</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor(7.)</span><br></pre></td></tr></table></figure></div>
+
+<p>Frobenius范数（Frobenius norm）是矩阵元素平方和的平方根：</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.norm(torch.ones((<span class="number">4</span>, <span class="number">9</span>)))</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor(6.)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A,A.<span class="built_in">sum</span>(axis=<span class="number">0</span>),A/A.<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(tensor([[ 0.,  1.,  2.,  3.],</span><br><span class="line">         [ 4.,  5.,  6.,  7.],</span><br><span class="line">         [ 8.,  9., 10., 11.],</span><br><span class="line">         [12., 13., 14., 15.],</span><br><span class="line">         [16., 17., 18., 19.]]),</span><br><span class="line"> tensor([40., 45., 50., 55.]),</span><br><span class="line"> tensor([[0.0000, 0.0222, 0.0400, 0.0545],</span><br><span class="line">         [0.1000, 0.1111, 0.1200, 0.1273],</span><br><span class="line">         [0.2000, 0.2000, 0.2000, 0.2000],</span><br><span class="line">         [0.3000, 0.2889, 0.2800, 0.2727],</span><br><span class="line">         [0.4000, 0.3778, 0.3600, 0.3455]]))</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="自动微分"><a href="#自动微分" class="headerlink" title="自动微分"></a>自动微分</h2><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">x = torch.arange(<span class="number">4.0</span>)</span><br><span class="line">x</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor([0., 1., 2., 3.])</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面代码需要一个地方来存储梯度，不会在每次对一个参数求导时都分配新的内存</span></span><br><span class="line">x.requires_grad_(<span class="literal">True</span>)  <span class="comment"># 等价于x=torch.arange(4.0,requires_grad=True)</span></span><br><span class="line"><span class="built_in">print</span>(x.grad)  <span class="comment"># 默认值是None</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">None</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">y = <span class="number">2</span> * torch.dot(x,x)</span><br><span class="line">y</span><br><span class="line"><span class="comment">#x是一个长度为4的向量，计算x和x的点积，得到了我们赋值给y的标量输出。 </span></span><br><span class="line"><span class="comment">#接下来，通过调用反向传播函数来自动计算y关于x每个分量的梯度，并打印这些梯度。</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor(28., grad_fn=&lt;MulBackward0&gt;)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+<p><strong>注意事项</strong>：前面这里 y 实际上是一个标量，标量关于向量的梯度是向量，并且与x拥有相同形状</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y.backward()</span><br><span class="line">x.grad</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor([ 0.,  4.,  8., 12.])</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.grad == <span class="number">4</span>*x</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor([True, True, True, True])</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在默认情况下，PyTorch会累积梯度，我们需要清除之前的值</span></span><br><span class="line">x.grad.zero_()</span><br><span class="line">y = x.<span class="built_in">sum</span>()</span><br><span class="line">y.backward()</span><br><span class="line">x.grad</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor([1., 1., 1., 1.])</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="非标量变量的反向传播"><a href="#非标量变量的反向传播" class="headerlink" title="非标量变量的反向传播"></a>非标量变量的反向传播</h3><p>当y不是标量时，向量y关于向量x的导数的最自然解释是一个矩阵。 对于高阶和高维的y和x，求导的结果可以是一个高阶张量。</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对非标量调用backward需要传入一个gradient参数，该参数指定微分函数关于self的梯度。</span></span><br><span class="line"><span class="comment"># 本例只想求偏导数的和，所以传递一个1的梯度是合适的</span></span><br><span class="line">x.grad.zero_()</span><br><span class="line">y = x * x</span><br><span class="line"><span class="comment"># 等价于y.backward(torch.ones(len(x)))</span></span><br><span class="line">y.<span class="built_in">sum</span>().backward()</span><br><span class="line">x.grad</span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tensor([0., 2., 4., 6.])</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>然而，这种情况会出现在高级机器学习中（包括深度学习中）， 但当调用向量的反向计算时，通常会试图计算一批训练样本中每个组成部分的损失函数的导数</p>
+<h3 id="分离计算"><a href="#分离计算" class="headerlink" title="分离计算"></a>分离计算</h3><p>假设y是作为x的函数计算的，而z则是作为y和x的函数计算的。 如果想计算z关于x的梯度，但由于某种原因，希望将y视为一个常数，并且只考虑到x在y被计算后发挥的作用，这里就需要用<strong>分离计算</strong>。</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x.grad.zero_()</span><br><span class="line">y = x * x</span><br><span class="line">u = y.detach() <span class="comment"># u 与 y 有相同的值，但是 u 会被作为常数处理，不在看作是 x 的函数</span></span><br><span class="line">z = u * x</span><br><span class="line"></span><br><span class="line">z.<span class="built_in">sum</span>().backward()</span><br><span class="line">x.grad == u</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor([True, True, True, True])</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="python-控制流梯度计算"><a href="#python-控制流梯度计算" class="headerlink" title="python 控制流梯度计算"></a>python 控制流梯度计算</h3><div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">a</span>):</span><br><span class="line">    b = a * <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> b.norm() &lt; <span class="number">1000</span>:</span><br><span class="line">        b = b * <span class="number">2</span></span><br><span class="line">    <span class="built_in">print</span>(b)</span><br><span class="line">    <span class="keyword">if</span> b.<span class="built_in">sum</span>() &gt; <span class="number">0</span>:</span><br><span class="line">        c = b</span><br><span class="line">        <span class="built_in">print</span>(c)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        c = <span class="number">100</span> * b</span><br><span class="line">        <span class="built_in">print</span>(c)</span><br><span class="line">    <span class="keyword">return</span> c</span><br></pre></td></tr></table></figure></div>
+
+<p>然后计算梯度</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(size=(), requires_grad=<span class="literal">True</span>)</span><br><span class="line">d = f(a)</span><br><span class="line">d.backward()</span><br><span class="line"></span><br><span class="line">a, d/a, a.grad</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tensor(-1794.2429, grad_fn=&lt;MulBackward0&gt;)</span><br><span class="line">tensor(-179424.2969, grad_fn=&lt;MulBackward0&gt;)</span><br><span class="line"></span><br><span class="line">(tensor(-0.2190, requires_grad=True),</span><br><span class="line"> tensor(819200., grad_fn=&lt;DivBackward0&gt;),</span><br><span class="line"> tensor(819200.))</span><br></pre></td></tr></table></figure></div>
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> Deep Learning学习day1-数据操作</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-06-16 21:11:19</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-06-16 21:32:58
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/06/16/data_process/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/pytorch/">#pytorch</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/05/17/windows-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Windows 异常处理 &amp; 例题</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Deep Learning学习day1-数据操作</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C"><span class="nav-text">2.1 数据操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A5%E9%97%A8"><span class="nav-text">入门</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6"><span class="nav-text">广播机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95-%E5%88%87%E7%89%87"><span class="nav-text">索引&amp;切片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E5%85%B6%E5%AE%83%E5%AF%B9%E8%B1%A1"><span class="nav-text">转换其它对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-text">数据集预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-text">读取数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E7%BC%BA%E5%A4%B1%E5%80%BC"><span class="nav-text">处理缺失值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%BC%A0%E9%87%8F%E6%A0%BC%E5%BC%8F"><span class="nav-text">转换为张量格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0"><span class="nav-text">练习</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0"><span class="nav-text">线性代数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%A0%E9%87%8F%E9%99%8D%E7%BB%B4"><span class="nav-text">张量降维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E9%99%8D%E7%BB%B4%E6%B1%82%E5%92%8C"><span class="nav-text">非降维求和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E7%A7%AF"><span class="nav-text">点积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8C%83%E6%95%B0"><span class="nav-text">范数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%BE%AE%E5%88%86"><span class="nav-text">自动微分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-1"><span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E6%A0%87%E9%87%8F%E5%8F%98%E9%87%8F%E7%9A%84%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="nav-text">非标量变量的反向传播</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%A6%BB%E8%AE%A1%E7%AE%97"><span class="nav-text">分离计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python-%E6%8E%A7%E5%88%B6%E6%B5%81%E6%A2%AF%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="nav-text">python 控制流梯度计算</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
