@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/06/19/ms17-010/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="MS17-010由于课程作业的需求，这里笔者重新将MS17-010进行分析，从windows内核角度来看曾经风靡一时的MS17-010漏洞形成原因以及利用过程。 一、SMB 介绍SMB（Server Message Block）服务是一种网络文件共享协议，允许在网络上的计算机之间共享文件、打印机和其他资源，SMB 协议最初由 IBM 开发，并在 Microsoft 的 Windows 操作系统中广">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解分析 MS17-010">
+<meta property="og:url" content="http://example.com/2024/06/19/MS17-010/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="MS17-010由于课程作业的需求，这里笔者重新将MS17-010进行分析，从windows内核角度来看曾经风靡一时的MS17-010漏洞形成原因以及利用过程。 一、SMB 介绍SMB（Server Message Block）服务是一种网络文件共享协议，允许在网络上的计算机之间共享文件、打印机和其他资源，SMB 协议最初由 IBM 开发，并在 Microsoft 的 Windows 操作系统中广">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_16-58-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_18-24-37.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_16-18-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_17-19-59.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_17-23-54.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_17-59-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_18-05-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_15-40-47.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_15-47-01.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_15-57-56.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_16-48-58.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_16-48-16.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_18-32-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_18-47-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_11-58-21.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_12-00-00.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_16-40-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_12-05-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_14-13-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-17_19-06-30.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_15-56-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_15-52-52.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_16-13-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_20-30-48.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-18_19-58-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-19_09-51-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-19_10-06-11.png">
+<meta property="article:published_time" content="2024-06-19T02:41:52.728Z">
+<meta property="article:modified_time" content="2024-06-19T02:52:45.927Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="windows kernel，SMB，srv，srvnet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-06-18_16-58-38.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            深入理解分析 MS17-010 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">深入理解分析 MS17-010</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-06-19 10:41:52</span>
+        <span class="mobile">2024-06-19 10:41:52</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-06-19 10:52:45</span>
+            <span class="mobile">2024-06-19 10:52:45</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Windows/">Windows</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/Windows/pwn/">pwn</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/windows-kernel%EF%BC%8CSMB%EF%BC%8Csrv%EF%BC%8Csrvnet/">windows kernel，SMB，srv，srvnet</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="MS17-010"><a href="#MS17-010" class="headerlink" title="MS17-010"></a>MS17-010</h1><p>由于课程作业的需求，这里笔者重新将MS17-010进行分析，从windows内核角度来看曾经风靡一时的MS17-010漏洞形成原因以及利用过程。</p>
+<h2 id="一、SMB-介绍"><a href="#一、SMB-介绍" class="headerlink" title="一、SMB 介绍"></a>一、SMB 介绍</h2><p>SMB（Server Message Block）服务是一种网络文件共享协议，允许在网络上的计算机之间共享文件、打印机和其他资源，SMB 协议最初由 IBM 开发，并在 Microsoft 的 Windows 操作系统中广泛使用，它定义了如何在网络中进行文件访问、打印服务、命名管道等。</p>
+<h3 id="1-1-特点"><a href="#1-1-特点" class="headerlink" title="1.1 特点"></a>1.1 特点</h3><ol>
+<li><p><strong>文件共享</strong>：</p>
+<p>SMB 允许用户在网络上的计算机之间共享文件和目录。用户可以在远程计算机上访问文件，就像在本地计算机上一样。</p>
+</li>
+<li><p><strong>打印共享</strong>：</p>
+<p>SMB 还支持打印机共享，使得网络上的多个用户可以共享同一台打印机。</p>
+</li>
+<li><p><strong>通信协议</strong>：</p>
+<p>SMB 提供了一种通信机制，允许应用程序在不同计算机之间进行数据交换。它使用了一种客户端&#x2F;服务器模型，其中客户端请求服务，服务器响应请求。</p>
+</li>
+<li><p><strong>跨平台支持</strong>：</p>
+<p>尽管最初是 Microsoft 开发的，但 SMB 协议已经被许多操作系统和平台所支持，包括 Linux、Unix、macOS 和一些网络设备。</p>
+</li>
+</ol>
+<h3 id="1-2-安全性"><a href="#1-2-安全性" class="headerlink" title="1.2 安全性"></a>1.2 安全性</h3><ul>
+<li><p><strong>禁用SMB 1.0</strong>：</p>
+<p>SMB 1.0 因存在许多安全漏洞（如 永恒之蓝）而被禁用。推荐使用更高版本的 SMB 协议（如 SMB 3.0 或 SMB 3.1.1）。</p>
+</li>
+<li><p><strong>加密和身份验证</strong>：</p>
+<p>最新版本的 SMB 协议提供了加密功能和更强的身份验证机制，以提高数据传输的安全性。</p>
+<p>​</p>
+</li>
+</ul>
+<h3 id="1-3-使用场景"><a href="#1-3-使用场景" class="headerlink" title="1.3 使用场景"></a>1.3 使用场景</h3><ul>
+<li><p><strong>文件和打印机共享</strong>：</p>
+<p>在家庭或小型办公室网络中，使用 SMB 协议共享文件和打印机。</p>
+</li>
+<li><p><strong>企业文件服务器</strong>：</p>
+<p>在企业环境中，利用 SMB 协议建立文件服务器，供员工访问和共享文件。</p>
+</li>
+<li><p><strong>跨平台文件共享</strong>：</p>
+<p>允许不同操作系统之间的文件和资源共享。</p>
+</li>
+</ul>
+<h3 id="1-4-生命周期"><a href="#1-4-生命周期" class="headerlink" title="1.4 生命周期"></a>1.4 生命周期</h3><p>一次普通的SMB周期大致如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_16-58-38.png"
+                      alt="	nipaste_2024-06-18_16-58-3"
+                ></p>
+<h2 id="二、漏洞分析"><a href="#二、漏洞分析" class="headerlink" title="二、漏洞分析"></a>二、漏洞分析</h2><p><strong>调试环境</strong></p>
+<p>win11：主机用来远程调试</p>
+<p>win7 64位 SP1：作为靶机</p>
+<p>kali2023：用来作为攻击机</p>
+<h3 id="2-1-利用介绍"><a href="#2-1-利用介绍" class="headerlink" title="2.1 利用介绍"></a>2.1 利用介绍</h3><p>溢出发生在内存中的大非分页池，由于大非分页池没有头部。因此池和池之间的内存空间是连续的，可以在上一个池后分配一个紧密相连的池，这个池由驱动分配并含有驱动的数据。</p>
+<p>因此，必须通过操纵池后被溢出的池，EternalBlue 使用的技术就是控制 SRVNET 驱动的缓冲区结构，为了实现这一点，两个缓冲区在内存中必须是对齐的，为了实现非分页堆的对齐，使用了内核池喷射技术。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_18-24-37.png"
+                      alt="nipaste_2024-06-17_18-24-3"
+                ></p>
+<p><strong>利用过程</strong></p>
+<p>1.FreeHole_A: EternalBlue通过发送SMB v1数据包来完成占位</p>
+<p>2.SMBv2_1n: 发送一组SMB v2数据包</p>
+<p>3.FreeHole_B: 发送另一个占位数据包；必须确保第一个占位的FreeHole_A被释放之前，这块内存被分配</p>
+<p>4.FreeHole_A_CLOSE: 关闭连接，使得第一个占位的内存空间被释放</p>
+<p>5.SMBv2_2n: 发送一组SMB v2数据包</p>
+<p>6.FreeHole_B_CLOSE: 关闭连接来释放缓冲区</p>
+<p>7.FINAL_Vulnerable_Buffer: 发送最后的数据包，这个数据包将会被存储在有漏洞的缓冲区中</p>
+<p>有漏洞的缓冲区（之前SRVNET创建的）被填入的数据将会覆盖部分SRVNET的缓冲区。</p>
+<h3 id="2-1-静态分析"><a href="#2-1-静态分析" class="headerlink" title="2.1 静态分析"></a>2.1 静态分析</h3><p>漏洞代码位于 srv 驱动模块中内核态函数 <strong>SrvSmbOpen2</strong> 对 <strong>SrvOs2FeaListToNt</strong> 的调用，<strong>SrvOs2FeaListToNt</strong> 用于将 FEAlist 转换 NTFEA list，而在这个转换过程中，存在一个转换类型错误漏洞，即函数 srv!SrvOs2FeaListToNt 在将FEA list 转换成 <strong>NTFEA(Windows NT FEA) list</strong> 前会调用 srv!SrvOs2FeaListSizeToNt 去计算转换后的 <strong>FEA lsit</strong> 的大小，从而导致可以进行缓冲区溢出。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_16-18-03.png"
+                      alt="nipaste_2024-06-17_16-18-0"
+                ></p>
+<p>其中 _FEA 和 _FEALIST 的结构体内容如上所示，下面这张图就是用来进行转换过程中的处理函数</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_17-19-59.png"
+                      alt="nipaste_2024-06-18_17-19-5"
+                ></p>
+<p>在对原函数进行逆向后，注释如上图所示，同时这里进入到 <strong>SrvOs2FeaListSizeToNt</strong> 函数中来具体分析类型转换错误原因。</p>
+<p><strong>SrvOs2FeaListSizeToNt</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_17-23-54.png"
+                      alt="nipaste_2024-06-18_17-23-5"
+                ></p>
+<p>上面红框中的位置即为漏洞点所在，由前面分析 _FEALIST 的结构体可以知道，其 cblist 成员占四个字节大小，在实际使用的过程中如果 cblist 的长度大于两个字节所能表示的最大大小，如 0x10000 就有可能导致转换过程中使用强制类型转换，从而让其高位的两个字节并不会被重置，最后形成长度溢出（具体见后面调试分析）。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_17-59-06.png"
+                      alt="nipaste_2024-06-18_17-59-0"
+                ></p>
+<p>从上图中的汇编也可以明显看到这里是使用 bx 16 位寄存器进行值传递的。</p>
+<p><strong>SrvOs2FeaToNt</strong></p>
+<p>该函数用来将每一个具体的 FEA 数据转换为 NTFEA 格式，从下图中可以看到在进入 while 循环前会将 FEALIST 中的 cblist 取出，并作为循环终止条件，如果在前面利用类型转换错误实现 FEALIST 的长度溢出，那么同理下面的while 循环次数也会增加，从而可以将恶意数据溢出到下一个非分页池当中。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_18-05-45.png"
+                      alt="nipaste_2024-06-18_18-05-4"
+                ></p>
+<p><strong>总结</strong></p>
+<ol>
+<li><p><strong>srv!SrvOs2FeaListSizeToNt</strong> 会计算 FEA list 的大小并<strong>更新待转换</strong>的 FEA list 的大小</p>
+</li>
+<li><p>因为错误的使用 WORD 强制类型转换，导致计算出来的待转换的 FEA list 的大小比真正的 FEA list 大</p>
+</li>
+<li><p>因为原先的总大小计算错误，导致当 FEA list 被转化为 NTFEA list 时，会在<strong>非分页池导致缓冲区溢出</strong></p>
+</li>
+</ol>
+<h3 id="2-2-动态分析"><a href="#2-2-动态分析" class="headerlink" title="2.2 动态分析"></a>2.2 动态分析</h3><p>根据前面的分析，断点设置如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bp srv!SrvSmbOpen2+0xc3				;call    srv!SrvOs2FeaListToNt (fffff88006719960)</span><br><span class="line">bp srv!SrvOs2FeaListToNt+0x2e</span><br><span class="line">bp srv!SrvOs2FeaListToNt+0x2e+5</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_15-40-47.png"
+                      alt="nipaste_2024-06-17_15-40-4"
+                ></p>
+<p>其中 FEALIST 的大小被设置为了 0x10000，一个非分页池的大小为 0x11000，数据结构体的长度满足在这个范围内，这个值被存放在 FEALIST-&gt;cbList 中。</p>
+<p>当前函数调用栈如下所示：</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span>: kd&gt; k</span><br><span class="line"> <span class="comment"># Child-SP          RetAddr               Call Site</span></span><br><span class="line"><span class="number">00</span> fffff880`0633b970 fffff880`03c84815     srv!SrvSmbOpen2+<span class="number">0xc3</span></span><br><span class="line">01 fffff880`0633ba20 fffff880`03cc8047     srv!ExecuteTransaction+<span class="number">0xc5</span></span><br><span class="line">02 fffff880`0633ba60 fffff880`03c3abb8     srv!SrvSmbTransactionSecondary+<span class="number">0x3f7</span></span><br><span class="line">03 fffff880`0633baf0 fffff880`03c3aad3     srv!SrvProcessSmb+<span class="number">0xb8</span></span><br><span class="line">04 fffff880`0633bb70 fffff880`03c7f78f     srv!SrvRestartReceive+<span class="number">0xa3</span></span><br><span class="line">05 fffff880`0633bbb0 fffff800`04122cce     srv!WorkerThread+<span class="number">0xe9</span></span><br><span class="line">06 fffff880`0633bc00 fffff800`03e76fe6     nt!PspSystemThreadStartup+<span class="number">0x5a</span></span><br><span class="line">07 fffff880`0633bc40 <span class="number">00000000</span>`<span class="number">00000000</span>     nt!KiStartSystemThread+<span class="number">0x16</span></span><br></pre></td></tr></table></figure></div>
+
+<p>接下来将会<strong>分配一个缓冲区用来存放将FEA list转换为 NTFEA list 后的数据</strong>。这就意味着需要通过函数 <strong>srv!SrvOs2FeaListSizeToNt</strong> 计算转换后NTFEA list的大小，我们在这个函数调用前下断点来查看此时 FEA 的长度和返回后的 NTFEA list 的长度，发现 FEALIST-&gt;cbList 从0x10000增长到了0x1ff5d。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_15-47-01.png"
+                      alt="nipaste_2024-06-17_15-47-0"
+                ></p>
+<p>从调试的结果来看 FEALIST-&gt;cbList 增大了 0xff5d 的长度，在前面的静态分析中有提到过 **SrvOs2FeaListSizeToNt **。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_15-57-56.png"
+                      alt="nipaste_2024-06-17_15-57-5"
+                ></p>
+<p>即源程序 SrvOs2FeaListSizeToNt 函数这里采用了强制类型转换，导致最后的结果只对 <strong>FeaList-&gt;cbList</strong> 的低2字节进行了修改，而高位的字节仍然保留在原区域位置 。</p>
+<p>下面在来分析当大非分页池发生溢出时候的状况，设置断点如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bp srv!SrvOs2FeaListToNt+0xa9        ;PAGE:000000000007FA09    lea     r14, [rax+rdi-5]</span><br><span class="line">bp srv!SrvOs2FeaListToNt+0xc1		;PAGE:000000000007FA21    call    SrvOs2FeaToNt</span><br><span class="line">bp srv!SrvOs2FeaToNt+0x38			;PAGE:000000000007D578 call    memmove1</span><br><span class="line">bp srv!SrvOs2FeaToNt+0x5a			;PAGE:000000000007D59A call    memmove2</span><br><span class="line">bp srv!SrvOs2FeaListToNt+0x101		;跳出循环</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_16-48-58.png"
+                      alt="nipaste_2024-06-17_16-48-5"
+                ></p>
+<p>由前面可以知道这里 <strong>FeaList-&gt;cbList</strong> 已经被设置为了 0x1ff5d，在 while 循环这里下断点，从下图中看到 v14 的大小为 0x1ff5d，再次验证了通过溢出错误成功设置了 while 循环的次数。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_16-48-16.png"
+                      alt="nipaste_2024-06-17_16-48-1"
+                ></p>
+<p>设置断点如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">bp srv!SrvOs2FeaListToNt+0xc1 &quot;.printf \&quot;NEXT: FEA: %p NTFEA: %p\\n\&quot;, rdx, rcx; g;&quot;</span><br><span class="line">bp srv!SrvOs2FeaToNt+5a &quot;.printf \&quot;memmove2: dst: %p src: %p size: %p\\n\&quot;, rcx, rdx, r8; g;&quot;</span><br><span class="line">bp srv!SrvOs2FeaListToNt+0x101</span><br><span class="line"></span><br><span class="line"># 下面这部分用于只输出最后的一部分</span><br><span class="line">bp srv!SrvOs2FeaListToNt+0xc1 &quot;.if @rcx &gt; fffffa803128e010 + 0x1c44 &#123;.printf \&quot;NEXT: FEA: %p NTFEA: %p\\n\&quot;, rdx, rcx; g;&#125;.else&#123;g&#125;&quot;</span><br><span class="line">bp srv!SrvOs2FeaToNt+5a &quot;.if @r8 &gt; 0x000000a0 &#123;.printf \&quot;memmove2: dst: %p src: %p size: %p\\n\&quot;, rcx, rdx, r8; g;&#125;.else&#123;g&#125;&quot;</span><br><span class="line">bp srv!SrvOs2FeaListToNt+0x101</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>这里将每次转换过程中的 NTFEA 和 FEA 项的转换信息输出，从下图中可以看到在前面将传输数据 size 设置为 0，每次 NTFEA 的增加值都是固定为 0xc（不包括数据部分），在最后第606次，即循环的倒数第二次，设置size 为的目标地址减去当前 NTFEA 地址之间的偏移，，这里即为要溢出的区域。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fffffa803315aff8 - fffffa803314bc75 = f383</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_18-32-51.png"
+                      alt="nipaste_2024-06-17_18-32-5"
+                ></p>
+<p><strong>fffffa803315b001</strong> 地址不再属于 NTFEA 的非分页池大小范围，这里实际上该地址属于 srvnet 的非分页池（见后面说明） ，但这里依然可以溢出 0xa8 的数据到 srvnet 的非分页池中，可以在 windbg 里面看溢出的具体数据信息。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_18-47-31.png"
+                      alt="nipaste_2024-06-17_18-47-3"
+                ></p>
+<p>将覆盖前和覆盖后的数据做一个比较，覆盖前的数据为正常的 SRVNET 非分页池的头部数据</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_11-58-21.png"
+                      alt="nipaste_2024-06-18_11-58-2"
+                ></p>
+<p>从下图中可以看到已经成功利用溢出修改了这部分数据。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_12-00-00.png"
+                      alt="nipaste_2024-06-18_12-00-0"
+                ></p>
+<p>通过溢出非法地址之后，靶机在执行 srvnet.sys 服务时会出现蓝屏。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_16-40-31.png"
+                      alt="nipaste_2024-06-17_16-40-3"
+                ></p>
+<p>重新下断点，从下图中可以看到位于 srv 中申请的非分页池下方溢出区域正是 srvnet 的非分页池区域，这是因为在实际利用的过程中使用了堆喷和堆占位操作使得可以 srv 溢出的部分刚好覆盖到 srvnet 中数据。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_12-05-12.png"
+                      alt="nipaste_2024-06-18_12-05-1"
+                ></p>
+<p>为了了解具体的观察内存分配结构，可以在 srv.sys 和 srvnet.sys 中分配池的函数中下断点，来查看内存分配情况，断点设置如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bp srvnet!SrvNetAllocatePoolWithTag+0x11</span><br><span class="line">bp srv!SrvAllocateNonPagedPool+0xe7</span><br><span class="line">bp srv!SrvFreeNonPagedPool+0x51</span><br><span class="line"></span><br><span class="line">bp srvnet!SrvNetAllocatePoolWithTag+0x17 &quot;.if @rdx &gt; 0x0000f000 &#123;.printf \&quot;srvnet!SrvNetAllocatePoolWithTag Allocation Address: %p; Size: %p;\\n\&quot;,eax,esi;g&#125;.else&#123;g;&#125;&quot;</span><br><span class="line">bp srv!SrvAllocateNonPagedPool+0xed &quot;.if @rsi &gt; 0x0000f000 &#123;.printf \&quot;srv!SrvAllocateNonPagedPool Allocation Address %p Size: %p;\\n\&quot;,rax,rsi;g&#125;.else&#123;g&#125;&quot;</span><br><span class="line">bp srv!SrvFreeNonPagedPool+0x51 &quot;.printf \&quot;srv!SrvFreeNonPagedPool Free Address: %p\\n\&quot;,rcx;g;&quot;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>经测试在 win7 SP1 64位系统下， poc 在发送数据包的过程并不由 <strong>srvnet!SrvNetAllocatePoolWithTag</strong> 进行分配非分页池，而是由 <strong>srvnet!SrvNetAllocateNonPagedBufferInternal</strong> 进行分配，所以将断点打在下面这里。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bp srvnet!SrvNetAllocateNonPagedBufferInternal+0x68 &quot;.if @rbx &gt; 0x0000f000 &#123;.printf \&quot;srvnet!SrvNetAllocateNonPagedBufferInternal Allocation Address: %p; Size: %p;\\n\&quot;,rax,rbx;g&#125;.else&#123;g;&#125;&quot;</span><br><span class="line">bp srv!SrvAllocateNonPagedPool+0xed &quot;.if @rsi &gt; 0x0000f000 &#123;.printf \&quot;srv!SrvAllocateNonPagedPool Allocation Address %p Size: %p;\\n\&quot;,rax,rsi;g&#125;.else&#123;g&#125;&quot;</span><br><span class="line">bp srv!SrvFreeNonPagedPool+0x51 &quot;.printf \&quot;srv!SrvFreeNonPagedPool Free Address: %p\\n\&quot;,rcx;g;&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_14-13-31.png"
+                      alt="nipaste_2024-06-18_14-13-3"
+                ></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fffffa80332b9000 + 0x11000 = fffffa80332ca000</span><br></pre></td></tr></table></figure></div>
+
+<p>​	从上面这里可以看到通过堆喷和堆占位让这两个非分页池实现相邻，从而可以稳定溢出到 srvnet 中的非分页池头部，大致分配策略如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-17_19-06-30.png"
+                      alt="nipaste_2024-06-17_19-06-3"
+                ></p>
+<p><strong>执行流劫持</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">bp srvnet!SrvNetCommonReceiveHandler &quot;kb;g;&quot;</span><br><span class="line">bp srvnet!SrvNetWskReceiveComplete &quot;kb;g;&quot;</span><br><span class="line"></span><br><span class="line">r $t0 = 0</span><br><span class="line">bp srvnet!SrvNetCommonReceiveHandler + b7 &quot;.if(@r10+8 == 0xfffffa8032f3f758) &#123;.printf \&quot;address %p, rax = %p times = %d\\n\&quot;,r10+8,rax,$t0; r $t0 = $t0 + 1;g;&#125;.else&#123;&#125;&quot;</span><br><span class="line"></span><br><span class="line">.text:0000000000011730 push    rbx</span><br><span class="line">.text:00000000000117E7 call    qword ptr [r10+8]</span><br></pre></td></tr></table></figure></div>
+
+<p>ms17-010 永恒之蓝最后程序执行流劫持利用的是 srvnet 中的 <strong>SrvNetCommonReceiveHandler</strong> ，该函数中存在一个函数指针调用，如果能够对该指针进行劫持，则可以完成程序控制流劫持的效果，如下图所示。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_15-56-49.png"
+                      alt="nipaste_2024-06-18_15-56-4"
+                ></p>
+<p>在这里下好断点，然后输出每次函数调用地址，从下图中可以发现之前每次调用的都是固定地址fffffa8032f3f758，而在最后一次的调用过程中会发现其函数指针调用的指针已经被修改为一个恶意地址<strong>ffffffffffd001f8</strong>。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_15-52-52.png"
+                      alt="nipaste_2024-06-18_15-52-5"
+                ></p>
+<p>为了只在最后调用恶意地址时断点才停下，这里设置一个条件断点：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">r $t0 = 0</span><br><span class="line">bp srvnet!SrvNetCommonReceiveHandler + b7 &quot;.if(@r10+8 == 0xfffffa8032f3f758) &#123;.printf \&quot;address %p, rax = %p times = %d\\n\&quot;,r10+8,rax,$t0; r $t0 = $t0 + 1;g;&#125;.else&#123;&#125;&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>然后程序就可以成功断住，跟入就可以发现这里就是 shellcode 的入口地址，需要注意的是在 win7 中这块虚拟地址空间，即 <strong>ffffffff&#96;ffd00000</strong> 是具有可执行权限的，为系统预留的一片区域，用于保存系统的一些信息，如时钟，版本，配置之类，<strong>注意事项</strong>在 win10 之后这块地址不再具有可执行权限。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_16-13-35.png"
+                      alt="nipaste_2024-06-18_16-13-3"
+                ></p>
+<p>至此就完成了整个 ms17-010 永恒之蓝的利用分析过程。</p>
+<h2 id="三、poc"><a href="#三、poc" class="headerlink" title="三、poc"></a>三、poc</h2><p>eternal blue 的官方poc，经过上面的分析，相信再来看会很容易理解</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://gist.github.com/worawit/bd04bad3cd231474763b873df081c09a" >https://gist.github.com/worawit/bd04bad3cd231474763b873df081c09a <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="四、补丁分析"><a href="#四、补丁分析" class="headerlink" title="四、补丁分析"></a>四、补丁分析</h2><h3 id="4-1-winxp"><a href="#4-1-winxp" class="headerlink" title="4.1 winxp"></a>4.1 winxp</h3><p>winxp 由于已被微软不在维护其更新，因此其 srv.sys 驱动中漏洞仍然存在。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_20-30-48.png"
+                      alt="nipaste_2024-06-18_20-30-4"
+                ></p>
+<h3 id="4-2-win7"><a href="#4-2-win7" class="headerlink" title="4.2 win7"></a>4.2 win7</h3><p>这里对打过补丁的 win7 x86系统进行分析，将其 srv.sys 放到 ida 中进行分析，可以看到打过补丁之后的代码这里不在存在强制类型转换了，而是直接进行四字节大小的赋值所以在漏洞利用过程中会失败。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-18_19-58-45.png"
+                      alt="nipaste_2024-06-18_19-58-4"
+                ></p>
+<h3 id="4-3-win10"><a href="#4-3-win10" class="headerlink" title="4.3 win10"></a>4.3 win10</h3><p>Win10的早期版本使用的仍然是存在该漏洞的srv.sys驱动，该漏洞在win10下需要靶机关闭防火墙，同时需要更改组策略，才可以利用成功</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-19_09-51-35.png"
+                      alt="nipaste_2024-06-19_09-51-3"
+                ></p>
+<p>在较新版本中的win10中，SMB3.1.1已被win10所采用，整个srv.sys驱动基本全部被重写，导致ms17-010不再能够完成利用</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-19_10-06-11.png"
+                      alt="nipaste_2024-06-19_10-06-1"
+                ></p>
+<p>双机调试环境：</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/huanongying131/article/details/90740286" >https://blog.csdn.net/huanongying131/article/details/90740286 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/m0_63898862/article/details/132791739" >https://blog.csdn.net/m0_63898862/article/details/132791739 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>参考链接：</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/86270" >https://www.anquanke.com/post/id/86270 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1196509-1-1.html" >https://www.52pojie.cn/thread-1196509-1-1.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 深入理解分析 MS17-010</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-06-19 10:41:52</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-06-19 10:52:45
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/06/19/MS17-010/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/windows-kernel%EF%BC%8CSMB%EF%BC%8Csrv%EF%BC%8Csrvnet/">#windows kernel，SMB，srv，srvnet</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/06/16/data_process/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Deep Learning学习day1-数据操作</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">深入理解分析 MS17-010</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MS17-010"><span class="nav-text">MS17-010</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81SMB-%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、SMB 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%89%B9%E7%82%B9"><span class="nav-text">1.1 特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-text">1.2 安全性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">1.3 使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">1.4 生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="nav-text">二、漏洞分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%88%A9%E7%94%A8%E4%BB%8B%E7%BB%8D"><span class="nav-text">2.1 利用介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-text">2.1 静态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8A%A8%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-text">2.2 动态分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81poc"><span class="nav-text">三、poc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%A1%A5%E4%B8%81%E5%88%86%E6%9E%90"><span class="nav-text">四、补丁分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-winxp"><span class="nav-text">4.1 winxp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-win7"><span class="nav-text">4.2 win7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-win10"><span class="nav-text">4.3 win10</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
