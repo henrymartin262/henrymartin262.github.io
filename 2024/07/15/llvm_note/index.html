@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/07/15/llvm_note/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="LLVM 学习笔记为了引入 llvm，这里我们先从编译器慢慢说起 1. 编译器设计简介传统静态编译器（如大多数 C 编译器）最流行的设计是三阶段设计，其主要组件是前端、优化器和后端。 前端解析源代码，检查错误，并构建特定于语言的抽象语法树 (AST) 来表示输入代码。AST 可选择转换为新的表示以进行优化，然后优化器和后端在代码上运行。  优化器负责进行各种转换，以尝试缩短代码的运行时间，例如消除">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM 学习笔记">
+<meta property="og:url" content="http://example.com/2024/07/15/llvm_note/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="LLVM 学习笔记为了引入 llvm，这里我们先从编译器慢慢说起 1. 编译器设计简介传统静态编译器（如大多数 C 编译器）最流行的设计是三阶段设计，其主要组件是前端、优化器和后端。 前端解析源代码，检查错误，并构建特定于语言的抽象语法树 (AST) 来表示输入代码。AST 可选择转换为新的表示以进行优化，然后优化器和后端在代码上运行。  优化器负责进行各种转换，以尝试缩短代码的运行时间，例如消除">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_14-25-37.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_14-25-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_10-03-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_10-03-33.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_14-00-01.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_14-22-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_15-29-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_15-33-29.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_15-50-27.png">
+<meta property="article:published_time" content="2024-07-15T08:09:42.544Z">
+<meta property="article:modified_time" content="2024-07-15T08:11:16.679Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="llvm，LLVM IR，optimization">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-07-08_14-25-37.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            LLVM 学习笔记 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">LLVM 学习笔记</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-07-15 16:09:42</span>
+        <span class="mobile">2024-07-15 16:09:42</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-07-15 16:11:16</span>
+            <span class="mobile">2024-07-15 16:11:16</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/fuzz/">fuzz</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/fuzz/llvm/">llvm</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/llvm%EF%BC%8CLLVM-IR%EF%BC%8Coptimization/">llvm，LLVM IR，optimization</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="LLVM-学习笔记"><a href="#LLVM-学习笔记" class="headerlink" title="LLVM 学习笔记"></a>LLVM 学习笔记</h1><p>为了引入 llvm，这里我们先从编译器慢慢说起</p>
+<h2 id="1-编译器设计简介"><a href="#1-编译器设计简介" class="headerlink" title="1. 编译器设计简介"></a>1. 编译器设计简介</h2><p>传统静态编译器（如大多数 C 编译器）最流行的设计是三阶段设计，其主要组件是<strong>前端、优化器和后端</strong>。</p>
+<p><strong>前端</strong>解析源代码，检查错误，并构建特定于语言的<strong>抽象语法树 (AST)</strong> 来表示输入代码。AST 可选择转换为新的表示以进行优化，然后优化器和后端在代码上运行。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_14-25-37.png"
+                      alt="nipaste_2024-07-08_14-25-3"
+                ></p>
+<p><strong>优化器负责进行各种转换</strong>，以尝试缩短代码的运行时间，例如消除冗余计算，并且通常或多或少独立于语言和目标。然后，后端（也称为代码生成器）将代码映射到目标指令集。除了生成正确的代码外，它还负责生成利用所支持架构的不寻常功能的良好代码。</p>
+<p>编译器<strong>后端</strong>的常见部分包括<strong>指令选择、寄存器分配和指令调度</strong>。</p>
+<p>这里可以思考一下为什么要将编译器设置为这种三阶段形式？</p>
+<p>其实当编译器决定<strong>支持多种源语言或目标架构</strong>时，这种经典设计的最大优势就体现出来了。如果编译器在其优化器中使用通用代码表示，则可以为任何可以编译成该语言的语言编写前端，也可以为任何可以从该语言编译的目标编写后端，如下图所示。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_14-25-38.png"
+                      alt="nipaste_2024-07-08_14-25-3"
+                ></p>
+<p>采用这种设计，移植编译器以支持新的源语言（例如 Algol 或 BASIC）仅需要实现新的前端，但现有的优化器和后端可以重复使用。<strong>注意</strong>如果不将这些部分分开，实现新的源语言将需要从头开始，因此支持<code>N</code>目标和 <code>M</code>源语言将需要 N*M 个编译器，这显然是非常耗费人力的一件事。</p>
+<p>三阶段设计的另一个优势是，实现前端所需的技能与优化器和后端所需的技能不同。将它们分开可以让“前端人员”更轻松地增强和维护他们的编译器部分。</p>
+<h2 id="2-现有的语言实现"><a href="#2-现有的语言实现" class="headerlink" title="2. 现有的语言实现"></a>2. 现有的语言实现</h2><p>虽然前面这种三阶段设计的优点引人注意，但可惜的是在实践中从未充分实现，像 Glasgow Haskell Compiler (GHC) 和 FreeBASIC 这样的项目可以重新定位到多个不同的 CPU，但它们的实现非常特定于它们支持的一种源语言。</p>
+<p>这种三阶段设计有三个比较成功的案例：</p>
+<ol>
+<li>Java 和 .NET 虚拟机</li>
+<li>使用自己语言的源代码编译成C代码，然后再在各个平台调用C编译器来生成可执行程序</li>
+<li>GCC 的实现</li>
+</ol>
+<p>尽管上面三个案例是非常成功的，但其实上面三个案例也有很多局限性，因为它们往往是作为一个整体程序存在的，举个例子，将GCC嵌入到其他应用程序中、将GCC用作运行时&#x2F;JIT编译器，或者在不引入大部分编译器的情况下提取和重用GCC的部分内容，这些都是不现实的。按<strong>我的理解就是程序内部耦合较高，难以分离做出一些方便优化的行为。</strong></p>
+<h2 id="3-LLVM-介绍"><a href="#3-LLVM-介绍" class="headerlink" title="3. LLVM 介绍"></a>3. LLVM 介绍</h2><p>再了解了前面的背景知识之后，我们就开始引入 LLVM，首先是它的概念：LLVM是一个编译器（确切的说是一套框架+基于框架的一些编译器实现，如clang），是当下很先进的一套编译系统。</p>
+<p>LLVM之所以优秀，在于以下几点：</p>
+<ul>
+<li>LLVM的中间表达（IR）是可以dump出来成为可阅读的文本形式的（语法有点像汇编），看起来微不足道，但是其他很多编译器却只有内存中的数据结构，使得学习调试难度大增。</li>
+<li>模块化的设计比较好，这一方面是后发优势，吸收了很多前人经验，也和设计者的架构功力息息相关。</li>
+<li>虽然始于学术项目，但LLVM一直受到工业界的支持（Apple），所以不仅好用，而且<strong>开源可定制</strong>。</li>
+</ul>
+<p><strong>注意事项：</strong>LLVM 不只是用于实现新的编译器及编译优化！</p>
+<p><strong>基础架构：</strong></p>
+<p>下面这张图显示了 LLVM 架构的主要部件</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_10-03-32.png"
+                      alt="nipaste_2024-07-15_10-03-3"
+                ></p>
+<p>这里对上图的一些核心组件做出一些解释：</p>
+<ul>
+<li><strong>前端</strong>，获取源代码并将其转换为中间表示或 IR。这种翻译简化了编译器其余部分的工作，它不想处理 C++ 源代码的全部复杂性。比如Clang</li>
+<li><strong>将 IR 转换为 IR的 Pass</strong>。在一般情况下，<strong>pass 通常会优化代码</strong>：生成一个 IR 程序作为输出，它与作为输入的 IR 执行相同的操作，只是它更快更优，这是需要拓展定制的地方。</li>
+<li><strong>后端</strong>，生成实际的机器码。</li>
+</ul>
+<p>尽管这种架构描述了当今大多数编译器，但值得注意的是 LLVM 的一个新颖之处：整个编译过程中使用<strong>相同的 IR</strong> 。而在其他编译器中，每次传递都可能以独特的形式生成代码。</p>
+<h2 id="4-LLVM-IR"><a href="#4-LLVM-IR" class="headerlink" title="4. LLVM IR"></a>4. LLVM IR</h2><p>从上图可以看到 IR 是作为整个架构器的中间表示，在这里即代表的是 LLVM IR，LLVM IR（Intermediate Representation）可以说是 LLVM 的最核心的一环，LLVM IR 旨在承载编译器优化器部分的分析和转换，LLVM IR 可以看做是一种类汇编语言，但是它拥有比汇编更好的易读性，还包括可定制。</p>
+<p>LLVM IR 在设计时考虑了很多目标，包括支持轻量级运行时优化、跨函数&#x2F;过程间优化、整个程序的分析以及重构转换等。然而，它最重要的方面是，它<strong>本身被定义为一种具有明确定义语义的一流语言</strong>。为了更具体地说明这一点，这里有一个简单的 <code>.ll</code> 文件示例：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">define i32 @add1(i32 %a, i32 %b) &#123;</span><br><span class="line">entry:</span><br><span class="line">  %tmp1 = add i32 %a, %b</span><br><span class="line">  ret i32 %tmp1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">define i32 @add2(i32 %a, i32 %b) &#123;</span><br><span class="line">entry:</span><br><span class="line">  %tmp1 = icmp eq i32 %a, 0</span><br><span class="line">  br i1 %tmp1, label %done, label %recurse</span><br><span class="line"></span><br><span class="line">recurse:</span><br><span class="line">  %tmp2 = sub i32 %a, 1</span><br><span class="line">  %tmp3 = add i32 %b, 1</span><br><span class="line">  %tmp4 = call i32 @add2(i32 %tmp2, i32 %tmp3)</span><br><span class="line">  ret i32 %tmp4</span><br><span class="line"></span><br><span class="line">done:</span><br><span class="line">  ret i32 %b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这里我们先不具体说明 IR 的语法，只是先简单了解一下 LLVM IR 是什么，上面的 LLVM IR 实现了两个不同的加法功能，一个是直接对两个操作数进行相加，另外一个是实现递归相加，其实从直观上来看，LLVM IR 更像是一种 C语言和汇编语言的杂糅，如它支持这种C语言中显式的函数传参调用，又有类似汇编风格的指令。</p>
+<p>上面的代码对应下图中的 C 代码：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="title function_">add1</span><span class="params">(<span class="type">unsigned</span> a, <span class="type">unsigned</span> b)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> a+b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Perhaps not the most efficient way to add two numbers.</span></span><br><span class="line"><span class="type">unsigned</span> <span class="title function_">add2</span><span class="params">(<span class="type">unsigned</span> a, <span class="type">unsigned</span> b)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (a == <span class="number">0</span>) <span class="keyword">return</span> b;</span><br><span class="line">  <span class="keyword">return</span> add2(a<span class="number">-1</span>, b+<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>LLVM具有严格的类型定义和简单的类型系统（例如，<code>i32</code>是32位整数，<code>i32**</code>是指向32位整数的指针的指针），并且抽象掉了机器的一些细节。例如，<strong>调用约定是通过call和ret指令以及显式参数来抽象的</strong>。LLVM IR与机器代码的另一个显著区别是，它不使用固定的一组命名寄存器，而是使用无限数量的以%字符命名的临时变量，你可以理解为 LLVM IR 中有无限寄存器，但是这些寄存器都是虚拟的。</p>
+<h3 id="4-1-写一个-LLVM-IR-优化器"><a href="#4-1-写一个-LLVM-IR-优化器" class="headerlink" title="4.1 写一个 LLVM IR 优化器"></a>4.1 写一个 LLVM IR 优化器</h3><p>这里通过一些例子来直观感受优化的过程是如何进行的，在实际过程中有很多的优化技巧和方法，所以很难提出一个解决任何问题的方案，但是大多数优化都遵循下面三个部分：</p>
+<ul>
+<li>寻找一个对应的匹配模式然后去转换</li>
+<li>验证转换后的匹配实例是否安全</li>
+<li>完成转换并更新代码</li>
+</ul>
+<p>最基本的优化是算术恒等式的模式匹配，比如说对于变量 X，<code>X-X</code> 是 0, <code>X-0</code> 是 <code>X</code>, <code>(X*2)-X</code> 是 <code>X</code>，这几个操作所对应的 LLVM IR 指令如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">⋮    ⋮    ⋮</span><br><span class="line">%example1 = sub i32 %a, %a</span><br><span class="line">⋮    ⋮    ⋮</span><br><span class="line">%example2 = sub i32 %b, 0</span><br><span class="line">⋮    ⋮    ⋮</span><br><span class="line">%tmp = mul i32 %c, 2</span><br><span class="line">%example3 = sub i32 %tmp, %c</span><br><span class="line">⋮    ⋮    ⋮</span><br></pre></td></tr></table></figure></div>
+
+<p>这些具体的转换处理在 <code>SimplifySubInst</code> 函数中，并具体表现如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// X - 0 -&gt; X</span></span><br><span class="line"><span class="keyword">if</span> (match(Op1, m_Zero()))</span><br><span class="line">  <span class="keyword">return</span> Op0;</span><br><span class="line"></span><br><span class="line"><span class="comment">// X - X -&gt; 0</span></span><br><span class="line"><span class="keyword">if</span> (Op0 == Op1)</span><br><span class="line">  <span class="keyword">return</span> Constant::getNullValue(Op0-&gt;getType());</span><br><span class="line"></span><br><span class="line"><span class="comment">// (X*2) - X -&gt; X</span></span><br><span class="line"><span class="keyword">if</span> (match(Op0, m_Mul(m_Specific(Op1), m_ConstantInt&lt;<span class="number">2</span>&gt;())))</span><br><span class="line">  <span class="keyword">return</span> Op1;</span><br><span class="line">…</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// Nothing matched, return null to indicate no transformation.</span></span><br></pre></td></tr></table></figure></div>
+
+<p>在这段代码中，Op0 和 Op1 分别绑定到一个整数减法指令的左操作数和右操作数，LLVM 由 C++ 实现，但 C++ 并不以这种模式匹配能力而出名，但 C++ 中提供的模版系统可以让我们来实现类似的功能。比如说上面的 <code>match</code> 和 <code>m_函数 </code> 都允许我们由 LLVM IR 匹配具体的模式，然后决定是否 return 返回优化后的结果。</p>
+<p>一个简单的优化示例如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (BasicBlock::iterator I = BB-&gt;begin(), E = BB-&gt;end(); I != E; ++I)</span><br><span class="line">  <span class="keyword">if</span> (Value *V = SimplifyInstruction(I))</span><br><span class="line">    I-&gt;replaceAllUsesWith(V);</span><br></pre></td></tr></table></figure></div>
+
+<p><code>SimplifyInstruction</code> 完成指令层面的优化转化，<code>replaceAllUsesWith</code> 完成具体的指令替换过程。</p>
+<h3 id="4-2-LLVM-的三阶段优化实现"><a href="#4-2-LLVM-的三阶段优化实现" class="headerlink" title="4.2 LLVM 的三阶段优化实现"></a>4.2 LLVM 的三阶段优化实现</h3><p>在基于 LLVM 的编译器中，前端负责解析、验证和诊断输入代码中的错误，然后将解析后的代码转换为 LLVM IR（通常但并非总是通过构建 AST 然后将 AST 转换为 LLVM IR）。此 IR 可选择经过一系列分析和优化过程以改进代码，然后发送到代码生成器以生成本机机器代码。分别对应下图中的三个阶段：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_10-03-33.png"
+                      alt="nipaste_2024-07-15_10-03-3"
+                ></p>
+<p>具体来说，LLVM IR 不仅规范明确，而且是优化器的唯一接口。此属性意味着，编写 LLVM 前端时，只需要知道 LLVM IR 是什么、它如何工作等。由于 LLVM IR 具有一流的文本格式，因此构建一个将 LLVM IR 输出为文本的前端，然后使用 Unix 管道将其发送到选择的优化器序列和代码生成器，是可能的也是合理的。</p>
+<h2 id="5-LLVM-特性介绍"><a href="#5-LLVM-特性介绍" class="headerlink" title="5. LLVM 特性介绍"></a>5. LLVM 特性介绍</h2><p>LLVM的指令集抓住了通用处理器的关键操作，并且避免了与底层硬件的约束关联，它提供了无限数量的虚拟寄存器，可用于处理多种原类型，如布尔型、整型、浮点型、指针等。</p>
+<p>虚拟寄存器采用静态单赋值形式（SSA），关于这个概念解释如下：</p>
+<blockquote>
+<p>在编译器设计中，在静态单赋值形式SSA是程序语言中间表示IR的一个属性，它要求每个变量只能被赋值一次并且在使用之前定义，它的好处在于可以通过简化变量的属性来改进编译器优化的结果。</p>
+</blockquote>
+<p>以如下代码为例。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">y := 1</span><br><span class="line">y := 2</span><br><span class="line">x := y</span><br></pre></td></tr></table></figure></div>
+
+<p>转换为SSA形式如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">y1 := 1</span><br><span class="line">y2 := 2</span><br><span class="line">x1 := y2</span><br></pre></td></tr></table></figure></div>
+
+<p>LLVM是一种<code>load/store</code>架构：程序仅通过使用类型化指针的加载和存储操作，在寄存器和内存之间传输值。其中，<code>load</code>指令从内存中取值加载到寄存器，<code>store</code>指令将寄存器的值存储到内存中。</p>
+<p>完整的LLVM指令集仅包含为数不多的操作码，LLVM采用较少的指令集一方面是避免多个操作码执行同样的操作，另一方面是大多数的操作码实际上是过载的，例如<code>add</code>加法指令可以对任意整型或浮点型的操作数执行计算。</p>
+<h3 id="5-1-语言无关类型系统"><a href="#5-1-语言无关类型系统" class="headerlink" title="5.1 语言无关类型系统"></a>5.1 语言无关类型系统</h3><p><strong>cast，getelementptr指令</strong></p>
+<p>LLVM类型系统包含了预定义大小的原类型，例如<code>void</code>、<code>bool</code>、有符号或无符号的<code>integer</code>、单精度或双精度的<code>float</code>等，且只有4种派生类型：<code>pointer</code>、<code>array</code>、<code>strut</code>和<code>function</code>。</p>
+<p>LLVM IR是一种<strong>强类型的语言</strong>，它要求所有变量都必须明确指定其类型，包括局部变量、全局变量，寄存器地址、内存地址等。<code>cast</code>指令用于将某个值的类型转换成任意类型，且是唯一进行类型转换的方式，这使得所有类型的变化过程都是显式的且能够追踪的。</p>
+<p><code>getelementptr</code>指令<strong>将内存指针算术化，既保留了类型信息又具有与机器无关的语义</strong>。给定一个指向聚合类型对象的内存指针，该指令能保留计算该对象子元素地址的行为，可有效使用<code>[]</code>来选取数组的指定项以及使用<code>.</code>来选取结构体的指定元素。例如C语言中的<code>X[i].a = 1</code>语句，可转换为如下LLVM指令：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%p = getelement %xty* %X, long %i, ubyte 3;</span><br><span class="line">store int 1, int* %p;</span><br></pre></td></tr></table></figure></div>
+
+<p>其中，假设<code>a</code>是结构体<code>X[i]</code>的第3个元素，结构体的类型为<code>%xty</code>，所有变量的类型都是显式的。上述的第一条指令获得<code>X[i].a</code>元素的地址分配到虚拟寄存器<code>%p</code>，第二条指令通过<code>store</code>操作将<code>int</code>类型的值<code>1</code>存入到<code>%p</code>指向的内存地址中。</p>
+<h3 id="5-2-显式的内存分配和统一的内存模型"><a href="#5-2-显式的内存分配和统一的内存模型" class="headerlink" title="5.2 显式的内存分配和统一的内存模型"></a>5.2 显式的内存分配和统一的内存模型</h3><p>在C语言中，<code>malloc</code>函数会在堆上分配一个或多个指定类型的内存空间并返回相应类型的指针，而<code>free</code>函数则搭配进行内存空间的释放。LLVM使用类似的指令<code>alloca</code>完成类似的操作，不同的是该指令是<strong>在当前函数的栈上划分内容空间而不是堆，所有栈相关的数据都必须显式地通过该指令进行内存空间分配</strong>。另外，全局变量和函数定义都定义在一张符号表中，并且提供对象地址而非对象自身进行使用，从而LLVM实现了一个统一的内存模型</p>
+<h3 id="5-3-函数调用和异常捕获"><a href="#5-3-函数调用和异常捕获" class="headerlink" title="5.3 函数调用和异常捕获"></a>5.3 函数调用和异常捕获</h3><p>LLVM使用<code>invoke</code>和<code>unwind</code>两个指令共同实现了抽象的异常捕获模型，<code>invoke</code>指令与<code>call</code>指令类似但指定一个特殊的程序基本块，当程序执行到<code>unwind</code>指令时它将堆栈恢复且从<code>invoke</code>指令指定的标签处跳转，可以很清晰地看到异常操作的程序控制流。高级语言使用的<code>try/catch</code>代码块从而可以很直接地用这两个指令来进行实现，任何函数内部遇到<code>try</code>关键字时将被编译为<code>invoke</code>指令，而当程序<code>catch</code>到某个抛出的异常时将调用<code>unwind</code>指令继续执行。在16.0.0版本的LLVM项目中，<code>unwind</code>指令被替换成了<code>resume</code>指令</p>
+<h3 id="5-4-纯文本、二进制和内存表示"><a href="#5-4-纯文本、二进制和内存表示" class="headerlink" title="5.4 纯文本、二进制和内存表示"></a>5.4 纯文本、二进制和内存表示</h3><p>LLVM IR是一种对文本、二进制、内存进行平等表示的一阶语言，指令集采用<strong>可持久且离线</strong>的设计，使得其不需要在不同编译环节进行语义转换。<strong>中间表示在进行分析和转换时不会发生信息丢失</strong>，这使得程序调试变得更加简单，而且也降低了对内存表示的理解和学习门槛。</p>
+<h2 id="6-LLVM-实践"><a href="#6-LLVM-实践" class="headerlink" title="6. LLVM 实践"></a>6. LLVM 实践</h2><p>安装 LLVM 编译器框架，安装比较简单，直接执行下面几个指令即可</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://apt.llvm.org/llvm.sh</span><br><span class="line">chmod +x llvm.sh</span><br><span class="line">sudo ./llvm.sh 16 all</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>一个 hello world 程序</strong></p>
+<p> <code>test.c</code> 文件如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int main() &#123;</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>将其编译为LLVM IR，执行命令如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ clang-16 -S -emit-llvm test.c</span><br></pre></td></tr></table></figure></div>
+
+<p>会生成一个<code>test.ll</code>文件，内容如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_14-00-01.png"
+                      alt="nipaste_2024-07-15_14-00-0"
+                ></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">clang-16 main.ll -o main</span><br><span class="line">./main</span><br><span class="line">echo $?</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_14-22-39.png"
+                      alt="nipaste_2024-07-15_14-22-3"
+                ></p>
+<p>我们可以对上面的流程进行分解</p>
+<p><strong>前端的语法分析</strong></p>
+<p>首先，Clang的前端编译器会将这个C语言的代码进行预处理、语法分析、语义分析，把前面的 test.c 执行下面的指令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang-16 -Xclang -ast-dump -fsyntax-only test.c</span><br></pre></td></tr></table></figure></div>
+
+<p><code>test.c</code>经过编译器前端的预处理、语法分析、语义分析之后，生成的抽象语法树（AST）：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">|-FunctionDecl 0x64f45bb19b58 &lt;/usr/include/stdio.h:885:1, col:27&gt; col:12 __uflow &#x27;int (FILE *)&#x27; extern</span><br><span class="line">| `-ParmVarDecl 0x64f45bb19ac0 &lt;col:21, col:26&gt; col:27 &#x27;FILE *&#x27;</span><br><span class="line">|-FunctionDecl 0x64f45bb19dc0 &lt;line:886:1, col:35&gt; col:12 __overflow &#x27;int (FILE *, int)&#x27; extern</span><br><span class="line">| |-ParmVarDecl 0x64f45bb19c20 &lt;col:24, col:29&gt; col:30 &#x27;FILE *&#x27;</span><br><span class="line">| `-ParmVarDecl 0x64f45bb19ca0 &lt;col:32&gt; col:35 &#x27;int&#x27;</span><br><span class="line">`-FunctionDecl 0x64f45bb19ed0 &lt;test.c:3:1, line:5:1&gt; line:3:5 main &#x27;int ()&#x27;</span><br><span class="line">  `-CompoundStmt 0x64f45bb19fa8 &lt;col:11, line:5:1&gt;</span><br><span class="line">    `-ReturnStmt 0x64f45bb19f98 &lt;line:4:2, col:9&gt;</span><br><span class="line">      `-IntegerLiteral 0x64f45bb19f78 &lt;col:9&gt; &#x27;int&#x27; 4</span><br></pre></td></tr></table></figure></div>
+
+<p>核心内容只需要关注后面四个部分，经过 clang 前端的处理，源代码被分析成一个函数 FunctionDecl，其中包含一个复合语句，复合语句中又包含一个返回语句，返回语句中又使用了一个整型字面量 <code>0</code>。</p>
+<p><strong>前端生成中间代码</strong></p>
+<p>第二个步骤，就是根据内存中的抽象语法树AST生成LLVM IR中间代码</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -S -emit-llvm test.c</span><br></pre></td></tr></table></figure></div>
+
+<p>会生成一个 test.ll 文件，这一部分实际上在前面有介绍，内容如下，由 LLVM IR 构成</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">; ModuleID = <span class="string">&#x27;test.c&#x27;</span></span><br><span class="line">source_filename = <span class="string">&quot;test.c&quot;</span></span><br><span class="line">target datalayout = <span class="string">&quot;e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128&quot;</span></span><br><span class="line">target triple = <span class="string">&quot;x86_64-pc-linux-gnu&quot;</span></span><br><span class="line"></span><br><span class="line">; Function Attrs: noinline nounwind optnone uwtable</span><br><span class="line">define dso_local i32 @main() #<span class="number">0</span> &#123;</span><br><span class="line">  %<span class="number">1</span> = alloca i32, align <span class="number">4</span></span><br><span class="line">  store i32 <span class="number">0</span>, ptr %<span class="number">1</span>, align <span class="number">4</span></span><br><span class="line">  ret i32 <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">attributes #<span class="number">0</span> = &#123; noinline nounwind optnone uwtable <span class="string">&quot;frame-pointer&quot;</span>=<span class="string">&quot;all&quot;</span> <span class="string">&quot;min-legal-vector-width&quot;</span>=<span class="string">&quot;0&quot;</span> <span class="string">&quot;no-trapping-math&quot;</span>=<span class="string">&quot;true&quot;</span> <span class="string">&quot;stack-protector-buffer-size&quot;</span>=<span class="string">&quot;8&quot;</span> <span class="string">&quot;target-cpu&quot;</span>=<span class="string">&quot;x86-64&quot;</span> <span class="string">&quot;target-features&quot;</span>=<span class="string">&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot;</span> <span class="string">&quot;tune-cpu&quot;</span>=<span class="string">&quot;generic&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line">!llvm.module.flags = !&#123;!<span class="number">0</span>, !<span class="number">1</span>, !<span class="number">2</span>, !<span class="number">3</span>, !<span class="number">4</span>&#125;</span><br><span class="line">!llvm.ident = !&#123;!<span class="number">5</span>&#125;</span><br><span class="line"></span><br><span class="line">!<span class="number">0</span> = !&#123;i32 <span class="number">1</span>, !<span class="string">&quot;wchar_size&quot;</span>, i32 <span class="number">4</span>&#125;</span><br><span class="line">!<span class="number">1</span> = !&#123;i32 <span class="number">8</span>, !<span class="string">&quot;PIC Level&quot;</span>, i32 <span class="number">2</span>&#125;</span><br><span class="line">!<span class="number">2</span> = !&#123;i32 <span class="number">7</span>, !<span class="string">&quot;PIE Level&quot;</span>, i32 <span class="number">2</span>&#125;</span><br><span class="line">!<span class="number">3</span> = !&#123;i32 <span class="number">7</span>, !<span class="string">&quot;uwtable&quot;</span>, i32 <span class="number">2</span>&#125;</span><br><span class="line">!<span class="number">4</span> = !&#123;i32 <span class="number">7</span>, !<span class="string">&quot;frame-pointer&quot;</span>, i32 <span class="number">2</span>&#125;</span><br><span class="line">!<span class="number">5</span> = !&#123;!<span class="string">&quot;Ubuntu clang version 16.0.6 (++20231112100510+7cbf1a259152-1~exp1~20231112100554.106)&quot;</span>&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>上面的代码乍一看有点多，但是我们看它的核心内容即可</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">; Function Attrs: noinline nounwind optnone uwtable</span><br><span class="line">define dso_local i32 @main() #0 &#123;</span><br><span class="line">  %1 = alloca i32, align 4</span><br><span class="line">  store i32 0, ptr %1, align 4</span><br><span class="line">  ret i32 4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这是AST转化为LLVM IR中最核心的部分</p>
+<p><strong>LLVM 后端优化 IR</strong></p>
+<p>LLVM后端优化 IR 是由<code>opt</code>这个组件完成的，该工具会根据输入的LLVM IR和相应的优化等级，进行优化，并输出对应的LLVM IR。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">opt test.ll -S --O3</span><br></pre></td></tr></table></figure></div>
+
+<p>上面的指令我在尝试的时候报错了，但是也可以从源代码直接进行优化</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang-16 -S -emit-llvm -O3 test.c</span><br></pre></td></tr></table></figure></div>
+
+<p>这时候我们再来看生成后的优化代码相较于前面发生了哪些变化</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">; ModuleID = &#x27;test.c&#x27;</span><br><span class="line">source_filename = &quot;test.c&quot;</span><br><span class="line">target datalayout = &quot;e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128&quot;</span><br><span class="line">target triple = &quot;x86_64-pc-linux-gnu&quot;</span><br><span class="line"></span><br><span class="line">; Function Attrs: mustprogress nofree norecurse nosync nounwind willreturn memory(none) uwtable</span><br><span class="line">define dso_local i32 @main() local_unnamed_addr #0 &#123;</span><br><span class="line">  ret i32 4</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">attributes #0 = &#123; mustprogress nofree norecurse nosync nounwind willreturn memory(none) uwtable &quot;min-legal-vector-width&quot;=&quot;0&quot; &quot;no-trapping-math&quot;=&quot;true&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;target-cpu&quot;=&quot;x86-64&quot; &quot;target-features&quot;=&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot; &quot;tune-cpu&quot;=&quot;generic&quot; &#125;</span><br><span class="line"></span><br><span class="line">!llvm.module.flags = !&#123;!0, !1, !2, !3&#125;</span><br><span class="line">!llvm.ident = !&#123;!4&#125;</span><br><span class="line"></span><br><span class="line">!0 = !&#123;i32 1, !&quot;wchar_size&quot;, i32 4&#125;</span><br><span class="line">!1 = !&#123;i32 8, !&quot;PIC Level&quot;, i32 2&#125;</span><br><span class="line">!2 = !&#123;i32 7, !&quot;PIE Level&quot;, i32 2&#125;</span><br><span class="line">!3 = !&#123;i32 7, !&quot;uwtable&quot;, i32 2&#125;</span><br><span class="line">!4 = !&#123;!&quot;Ubuntu clang version 16.0.6 (++20231112100510+7cbf1a259152-1~exp1~20231112100554.106)&quot;&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>可以看到核心部分仅仅变为了 1 行。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">define dso_local i32 @main() local_unnamed_addr #0 &#123;</span><br><span class="line">  ret i32 4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>LLVM 后端生成汇编代码</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">llc test.ll</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_15-29-12.png"
+                      alt="nipaste_2024-07-15_15-29-1"
+                ></p>
+<p>这里不知道啥原因产生了报错，但是我对另外一个直接由 LLVM IR 写的 main.ll 文件可以成功生成汇编代码</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_15-33-29.png"
+                      alt="nipaste_2024-07-15_15-33-2"
+                ></p>
+<p><strong>LLVM IR</strong></p>
+<p>LLVM IR同时表示了三种东西：</p>
+<ul>
+<li>内存中的LLVM IR</li>
+<li>比特码形式的LLVM IR</li>
+<li>可读形式的LLVM IR</li>
+</ul>
+<p>内存中的LLVM IR是编译器处理最本质的形式，其中<strong>比特码形式</strong>和<strong>可读形式</strong>则是将<strong>内存中的LLVM IR持久化</strong>的方法。</p>
+<p>生成可读形式的LLVM IR文件<code>test.ll</code>，如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -S -emit-llvm test.c</span><br></pre></td></tr></table></figure></div>
+
+<p>生成比特码形式的LLVM IR文件<code>test.bc</code>，如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -c -emit-llvm test.c</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_15-50-27.png"
+                      alt="nipaste_2024-07-15_15-50-2"
+                ></p>
+<p>将比特码<code>test.bc</code>转化为可读形式的<code>test.ll</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">llvm-dis test.bc</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>这篇文章主要是想把 LLVM 介绍的清楚一点，并没有过多的纠缠于一些细节，如 LLVM IR 的具体指令语法，编写 LLVM PASS 等等，后面可以尝试来进行下一步分析</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a class="link"   target="_blank" rel="noopener" href="https://aosabook.org/en/v1/llvm.html" >https://aosabook.org/en/v1/llvm.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/472813616" >https://zhuanlan.zhihu.com/p/472813616 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/689798611" >https://zhuanlan.zhihu.com/p/689798611 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+</ul>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> LLVM 学习笔记</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-07-15 16:09:42</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-07-15 16:11:16
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/07/15/llvm_note/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/llvm%EF%BC%8CLLVM-IR%EF%BC%8Coptimization/">#llvm，LLVM IR，optimization</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/07/15/fuzzing101/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">fuzz101 Exercise</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">LLVM 学习笔记</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LLVM-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="nav-text">LLVM 学习笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%BC%96%E8%AF%91%E5%99%A8%E8%AE%BE%E8%AE%A1%E7%AE%80%E4%BB%8B"><span class="nav-text">1. 编译器设计简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%8E%B0%E6%9C%89%E7%9A%84%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0"><span class="nav-text">2. 现有的语言实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-LLVM-%E4%BB%8B%E7%BB%8D"><span class="nav-text">3. LLVM 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-LLVM-IR"><span class="nav-text">4. LLVM IR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%86%99%E4%B8%80%E4%B8%AA-LLVM-IR-%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-text">4.1 写一个 LLVM IR 优化器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-LLVM-%E7%9A%84%E4%B8%89%E9%98%B6%E6%AE%B5%E4%BC%98%E5%8C%96%E5%AE%9E%E7%8E%B0"><span class="nav-text">4.2 LLVM 的三阶段优化实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-LLVM-%E7%89%B9%E6%80%A7%E4%BB%8B%E7%BB%8D"><span class="nav-text">5. LLVM 特性介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E8%AF%AD%E8%A8%80%E6%97%A0%E5%85%B3%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F"><span class="nav-text">5.1 语言无关类型系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%98%BE%E5%BC%8F%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%92%8C%E7%BB%9F%E4%B8%80%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-text">5.2 显式的内存分配和统一的内存模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E5%92%8C%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7"><span class="nav-text">5.3 函数调用和异常捕获</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E7%BA%AF%E6%96%87%E6%9C%AC%E3%80%81%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%92%8C%E5%86%85%E5%AD%98%E8%A1%A8%E7%A4%BA"><span class="nav-text">5.4 纯文本、二进制和内存表示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-LLVM-%E5%AE%9E%E8%B7%B5"><span class="nav-text">6. LLVM 实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%80%BB%E7%BB%93"><span class="nav-text">7. 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-text">Reference</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>

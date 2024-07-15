@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/07/15/fuzzing101/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="以下所有实验都在 Ubuntu20.04 所做，环境搭建可以直接参考 Fuzzing101 中的 README 文件。 1git clone https:&#x2F;&#x2F;github.com&#x2F;antonio-morales&#x2F;Fuzzing101    Exercise 1：XpdfXpdf是一款免费的PDF查看器和工具包，包括文本提取器、图像转换器、HTML转换器等。大部分工具都是开源的。    CVE-20">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fuzz101 Exercise">
+<meta property="og:url" content="http://example.com/2024/07/15/fuzzing101/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="以下所有实验都在 Ubuntu20.04 所做，环境搭建可以直接参考 Fuzzing101 中的 README 文件。 1git clone https:&#x2F;&#x2F;github.com&#x2F;antonio-morales&#x2F;Fuzzing101    Exercise 1：XpdfXpdf是一款免费的PDF查看器和工具包，包括文本提取器、图像转换器、HTML转换器等。大部分工具都是开源的。    CVE-20">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_11-24-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_14-41-46.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_15-35-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_15-52-07.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_16-34-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_16-33-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_16-43-17.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_17-01-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_17-02-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_10-07-25.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_10-14-42.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_10-48-30.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_10-51-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_11-21-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_14-09-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_14-42-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_14-45-00.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_14-47-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_14-52-53.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_16-18-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_16-18-09.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_16-24-08.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_16-30-54.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_16-32-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_16-33-50.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_14-01-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_14-42-48.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_14-47-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_14-49-27.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_14-53-30.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_14-55-15.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_15-09-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_15-10-18.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_15-22-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-05_14-06-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_16-08-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-06_16-30-59.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-07_16-04-52.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-07_16-26-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-07_17-04-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-07_17-48-14.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_10-12-46.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_11-02-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_10-39-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_14-08-09.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_14-25-27.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-08_14-25-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-15_16-00-44.png">
+<meta property="article:published_time" content="2024-07-15T08:04:49.014Z">
+<meta property="article:modified_time" content="2024-07-15T08:07:13.176Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="AFL，fuzz101，fuzz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-07-04_11-24-43.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            fuzz101 Exercise -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">fuzz101 Exercise</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-07-15 16:04:49</span>
+        <span class="mobile">2024-07-15 16:04:49</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-07-15 16:07:13</span>
+            <span class="mobile">2024-07-15 16:07:13</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/fuzz/">fuzz</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/fuzz/Fuzzing101/">Fuzzing101</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/AFL%EF%BC%8Cfuzz101%EF%BC%8Cfuzz/">AFL，fuzz101，fuzz</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <p>以下所有实验都在 Ubuntu20.04 所做，环境搭建可以直接参考 Fuzzing101 中的 README 文件。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/antonio-morales/Fuzzing101</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Exercise-1：Xpdf"><a href="#Exercise-1：Xpdf" class="headerlink" title="Exercise 1：Xpdf"></a>Exercise 1：Xpdf</h2><p>Xpdf是一款免费的PDF查看器和工具包，包括文本提取器、图像转换器、HTML转换器等。大部分工具都是开源的。</p>
+<blockquote>
+<p>  <strong>CVE-2019-13288</strong> is a vulnerability that may cause an infinite recursion via a crafted file.</p>
+<p>  Since each called function in a program allocates a stack frame on the stack, if a a function is recursively called so many times it can lead to stack memory exhaustion and program crash.</p>
+<p> As a result, a remote attacker can leverage this for a DoS attack.</p>
+<p> You can find more information about Uncontrolled Recursion vulnerabilities at the following link: <a class="link"   target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/674.html" >https://cwe.mitre.org/data/definitions/674.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p><strong>知识点</strong></p>
+<ul>
+<li>编译一个目标程序</li>
+<li>学会使用 afl-fuzz</li>
+<li>通过 gdb 调试 fuzz 出来的 crash 文件</li>
+</ul>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>搭建<code>Xpdf</code>环境：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">cd $HOME</span><br><span class="line">mkdir fuzzing_xpdf &amp;&amp; cd fuzzing_xpdf/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">相关依赖</span></span><br><span class="line">sudo apt install build-essential</span><br><span class="line">sudo apt update &amp;&amp; sudo apt install -y build-essential gcc</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Download Xpdf 3.02</span></span><br><span class="line">wget https://dl.xpdfreader.com/old/xpdf-3.02.tar.gz</span><br><span class="line">tar -xvzf xpdf-3.02.tar.gz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Download PDF examples to <span class="built_in">test</span> Xpdf</span></span><br><span class="line">cd $HOME/fuzzing_xpdf</span><br><span class="line">mkdir pdf_examples &amp;&amp; cd pdf_examples</span><br><span class="line">wget https://github.com/mozilla/pdf.js-sample-files/raw/master/helloworld.pdf</span><br><span class="line">wget http://www.africau.edu/images/default/sample.pdf</span><br><span class="line">wget https://www.melbpc.org.au/wp-content/uploads/2017/10/small-example-pdf-file.pdf</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Build Xpdf</span></span><br><span class="line">cd xpdf-3.02</span><br><span class="line">sudo apt update &amp;&amp; sudo apt install -y build-essential gcc</span><br><span class="line">./configure --prefix=&quot;$HOME/fuzzing_xpdf/install/&quot;</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>测试 xpdf 功能</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$HOME/fuzzing_xpdf/install/bin/pdfinfo -box -meta $HOME/fuzzing_xpdf/pdf_examples/helloworld.pdf</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_11-24-43.png"
+                      alt="nipaste_2024-07-04_11-24-4"
+                ></p>
+<p>搭建fuzz环境</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">install dependency</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install -y build-essential python3-dev automake git flex bison libglib2.0-dev libpixman-1-dev python3-setuptools</span><br><span class="line">sudo apt-get install -y lld-11 llvm-11 llvm-11-dev clang-11 || sudo apt-get install -y lld llvm llvm-dev clang </span><br><span class="line">sudo apt-get install -y gcc-$(gcc --version|head -n1|sed &#x27;s/.* //&#x27;|sed &#x27;s/\..*//&#x27;)-plugin-dev libstdc++-$(gcc --version|head -n1|sed &#x27;s/.* //&#x27;|sed &#x27;s/\..*//&#x27;)-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Build AFL++</span></span><br><span class="line">cd $HOME</span><br><span class="line">git clone https://github.com/AFLplusplus/AFLplusplus &amp;&amp; cd AFLplusplus</span><br><span class="line">export LLVM_CONFIG=&quot;llvm-config-11&quot;</span><br><span class="line">make distrib</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure></div>
+
+<p>使用<code>afl-clang-fast</code>对<code>Xpdf</code>进行插桩：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">clean all previously compiled object files and executables</span></span><br><span class="line">rm -r $HOME/fuzzing_xpdf/install</span><br><span class="line">cd $HOME/fuzzing_xpdf/xpdf-3.02/</span><br><span class="line">make clean</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">compile with afl-clang-fast</span></span><br><span class="line">export LLVM_CONFIG=&quot;llvm-config-11&quot;</span><br><span class="line">CC=$HOME/AFLplusplus/afl-clang-fast CXX=$HOME/AFLplusplus/afl-clang-fast++ ./configure --prefix=&quot;$HOME/fuzzing_xpdf/install/&quot;</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>参数设置如下：</p>
+<ul>
+<li><code>-i</code>：设置输入实例的文件夹</li>
+<li><code>-o</code>：设置用于存放模糊测试结果的文件夹</li>
+<li><code>-s</code>：设置一个静态随机数作为种子</li>
+<li><code>--</code>：设置测试目标</li>
+<li><code>@@</code>：占位符，指代每一个输入的文件，告诉 <code>afl-fuzz</code> 在这里插入当前正在测试的模糊输入文件的路径。</li>
+</ul>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i $HOME/fuzzing_xpdf/pdf_examples/ -o $HOME/fuzzing_xpdf/out/ -s 123 -- $HOME/fuzzing_xpdf/install/bin/pdftotext @@ $HOME/fuzzing_xpdf/output</span><br></pre></td></tr></table></figure></div>
+
+<p>然后就可以开始正常 fuzz了，边看源码边等，或者像我一样直接摆烂。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_14-41-46.png"
+                      alt="nipaste_2024-07-04_14-41-4"
+                ></p>
+<p>四十分钟之后爆了10个crash</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_15-35-35.png"
+                      alt="nipaste_2024-07-04_15-35-3"
+                ></p>
+<p>设置gdb调试环境，这里我们把插桩后的xpdf程序重新删掉，然后正常编译，利用crash里面的文件，来分析程序crash的原因</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rm -r $HOME/fuzzing_xpdf/install</span><br><span class="line">cd $HOME/fuzzing_xpdf/xpdf-3.02/</span><br><span class="line">make clean</span><br><span class="line">CFLAGS=&quot;-g -O0&quot; CXXFLAGS=&quot;-g -O0&quot; ./configure --prefix=&quot;$HOME/fuzzing_xpdf/install/&quot;</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>gdb设置调试</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb --args $HOME/fuzzing_xpdf/xpdf-3.02/xpdf/pdftotext $HOME/fuzzing_xpdf/out/default/crashes/id:000000,sig:11,src:000748,time:352834,execs:158296,op:havoc,rep:4 $HOME/fuzzing_xpdf/output</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_15-52-07.png"
+                      alt="nipaste_2024-07-04_15-52-0"
+                ></p>
+<p>程序一直在重复输出错误信息，直到最后出现 Segmentation fault</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_16-34-44.png"
+                      alt="nipaste_2024-07-04_16-34-4"
+                ></p>
+<p>输出bt，来查看函数的调用栈，我们来定位到源码文件中来分析原因。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_16-33-38.png"
+                      alt="nipaste_2024-07-04_16-33-3"
+                ></p>
+<p>这里出现了一个无限递归，依次提取出递归链</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Parser.cc</span></span><br><span class="line">Object *<span class="title function_">Parser::getObj</span><span class="params">(Object *obj, Guchar *fileKey,</span></span><br><span class="line"><span class="params">		       CryptAlgorithm encAlgorithm, <span class="type">int</span> keyLength,</span></span><br><span class="line"><span class="params">		       <span class="type">int</span> objNum, <span class="type">int</span> objGen)</span> &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line"><span class="keyword">if</span> ((str = makeStream(obj, fileKey, encAlgorithm, keyLength, objNum, objGen))) &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    </span><br><span class="line">Stream *<span class="title function_">Parser::makeStream</span><span class="params">(Object *dict, Guchar *fileKey,</span></span><br><span class="line"><span class="params">			   CryptAlgorithm encAlgorithm, <span class="type">int</span> keyLength,</span></span><br><span class="line"><span class="params">                           <span class="type">int</span> objNum, <span class="type">int</span> objGen)</span> &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    dict-&gt;dictLookup(<span class="string">&quot;Length&quot;</span>, &amp;obj);</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// Object.h</span></span><br><span class="line"><span class="keyword">inline</span> Object *<span class="title function_">Object::dictLookup</span><span class="params">(<span class="type">char</span> *key, Object *obj)</span></span><br><span class="line">  &#123; <span class="keyword">return</span> dict-&gt;lookup(key, obj); &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Dict.cc</span></span><br><span class="line">Object *<span class="title function_">Dict::lookup</span><span class="params">(<span class="type">char</span> *key, Object *obj)</span> &#123;</span><br><span class="line">  DictEntry *e;</span><br><span class="line">  <span class="keyword">return</span> (e = find(key)) ? e-&gt;val.fetch(xref, obj) : obj-&gt;initNull();</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// Object.cc</span></span><br><span class="line">Object *<span class="title function_">Object::fetch</span><span class="params">(XRef *xref, Object *obj)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (type == objRef &amp;&amp; xref) ?</span><br><span class="line">         xref-&gt;fetch(ref.num, ref.gen, obj) : copy(obj);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// XRef.cc</span></span><br><span class="line">Object *<span class="title function_">XRef::fetch</span><span class="params">(<span class="type">int</span> num, <span class="type">int</span> gen, Object *obj)</span>&#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    parser-&gt;getObj(obj, encrypted ? fileKey : (Guchar *)<span class="literal">NULL</span>, </span><br><span class="line">                   encAlgorithm, keyLength, num, gen);</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>至此我们就搞明白了出现无限递归的原因，然后再来看看4.00 版本中是如何处理这一 bug 的，这里diff一下这两个文件来看是怎么解决这一问题的。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_16-43-17.png"
+                      alt="nipaste_2024-07-04_16-43-1"
+                ></p>
+<p>这里是直接设置了一个 recursionLimit 宏变量来设置递归的次数，从而防止程序一直递归。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>我们几乎没有对xpdf的底层原理进行详细了解，只了解其简单功能，通过 AFL 对 xpdf 进行插桩，就 fuzz 出了 <a class="link"   target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2019-13288/" >CVE-2019-13288 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，可见fuzz威力的强大，不过 fuzz 的功能还要比这更丰富。</p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a><strong>拓展</strong></h3><p>由于有好几个crashes错误，依次来简单看一下</p>
+<p><strong>id:000001,sig:11,src:000001,time:453622,execs:197479,op:havoc,rep:16</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_17-01-51.png"
+                      alt="nipaste_2024-07-04_17-01-5"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_17-02-45.png"
+                      alt="nipaste_2024-07-04_17-02-4"
+                ></p>
+<p>报错信息显示pdf文件已被损坏，很显然这里是一个非法地址引用的错误，很不幸运的是后面所有的crash基本上与这个都是相同的报错类型。</p>
+<h2 id="Exercise-2：libexif"><a href="#Exercise-2：libexif" class="headerlink" title="Exercise 2：libexif"></a>Exercise 2：libexif</h2><p><code>libexif</code> 是一个用于解析、编辑和保存 EXIF 数据的库。它的设计目的是替换许多命令行工具和带图形用户界面（GUI）的程序中冗余的实现。</p>
+<blockquote>
+<p><strong>CVE-2009-3895</strong> is a heap-based buffer overflow that can be triggered with an invalid EXIF image.</p>
+<p>  A heap-based buffer overflow is a type of buffer overflow that occurs in the heap data area, and it’s usually related to explicit dynamic memory management (allocation&#x2F;deallocation with malloc() and free() functions).</p>
+<p>  As a result, a remote attacker can exploit this issue to execute arbitrary code within the context of an application using the affected library.</p>
+<p>  You can find more information about Heap-based buffer oveflow vulnerabilities at the following link: <a class="link"   target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/122.html" >https://cwe.mitre.org/data/definitions/122.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<hr>
+<p>  <strong>CVE-2012-2836</strong> is an Out-of-bounds Read vulneratibily that can be triggered via an image with crafted EXIF tags.</p>
+<p>  An Out-of-bounds Read is a vulnerability that occurs when the program reads data past the end, or before the beginning, of the intended buffer.</p>
+<p>  As a result, it allows remote attackers to cause a denial of service or possibly obtain potentially sensitive information from process memory.</p>
+<p>  You can find more information about Out-of-bounds Read vulnerabilities at the following link: <a class="link"   target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/125.html" >https://cwe.mitre.org/data/definitions/125.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p><strong>知识点</strong></p>
+<ul>
+<li>使用一个外部程序exif 去 fuzz libexif库</li>
+</ul>
+<p><strong>环境搭建</strong></p>
+<p><strong>下载并编译目标文件</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cd $HOME</span><br><span class="line">mkdir fuzzing_libexif &amp;&amp; cd fuzzing_libexif/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Download and uncompress libexif-0.6.14:</span></span><br><span class="line">wget https://github.com/libexif/libexif/archive/refs/tags/libexif-0_6_14-release.tar.gz</span><br><span class="line">    tar -xzvf libexif-0_6_14-release.tar.gz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Build and install libexif</span></span><br><span class="line">cd libexif-libexif-0_6_14-release/</span><br><span class="line">sudo apt-get install autopoint libtool gettext libpopt-dev</span><br><span class="line">autoreconf -fvi</span><br><span class="line">./configure --enable-shared=no --prefix=&quot;$HOME/fuzzing_libexif/install/&quot;</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>选择一个应用程序</strong></p>
+<p>因为 libexif 是一个库，我们并不能直接使用它，而是需要一个调用该库的应用程序，并且选择该程序为fuzz目标，这里下载使用 exif 命令行程序。</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd $HOME/fuzzing_libexif</span><br><span class="line">wget https://github.com/libexif/exif/archive/refs/tags/exif-0_6_15-release.tar.gz</span><br><span class="line">tar -xzvf exif-0_6_15-release.tar.gz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">build and install exif command-line utility</span></span><br><span class="line"></span><br><span class="line">cd exif-exif-0_6_15-release/</span><br><span class="line">autoreconf -fvi</span><br><span class="line">./configure --enable-shared=no --prefix=&quot;$HOME/fuzzing_libexif/install/&quot; PKG_CONFIG_PATH=$HOME/fuzzing_libexif/install/lib/pkgconfig</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>测试命令</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">HOME/fuzzing_libexif/install/bin/exif</span></span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_10-07-25.png"
+                      alt="nipaste_2024-07-05_10-07-2"
+                ></p>
+<p><strong>下载语料库</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">get some exif samples</span></span><br><span class="line">cd $HOME/fuzzing_libexif</span><br><span class="line">wget https://github.com/ianare/exif-samples/archive/refs/heads/master.zip</span><br><span class="line">unzip master.zip</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试用例</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">HOME/fuzzing_libexif/install/bin/exif <span class="variable">$HOME</span>/fuzzing_libexif/exif-samples-master/jpg/Canon_40D_photoshop_import.jpg</span></span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_10-14-42.png"
+                      alt="nipaste_2024-07-05_10-14-4"
+                ></p>
+<p>可以看到成功通过 exif 命令行程序输出了图片中的 exif 信息</p>
+<p><strong>使用 Afl-clang-lto 对 libexif 和 exif 进行编译插桩</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">rm -r $HOME/fuzzing_libexif/install</span><br><span class="line">cd $HOME/fuzzing_libexif/libexif-libexif-0_6_14-release/</span><br><span class="line">make clean</span><br><span class="line">export LLVM_CONFIG=&quot;llvm-config-11&quot;</span><br><span class="line">CC=afl-clang-lto ./configure --enable-shared=no --prefix=&quot;$HOME/fuzzing_libexif/install/&quot;</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line">cd $HOME/fuzzing_libexif/exif-exif-0_6_15-release</span><br><span class="line">make clean</span><br><span class="line">export LLVM_CONFIG=&quot;llvm-config-11&quot;</span><br><span class="line">CC=afl-clang-lto ./configure --enable-shared=no --prefix=&quot;$HOME/fuzzing_libexif/install/&quot; PKG_CONFIG_PATH=$HOME/fuzzing_libexif/install/lib/pkgconfig</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>afl-clang-lto 支持无碰撞，并且拥有比 afl-clang-fast 更快地速度。</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i $HOME/fuzzing_libexif/exif-samples-master/jpg/ -o $HOME/fuzzing_libexif/out/ -s 123 -- $HOME/fuzzing_libexif/install/bin/exif @@</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>注意事项</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_10-48-30.png"
+                      alt="nipaste_2024-07-05_10-48-3"
+                ></p>
+<p>然而我发现我安装的 afl++ 中并没有 afl-clang-lto，所以我这里还是依然采用 afl-clang-fast 来进行编译插桩，把上面的 <code>CC=afl-clang-lto</code> 改成 <code>CC=afl-clang-fast</code>就好了。</p>
+<p>然后就可以开始正常 fuzz，秒出了一个，不知道有没有用，待会一块看。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_10-51-39.png"
+                      alt="nipaste_2024-07-05_10-51-3"
+                ></p>
+<p>跑了大概三十分钟左右出了大概10个crashes，忍不住了直接看看有没有比较有用的crash。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_11-21-44.png"
+                      alt="nipaste_2024-07-05_11-21-4"
+                ></p>
+<p><strong>对源码重新编译不使用afl++</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cd libexif-libexif-0_6_14-release/</span><br><span class="line">./configure --enable-shared=no --prefix=&quot;$HOME/fuzzing_libexif/install/&quot;</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cd exif-exif-0_6_15-release/</span><br><span class="line">./configure --enable-shared=no --prefix=&quot;$HOME/fuzzing_libexif/install/&quot; PKG_CONFIG_PATH=$HOME/fuzzing_libexif/install/lib/pkgconfig</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>gdb设置调试</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb --args $HOME/fuzzing_libexif/install/bin/exif out/default/crashes/$1 $HOME/fuzzing_libexif/out</span><br></pre></td></tr></table></figure></div>
+
+<p><code>$1</code> 设置为 crashes 文件夹中的任意一个就可以了</p>
+<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a><strong>分析</strong></h3><h3 id="CVE-2012-2836"><a href="#CVE-2012-2836" class="headerlink" title="CVE-2012-2836"></a>CVE-2012-2836</h3><p><strong>id:000000,sig:11,src:000005,time:17828,execs:6742,op:arith32,pos:34,val:be:-9</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_14-09-03.png"
+                      alt="nipaste_2024-07-05_14-09-0"
+                ></p>
+<p>函数调用栈</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">► f 0   0x5555555682e0 exif_get_sshort+48</span><br><span class="line">  f 1   0x555555563096 exif_data_load_data+726</span><br><span class="line">  f 2   0x555555563096 exif_data_load_data+726</span><br><span class="line">  f 3   0x55555556775a exif_loader_get_data+58</span><br><span class="line">  f 4   0x55555555e0e7 main+2407</span><br><span class="line">  f 5   0x7ffff7c85083 __libc_start_main+243</span><br></pre></td></tr></table></figure></div>
+
+<p>这个漏洞看起来很有意思，因为漏洞发生在 exif 本身这个程序当中，而且存在一个非法地址引用，可以通过调试来探究一下具体原因。</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#0  exif_get_sshort (buf=0x55565558af75 &lt;error: Cannot access memory at address 0x55565558af75&gt;, order=EXIF_BYTE_ORDER_MOTOROLA) at exif-utils.c:87</span></span><br><span class="line"><span class="comment">#1  0x0000555555563096 in exif_data_load_data (ds_orig=&lt;optimized out&gt;, d_orig=&lt;optimized out&gt;, data=0x55555558b400) at exif-data.c:819</span></span><br><span class="line"><span class="comment">#2  exif_data_load_data (data=data@entry=0x55555558b400, d_orig=&lt;optimized out&gt;, ds_orig=&lt;optimized out&gt;) at exif-data.c:698</span></span><br><span class="line"><span class="comment">#3  0x000055555556775a in exif_loader_get_data (loader=0x55555558af20) at exif-loader.c:387</span></span><br><span class="line"><span class="comment">#4  0x000055555555e0e7 in main (argc=argc@entry=3, argv=argv@entry=0x7fffffffe318) at main.c:438</span></span><br><span class="line"><span class="comment">#5  0x00007ffff7c85083 in __libc_start_main (main=0x55555555d780 &lt;main&gt;, argc=3, argv=0x7fffffffe318, init=&lt;optimized out&gt;, fini=&lt;optimized out&gt;, rtld_fini=&lt;optimized out&gt;, stack_end=0x7fffffffe308) at ../csu/libc-start.c:308</span></span><br><span class="line"><span class="comment">#6  0x000055555555eace in _start ()</span></span><br></pre></td></tr></table></figure></div>
+
+<p>先来搞清楚 exif_get_sshort 是干嘛用的，这是 exif_get_sshort 的源码内容</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ExifSShort</span><br><span class="line"><span class="title function_">exif_get_sshort</span> <span class="params">(<span class="type">const</span> <span class="type">unsigned</span> <span class="type">char</span> *buf, ExifByteOrder order)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (!buf) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">switch</span> (order) &#123;</span><br><span class="line">        <span class="keyword">case</span> EXIF_BYTE_ORDER_MOTOROLA:</span><br><span class="line">                <span class="keyword">return</span> ((buf[<span class="number">0</span>] &lt;&lt; <span class="number">8</span>) | buf[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">case</span> EXIF_BYTE_ORDER_INTEL:</span><br><span class="line">                <span class="keyword">return</span> ((buf[<span class="number">1</span>] &lt;&lt; <span class="number">8</span>) | buf[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Won&#x27;t be reached */</span></span><br><span class="line">	<span class="keyword">return</span> (<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><code>exif_get_sshort</code>函数从给定的EXIF数据缓冲区中提取一个16位的短整型数值，并根据指定的字节顺序进行解释</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_14-42-02.png"
+                      alt="nipaste_2024-07-05_14-42-0"
+                ></p>
+<p>在发生crash的函数处下个断点，可以发现在调用 <code>exif_get_short</code> 时，已经传递了一个非法地址才会造成crash，一步一步往前推试着搞明白这个非法地址是怎么来的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_14-45-00.png"
+                      alt="nipaste_2024-07-05_14-45-0"
+                ></p>
+<p>这一步已经开始发生错误了，rdx 为 0xffffffff 导致在加了一个堆地址之后直接溢出了，再往前看看</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_14-47-23.png"
+                      alt="nipaste_2024-07-05_14-47-2"
+                ></p>
+<p>这里有一个边界检查，但由于 r13 为 0xffffffff 在 +8 之后<strong>整数溢出</strong>变为了7，因此成功绕过判断，再往前找找</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_14-52-53.png"
+                      alt="nipaste_2024-07-05_14-52-5"
+                ></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">► 0x55555556302e &lt;exif_data_load_data+622&gt;    call   exif_get_long                &lt;exif_get_long&gt;</span><br><span class="line">       rdi: 0x55555558af7a ◂— 0xf010c00ffffffff</span><br><span class="line">       rsi: 0x0</span><br></pre></td></tr></table></figure></div>
+
+<p>可以发现在 <code>exif_get_long</code> 这一步，给offset 的返回值为 0xffffffff，罪魁祸首就是 <code>exif_get_long</code> 这里，来看看这个函数的功能。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ExifLong</span><br><span class="line"><span class="title function_">exif_get_long</span> <span class="params">(<span class="type">const</span> <span class="type">unsigned</span> <span class="type">char</span> *buf, ExifByteOrder order)</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">return</span> (exif_get_slong (buf, order) &amp; <span class="number">0xffffffff</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ExifSLong</span><br><span class="line"><span class="title function_">exif_get_slong</span> <span class="params">(<span class="type">const</span> <span class="type">unsigned</span> <span class="type">char</span> *b, ExifByteOrder order)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (!b) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">switch</span> (order) &#123;</span><br><span class="line">        <span class="keyword">case</span> EXIF_BYTE_ORDER_MOTOROLA:</span><br><span class="line">                <span class="keyword">return</span> ((b[<span class="number">0</span>] &lt;&lt; <span class="number">24</span>) | (b[<span class="number">1</span>] &lt;&lt; <span class="number">16</span>) | (b[<span class="number">2</span>] &lt;&lt; <span class="number">8</span>) | b[<span class="number">3</span>]);</span><br><span class="line">        <span class="keyword">case</span> EXIF_BYTE_ORDER_INTEL:</span><br><span class="line">                <span class="keyword">return</span> ((b[<span class="number">3</span>] &lt;&lt; <span class="number">24</span>) | (b[<span class="number">2</span>] &lt;&lt; <span class="number">16</span>) | (b[<span class="number">1</span>] &lt;&lt; <span class="number">8</span>) | b[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Won&#x27;t be reached */</span></span><br><span class="line">	<span class="keyword">return</span> (<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>由于低四字节为 0xffffffff，所以实际上在经过移位异或之后依然是 0xffffffff，前面说过我们的调用栈如下	</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">► f 0   0x5555555682e0 exif_get_sshort+48</span><br><span class="line">  f 1   0x555555563096 exif_data_load_data+726</span><br><span class="line">  f 2   0x555555563096 exif_data_load_data+726</span><br><span class="line">  f 3   0x55555556775a exif_loader_get_data+58</span><br><span class="line">  f 4   0x55555555e0e7 main+2407</span><br><span class="line">  f 5   0x7ffff7c85083 __libc_start_main+243</span><br></pre></td></tr></table></figure></div>
+
+<p>我们现在的目的就是找到 <code>0xf010c00ffffffff</code>何时被加载到程序当中</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_16-18-49.png"
+                      alt="nipaste_2024-07-05_16-18-4"
+                ></p>
+<p>从上图可以看到 <code>exif_loader_get_data</code> 传递的 rdi 即为 loader 指针，而 loader-&gt;buf 位于 loader+0x20 的位置处，这里就有 <code>0xf010c00ffffffff</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_16-18-09.png"
+                      alt="nipaste_2024-07-05_16-18-0"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_16-24-08.png"
+                      alt="nipaste_2024-07-05_16-24-0"
+                ></p>
+<p>从上面的信息可以知道，程序从 main 函数在进入 exif_data_load_data 时，其数据已经被污染，结合源码在进一步调试分析</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_16-30-54.png"
+                      alt="nipaste_2024-07-05_16-30-5"
+                ></p>
+<p>这里根据所给参数，将从 jpg 文件中读取 exif 数据到 exif_loader 结构体中。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_16-32-23.png"
+                      alt="nipaste_2024-07-05_16-32-2"
+                ></p>
+<p>可以看到这里的文件是从我们之前fuzz的crash中读入的，读入之后的loader结构体初始化完成，可以看到<code>0xf010c00ffffffff</code>最终来自于这里，即图片文件的 exif 数据部分，而这一部分我们完全可以伪造该数据，从而使目标程序崩溃。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_16-33-50.png"
+                      alt="nipaste_2024-07-05_16-33-5"
+                ></p>
+<p>事实上，该漏洞即为 <a class="link"   target="_blank" rel="noopener" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-2836" >CVE-2012-2836 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，fuzz 确实在一定程序上可以帮助我们快速定位漏洞。</p>
+<h3 id="CVE-2009-3895"><a href="#CVE-2009-3895" class="headerlink" title="CVE-2009-3895"></a>CVE-2009-3895</h3><p><strong>id:000001,sig:11,src:000010,time:257915,execs:74652,op:havoc,rep:5</strong></p>
+<p>再来看看另外一个 crash，也是存在一个非法地址引用，但是函数调用栈不同</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_14-01-36.png"
+                      alt="nipaste_2024-07-05_14-01-3"
+                ></p>
+<p>调用栈如下所示</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">► f 0   0x7ffff7decb38 __memmove_avx_unaligned_erms+552</span><br><span class="line">  f 1   0x5555555629ba exif_data_load_data_content+906</span><br><span class="line">  f 2   0x555555563115 exif_data_load_data+853</span><br><span class="line">  f 3   0x555555563115 exif_data_load_data+853</span><br><span class="line">  f 4   0x55555556775a exif_loader_get_data+58</span><br><span class="line">  f 5   0x55555555e0e7 main+2407</span><br><span class="line">  f 6   0x7ffff7c85083 __libc_start_main+243</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#0  __memmove_avx_unaligned_erms () at ../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:440</span></span><br><span class="line"><span class="comment">#1  0x00005555555629ba in exif_data_load_data_content (data=data@entry=0x55555558b750, ifd=ifd@entry=EXIF_IFD_1, d=d@entry=0x55555558af66 &quot;II*&quot;, ds=ds@entry=2011, offset=924, offset@entry=922, recursion_depth=recursion_depth@entry=0) at exif-data.c:381</span></span><br><span class="line"><span class="comment">#2  0x0000555555563115 in exif_data_load_data (ds_orig=&lt;optimized out&gt;, d_orig=&lt;optimized out&gt;, data=0x55555558b750) at exif-data.c:835</span></span><br><span class="line"><span class="comment">#3  exif_data_load_data (data=data@entry=0x55555558b750, d_orig=&lt;optimized out&gt;, ds_orig=&lt;optimized out&gt;) at exif-data.c:698</span></span><br><span class="line"><span class="comment">#4  0x000055555556775a in exif_loader_get_data (loader=0x55555558af10) at exif-loader.c:387</span></span><br><span class="line"><span class="comment">#5  0x000055555555e0e7 in main (argc=argc@entry=3, argv=argv@entry=0x7fffffffe328) at main.c:438</span></span><br><span class="line"><span class="comment">#6  0x00007ffff7c85083 in __libc_start_main (main=0x55555555d780 &lt;main&gt;, argc=3, argv=0x7fffffffe328, init=&lt;optimized out&gt;, fini=&lt;optimized out&gt;, rtld_fini=&lt;optimized out&gt;, stack_end=0x7fffffffe318) at ../csu/libc-start.c:308</span></span><br><span class="line"><span class="comment">#7  0x000055555555eace in _start ()</span></span><br></pre></td></tr></table></figure></div>
+
+<p>根据上面的信息定位到最后触发漏洞的位置，即源码 exif-data.c:381行的 <code>exif_data_load_data_thumbnail</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_14-42-48.png"
+                      alt="nipaste_2024-07-06_14-42-4"
+                ></p>
+<p>下个断点尝试找到这里</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_14-47-32.png"
+                      alt="nipaste_2024-07-06_14-47-3"
+                ></p>
+<p>可以明显发现这里 memcpy 的第三个参数过大，回导致后面复制过程中出现非法地址，随即让程序crash</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_14-49-27.png"
+                      alt="nipaste_2024-07-06_14-49-2"
+                ></p>
+<p>回到 <code>exif_data_load_data_thumbnail</code> 的源码分析，如果size设置过大的话，这里会不通过检查，那我们看看这个判断是如何绕过的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_14-53-30.png"
+                      alt="nipaste_2024-07-06_14-53-3"
+                ></p>
+<p>可以发现这里由于 size 为 0xfffffd25 所以导致了 32位整数溢出，从而绕过了判断。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_14-55-15.png"
+                      alt="nipaste_2024-07-06_14-55-1"
+                ></p>
+<p>接下来就好分析了，只需要知道是哪一步设置了 size，从而就知道了这个触发这个漏洞的所在地</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_15-09-41.png"
+                      alt="nipaste_2024-07-06_15-09-4"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_15-10-18.png"
+                      alt="nipaste_2024-07-06_15-10-1"
+                ></p>
+<p>返回值即为上面的 0xfffffd25，该数据来自一个堆块中，一直往前跟就会找到答案，这部分堆块数据是从照片中提取出的 Exif data 信息，因而使得可以控制这一数据来实现堆块越界读的效果。 </p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_15-22-03.png"
+                      alt="nipaste_2024-07-06_15-22-0"
+                ></p>
+<p>至此完成了对 <a class="link"   target="_blank" rel="noopener" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-3895" >CVE-2009-3895 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 的分析。</p>
+<p><strong>id:000007,sig:11,src:000476,time:972518,execs:289326,op:int32,pos:852,val:-1</strong></p>
+<p>与上一个调用栈不同，但是漏洞触发的地点是一样的，应该都是同一原因导致的。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-05_14-06-12.png"
+                      alt="nipaste_2024-07-05_14-06-1"
+                ></p>
+<h3 id="拓展-1"><a href="#拓展-1" class="headerlink" title="拓展"></a>拓展</h3><p>挖个坑，回头尝试对最新版本的 libexif 库进行 fuzz。</p>
+<h2 id="Exercise-3：TCPdump"><a href="#Exercise-3：TCPdump" class="headerlink" title="Exercise 3：TCPdump"></a>Exercise 3：TCPdump</h2><p>TCPdump是一个网络数据包分析工具，它可以截获网络中传送的数据包，并提供详细的分析功能</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2017-13028/"><strong>CVE-2017-13028</strong></a> is an <strong>Out-of-bounds Read vulneratibily</strong> that can be triggered via a <strong>BOOTP packet</strong> (Bootstrap Protocol).</p>
+<p>As a result, it allows remote attackers to cause a <strong>denial of service</strong> or possibly <strong>obtain potentially sensitive information</strong> from process memory.</p>
+<p>You can find more information about Out-of-bounds Read vulnerabilities at the following link: <a class="link"   target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/125.html" >https://cwe.mitre.org/data/definitions/125.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p><strong>知识点</strong></p>
+<ul>
+<li>了解 ASan（Address Sanitizer），这是一个实时内存检测工具</li>
+<li>学会使用 ASAN 去 fuzz 一个目标</li>
+<li>使用 ASAN 触发 crash</li>
+</ul>
+<p><strong>环境搭建</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建目录</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span></span><br><span class="line"><span class="built_in">mkdir</span> fuzzing_tcpdump &amp;&amp; <span class="built_in">cd</span> fuzzing_tcpdump/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载解压 tcpdump-4.9.2.tar.gz</span></span><br><span class="line">wget https://github.com/the-tcpdump-group/tcpdump/archive/refs/tags/tcpdump-4.9.2.tar.gz</span><br><span class="line">tar -xzvf tcpdump-4.9.2.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载解压 libpcap，这个库是 TCPdump 运行所需要的</span></span><br><span class="line">wget https://github.com/the-tcpdump-group/libpcap/archive/refs/tags/libpcap-1.8.0.tar.gz</span><br><span class="line">tar -xzvf libpcap-1.8.0.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将 libpcap-libpcap-1.8.0 重命名为 libpcap-1.8.0 否则, tcpdump 找不到 libpcap的路径</span></span><br><span class="line"><span class="built_in">mv</span> libpcap-libpcap-1.8.0/ libpcap-1.8.0</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 编译安装 libpcap</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tcpdump/libpcap-1.8.0/</span><br><span class="line">./configure --enable-shared=no</span><br><span class="line">make</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译安装 tcpdump</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tcpdump/tcpdump-tcpdump-4.9.2/</span><br><span class="line">./configure --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>测试命令</strong></p>
+<p><code>$HOME/fuzzing_tcpdump/install/sbin/tcpdump -h</code></p>
+<p><code>$HOME/fuzzing_tcpdump/install/sbin/tcpdump -vvvvXX -ee -nn -r ./tests/geneve.pcap</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_16-08-39.png"
+                      alt="nipaste_2024-07-06_16-08-3"
+                ></p>
+<p>出现如图所示的界面，就说明功能正常</p>
+<h3 id="AddressSanitizer"><a href="#AddressSanitizer" class="headerlink" title="AddressSanitizer"></a>AddressSanitizer</h3><p><strong>AddressSanitizer (ASan)</strong> 是针对 C 和 C++ 的一个快速内存错误检测器，在 2011年5月，由 Google (Konstantin Serebryany, Derek Bruening, Alexander Potapenko, Dmitry Vyukov) 发布。</p>
+<p>ASan 由一个编译插桩模块和实时运行库组成，该工具可以找到堆、栈、全局对象中的越界访问错误，如 UAF，double-free 和 内存泄露。</p>
+<p><strong>ASan 编译插桩目标</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除原来的环境</span></span><br><span class="line"><span class="built_in">rm</span> -r <span class="variable">$HOME</span>/fuzzing_tcpdump/install</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tcpdump/libpcap-1.8.0/</span><br><span class="line">make clean</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tcpdump/tcpdump-tcpdump-4.9.2/</span><br><span class="line">make clean</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在调用 configure 和 make 前，设置 AFL_USE_ASAN=1</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tcpdump/libpcap-1.8.0/</span><br><span class="line"><span class="built_in">export</span> LLVM_CONFIG=<span class="string">&quot;llvm-config-11&quot;</span></span><br><span class="line">CC=afl-clang-fast ./configure --enable-shared=no --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">AFL_USE_ASAN=1 make</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tcpdump/tcpdump-tcpdump-4.9.2/</span><br><span class="line">AFL_USE_ASAN=1 CC=afl-clang-fast ./configure --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">AFL_USE_ASAN=1 make</span><br><span class="line">AFL_USE_ASAN=1 make install</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>然后就可以使用下面的命令开始进行 fuzz 了</p>
+<p><code>afl-fuzz -m none -i $HOME/fuzzing_tcpdump/tcpdump-tcpdump-4.9.2/tests/ -o $HOME/fuzzing_tcpdump/out/ -s 222 -- $HOME/fuzzing_tcpdump/install/sbin/tcpdump -vvvvXX -ee -nn -r @@</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-06_16-30-59.png"
+                      alt="nipaste_2024-07-06_16-30-5"
+                ></p>
+<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>大概在跑了20小时之后，仅出了一个 crash，由于之前编译的时候使用了 ASAN，所以就不需要重新编译整个文件进行调试了。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$HOME/fuzzing_tcpdump/install/sbin/tcpdump -vvvvXX -ee -nn -r $HOME/fuzzing_tcpdump/out/default/crashes/id:000000,sig:06,src:000039,time:27796493,execs:2488857,op:havoc,rep:7</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-07_16-04-52.png"
+                      alt="nipaste_2024-07-07_16-04-5"
+                ></p>
+<p>这里报了一个堆溢出的错误，可以在这里找到 <a class="link"   target="_blank" rel="noopener" href="https://github.com/the-tcpdump-group/tcpdump/commit/85078eeaf4bf8fcdc14a4e79b516f92b6ab520fc#diff-05f854a9033643de07f0d0059bc5b98f3b314eeb1e2499ea1057e925e6501ae8L381" >CVE-2017-13028 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 的详细补丁信息，由于这种溢出类错误可能不会导致程序直接 crash，所以跟踪调试起来稍微麻烦点，后期再来看看。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>对于这种堆栈溢出不会直接造成程序崩溃的 poc，我们需要如何从调试来具体分析原因，或许可以从ASAN中的函数调用栈来进行跟踪</p>
+<h2 id="Exercise-4：LibTIFF"><a href="#Exercise-4：LibTIFF" class="headerlink" title="Exercise 4：LibTIFF"></a>Exercise 4：LibTIFF</h2><p>libTIFF是一个用于处理TIFF（Tagged Image File Format，标记图像文件格式）图像文件的开源软件库。TIFF是一种常见的图像文件格式，主要用于存储照片和图像。</p>
+<blockquote>
+<p><strong>CVE-2016-9297</strong> is an Out-of-bounds Read vulnerability that can be triggered via crafted TIFF_SETGET_C16ASCII or TIFF_SETGET_C32_ASCII tag values.</p>
+<p>  An Out-of-bounds Read is a vulnerability that occurs when the program reads data past the end, or before the beginning, of the intended buffer.</p>
+<p>  As a result, it allows remote attackers to cause a denial of service or possibly obtain potentially sensitive information from process memory.</p>
+<p>  You can find more information about Out-of-bounds Read vulnerabilities at the following link: <a class="link"   target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/125.html" >https://cwe.mitre.org/data/definitions/125.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p><strong>知识点</strong></p>
+<ul>
+<li>如何使用代码覆盖率数据来提高 fuzz 性能</li>
+<li>使用 lcov（覆盖率检测）编译libtiff</li>
+</ul>
+<p><strong>环境搭建</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### Download and build your target</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span></span><br><span class="line"><span class="built_in">mkdir</span> fuzzing_tiff &amp;&amp; <span class="built_in">cd</span> fuzzing_tiff/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Download and uncompress libtiff 4.0.4:</span></span><br><span class="line">wget https://download.osgeo.org/libtiff/tiff-4.0.4.tar.gz</span><br><span class="line">tar -xzvf tiff-4.0.4.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> tiff-4.0.4/</span><br><span class="line">./configure --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/fuzzing_tiff/install/&quot;</span> --disable-shared</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p><code>$HOME/fuzzing_tiff/install/bin/tiffinfo -D -j -c -r -s -w $HOME/fuzzing_tiff/tiff-4.0.4/test/images/palette-1c-1b.tiff</code></p>
+<p>测试功能是否能正常运行</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-07_16-26-05.png"
+                      alt="nipaste_2024-07-07_16-26-0"
+                ></p>
+<p>使用功能见下表</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">usage: tiffinfo [options] input...</span><br><span class="line">where options are:</span><br><span class="line"> -D		read data</span><br><span class="line"> -i		ignore read errors</span><br><span class="line"> -c		display data for grey/color response curve or colormap</span><br><span class="line"> -d		display raw/decoded image data</span><br><span class="line"> -f lsb2msb	force lsb-to-msb FillOrder for input</span><br><span class="line"> -f msb2lsb	force msb-to-lsb FillOrder for input</span><br><span class="line"> -j		show JPEG tables</span><br><span class="line"> -o offset	set initial directory offset</span><br><span class="line"> -r		read/display raw image data instead of decoded data</span><br><span class="line"> -s		display strip offsets and byte counts</span><br><span class="line"> -w		display raw data in words rather than bytes</span><br><span class="line"> -z		enable strip chopping</span><br><span class="line"> -#		set initial directory (first directory is # 0)</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h3 id="code-coverage"><a href="#code-coverage" class="headerlink" title="code coverage"></a>code coverage</h3><p>代码覆盖率是一个软件度量指标，用于显示每行代码被触发的次数。通过使用代码覆盖率，我们可以知道哪些部分的代码被模糊测试器（fuzzer）所覆盖，并可视化模糊测试的过程。</p>
+<p>要做到代码覆盖率统计，需要安装 lcov</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install lcov</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用 --coverage 重新编译 libTIFF</span></span><br><span class="line"><span class="built_in">rm</span> -r <span class="variable">$HOME</span>/fuzzing_tiff/install</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tiff/tiff-4.0.4/</span><br><span class="line">make clean</span><br><span class="line">  </span><br><span class="line">CFLAGS=<span class="string">&quot;--coverage&quot;</span> LDFLAGS=<span class="string">&quot;--coverage&quot;</span> ./configure --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/fuzzing_tiff/install/&quot;</span> --disable-shared</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过下面的命令来获取代码覆盖率</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tiff/tiff-4.0.4/</span><br><span class="line"><span class="comment"># Reset previous counters</span></span><br><span class="line">lcov --zerocounters --directory ./</span><br><span class="line"><span class="comment"># Return the &quot;baseline&quot; coverage data file that contains zero coverage for every instrumented line</span></span><br><span class="line">lcov --capture --initial --directory ./ --output-file app.info</span><br><span class="line"><span class="comment"># Run the application you want to analyze . You can run it multiple times with different inputs</span></span><br><span class="line"><span class="variable">$HOME</span>/fuzzing_tiff/install/bin/tiffinfo -D -j -c -r -s -w <span class="variable">$HOME</span>/fuzzing_tiff/tiff-4.0.4/test/images/palette-1c-1b.tiff</span><br><span class="line"><span class="comment"># Save the current coverage state into the app2.info file</span></span><br><span class="line">lcov --no-checksum --directory ./ --capture --output-file app2.info</span><br></pre></td></tr></table></figure></div>
+
+<p>生成 html 输出文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">genhtml --highlight --legend -output-directory ./html-coverage/ ./app2.info</span><br></pre></td></tr></table></figure></div>
+
+<p>在当前目录存在一个 html-coverage 文件夹，打开 .&#x2F;html-coverage&#x2F;index.html 文件就可以看到，具体的代码覆盖率报告</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-07_17-04-38.png"
+                      alt="nipaste_2024-07-07_17-04-3"
+                ></p>
+<p>随便点进去一个文件就可以查看它的覆盖率信息</p>
+<h3 id="分析-3"><a href="#分析-3" class="headerlink" title="分析"></a>分析</h3><p>现在开始 fuzz libTIFF</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 afl 对 libtiff 进行编译插桩</span></span><br><span class="line"><span class="built_in">rm</span> -r <span class="variable">$HOME</span>/fuzzing_tiff/install</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tiff/tiff-4.0.4/</span><br><span class="line">make clean</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里依旧使用 AFL_USE_ASAN 用来内存检测</span></span><br><span class="line"><span class="built_in">export</span> LLVM_CONFIG=<span class="string">&quot;llvm-config-11&quot;</span></span><br><span class="line">CC=afl-clang-lto ./configure --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/fuzzing_tiff/install/&quot;</span> --disable-shared</span><br><span class="line">AFL_USE_ASAN=1 make -j4</span><br><span class="line">AFL_USE_ASAN=1 make install</span><br></pre></td></tr></table></figure></div>
+
+<p>执行下面的 fuzz 命令即可</p>
+<p><code>afl-fuzz -m none -i $HOME/fuzzing_tiff/tiff-4.0.4/test/images/ -o $HOME/fuzzing_tiff/out/ -s 123 -- $HOME/fuzzing_tiff/install/bin/tiffinfo -D -j -c -r -s -w @@</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-07_17-48-14.png"
+                      alt="nipaste_2024-07-07_17-48-1"
+                ></p>
+<p>随便找一个就可以看见 ASAN 的分析报告</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_10-12-46.png"
+                      alt="nipaste_2024-07-08_10-12-4"
+                ></p>
+<ul>
+<li><strong>蓝色部分</strong>为读取操作，大概意思就是在线程为T0中，在<code>0x6020000000b1</code>处读取了大小为2的数据，并显示了函数栈的信息。</li>
+<li><strong>绿色部分</strong>为溢出的情况，其中还显示了<strong>堆块分配的函数栈</strong>。</li>
+</ul>
+<p>CVE-2016-9297 <a class="link"   target="_blank" rel="noopener" href="https://github.com/vadz/libtiff/commit/30c9234c7fd0dd5e8b1e83ad44370c875a0270ed" >补丁 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_11-02-51.png"
+                      alt="nipaste_2024-07-08_11-02-5"
+                ></p>
+<p>当最后一个字节不为 0 时，程序会强制将其赋值为 0 字节，因而避免越界读的问题。</p>
+<p>尝试生成覆盖率报告</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意这里如果用的是afl编译的libTIFF的话，我们需要用 --coverage 重新编译 libTIFF</span></span><br><span class="line"><span class="built_in">rm</span> -r <span class="variable">$HOME</span>/fuzzing_tiff/install</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span>/fuzzing_tiff/tiff-4.0.4/</span><br><span class="line">make clean</span><br><span class="line">CFLAGS=<span class="string">&quot;--coverage&quot;</span> LDFLAGS=<span class="string">&quot;--coverage&quot;</span> ./configure --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/fuzzing_tiff/install/&quot;</span> --disable-shared</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line"><span class="variable">$HOME</span>/fuzzing_tiff/install/bin/tiffinfo -D -j -c -r -s -w <span class="variable">$HOME</span>/fuzzing_tiff/out/default/crashes/id:000007,sig:06,src:000303,time:167126,execs:68988,op:havoc,rep:2</span><br><span class="line"></span><br><span class="line">lcov --no-checksum --directory ./ --capture --output-file app2.info</span><br><span class="line">genhtml --highlight --legend -output-directory ./html-coverage2/ ./app2.info</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_10-39-13.png"
+                      alt="nipaste_2024-07-08_10-39-1"
+                ></p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>但是对于整个程序具体的功能及如何触发越界读流程，还需要我们对程序足够了解和深入理解</p>
+<h2 id="Exercise-5：LibXML2"><a href="#Exercise-5：LibXML2" class="headerlink" title="Exercise 5：LibXML2"></a>Exercise 5：LibXML2</h2><p>libxml2是一个功能强大的C语言库，主要用于解析和处理XML文档。</p>
+<blockquote>
+<p>  <strong>CVE-2017-9048</strong> is an stack buffer overflow vulnerability affecting the DTD validation functionality of LibXML2.</p>
+<p> As a result, a remote attacker can exploit this issue to <strong>execute arbitrary code</strong> within the context of an application using the affected library.</p>
+<p> You can find more information about stack buffer oveflow vulnerabilities at the following link: <a class="link"   target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/121.html" >https://cwe.mitre.org/data/definitions/121.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</blockquote>
+<p><strong>知识点</strong></p>
+<ul>
+<li><strong>自定义字典</strong>帮助找到新的执行路径</li>
+<li>使用<strong>多核</strong>来并行执行 fuzz 任务</li>
+</ul>
+<h3 id="Dictionaries"><a href="#Dictionaries" class="headerlink" title="Dictionaries"></a>Dictionaries</h3><p>当需要 fuzz 复杂文本格式的文档时（如 xml），用一个包含有基本语法 token 的字典对于fuzz的效果来说是非常有用的。</p>
+<p>在AFL（American Fuzzy Lop，一个模糊测试工具）的上下文中，这样的字典只是一组单词或值，被AFL用于对当前内存中的文件应用更改。具体来说，AFL使用字典中提供的值进行以下更改：</p>
+<ul>
+<li><strong>覆盖（Override）</strong>：用字典条目中的n个字节替换文件中的特定位置，其中n是字典条目的长度。</li>
+<li><strong>插入（Insert）</strong>：在当前文件位置插入字典条目，迫使所有字符向下移动n个位置，并增加文件大小。</li>
+</ul>
+<p>可以在<a class="link"   target="_blank" rel="noopener" href="https://github.com/AFLplusplus/AFLplusplus/tree/stable/dictionaries" >这里 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>找到一些字典样本文件</p>
+<h3 id="Paralellization"><a href="#Paralellization" class="headerlink" title="Paralellization"></a>Paralellization</h3><p>最大化并行利用多核 cpu 资源可以显著提高 fuzz 的效率。</p>
+<p><strong>Independent instances</strong></p>
+<p>在独立实例下，我们需要为每一个运行的 AFL 实例创建一个独立的输出文件夹，同时如果使用 <code>-s</code> 标志，还需要为每一个 AFL 实例设置不同的 seed。</p>
+<p><strong>Shared instances</strong></p>
+<p>在共享实例下，每个 fuzz 实例汇合了其他实例的测试集，同时在一个时间内，只能有一个 main instance</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./afl-fuzz -i afl_in -o afl_out -M Master -- ./program @@</span><br></pre></td></tr></table></figure></div>
+
+<p>和其他 N-1个 slaves:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./afl-fuzz -i afl_in -o afl_out -S Slave1 -- ./program @@</span><br><span class="line">./afl-fuzz -i afl_in -o afl_out -S Slave2 -- ./program @@</span><br><span class="line">...</span><br><span class="line">./afl-fuzz -i afl_in -o afl_out -S SlaveN -- ./program @@</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>环境搭建</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$HOME</span></span><br><span class="line"><span class="built_in">mkdir</span> Fuzzing_libxml2 &amp;&amp; <span class="built_in">cd</span> Fuzzing_libxml2</span><br><span class="line"></span><br><span class="line"><span class="comment"># Download and uncompress libxml2-2.9.4.tar.gz</span></span><br><span class="line">wget http://xmlsoft.org/download/libxml2-2.9.4.tar.gz</span><br><span class="line">tar xvf libxml2-2.9.4.tar.gz &amp;&amp; <span class="built_in">cd</span> libxml2-2.9.4/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build and install libxml2:</span></span><br><span class="line">sudo apt-get install python-dev</span><br><span class="line">CC=afl-cc CXX=afl-c++ CFLAGS=<span class="string">&quot;-fsanitize=address&quot;</span> CXXFLAGS=<span class="string">&quot;-fsanitize=address&quot;</span> LDFLAGS=<span class="string">&quot;-fsanitize=address&quot;</span> ./configure --prefix=<span class="string">&quot;<span class="variable">$HOME</span>/Fuzzing_libxml2/libxml2-2.9.4/install&quot;</span> --disable-shared --without-debug --without-ftp --without-http --without-legacy --without-python LIBS=<span class="string">&#x27;-ldl&#x27;</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></div>
+
+<p>测试如下</p>
+<p><code>./xmllint --memory ./test/wml.xml</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_14-08-09.png"
+                      alt="nipaste_2024-07-08_14-08-0"
+                ></p>
+<p><strong>创建语料库</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> afl_in &amp;&amp; <span class="built_in">cd</span> afl_in</span><br><span class="line">wget https://raw.githubusercontent.com/antonio-morales/Fuzzing101/main/Exercise%205/SampleInput.xml</span><br><span class="line"><span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>指定字典</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> dictionaries &amp;&amp; <span class="built_in">cd</span> dictionaries</span><br><span class="line">wget https://raw.githubusercontent.com/AFLplusplus/AFLplusplus/stable/dictionaries/xml.dict</span><br><span class="line"><span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>开始fuzz</strong></p>
+<p>创建一个 main instance</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -m none -i ./afl_in -o afl_out -s 321 -x ./dictionaries/xml.dict -D -M master -- ./libxml2-2.9.4/xmllint --memory --noenc --nocdata --dtdattr --loaddtd --valid --xinclude @@</span><br></pre></td></tr></table></figure></div>
+
+<p>在另外一个 terminal 创建另外一个 slave instance</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -m none -i ./afl_in -o afl_out -s 234 -S slave1 -- ./libxml2-2.9.4/xmllint --memory --noenc --nocdata --dtdattr --loaddtd --valid --xinclude @@</span><br></pre></td></tr></table></figure></div>
+
+<p>然后我们就可以分别看到如下图所示的两个 fuzz 界面，一个是 master instance，一个是 slave1 master</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_14-25-27.png"
+                      alt="nipaste_2024-07-08_14-25-2"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-08_14-25-36.png"
+                      alt="nipaste_2024-07-08_14-25-3"
+                ></p>
+<p>但是经过7天之后，最终结果如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-15_16-00-44.png"
+                      alt="nipaste_2024-07-15_16-00-4"
+                ></p>
+<p>我直呼精彩，但也无所谓，这些 Exercise 也仅仅是用来帮助我们掌握使用 AFL 进行 fuzz 的过程。</p>
+<p><strong>Reference</strong></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.xmcve.com/2023/01/13/Fuzzing101%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >https://blog.xmcve.com/2023/01/13/Fuzzing101%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> fuzz101 Exercise</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-07-15 16:04:49</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-07-15 16:07:13
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/07/15/fuzzing101/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/AFL%EF%BC%8Cfuzz101%EF%BC%8Cfuzz/">#AFL，fuzz101，fuzz</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2024/07/15/llvm_note/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">LLVM 学习笔记</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/06/19/MS17-010/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">深入理解分析 MS17-010</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">fuzz101 Exercise</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Exercise-1%EF%BC%9AXpdf"><span class="nav-text">Exercise 1：Xpdf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E5%B1%95"><span class="nav-text">拓展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exercise-2%EF%BC%9Alibexif"><span class="nav-text">Exercise 2：libexif</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-1"><span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CVE-2012-2836"><span class="nav-text">CVE-2012-2836</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CVE-2009-3895"><span class="nav-text">CVE-2009-3895</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E5%B1%95-1"><span class="nav-text">拓展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exercise-3%EF%BC%9ATCPdump"><span class="nav-text">Exercise 3：TCPdump</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AddressSanitizer"><span class="nav-text">AddressSanitizer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exercise-4%EF%BC%9ALibTIFF"><span class="nav-text">Exercise 4：LibTIFF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-coverage"><span class="nav-text">code coverage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exercise-5%EF%BC%9ALibXML2"><span class="nav-text">Exercise 5：LibXML2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dictionaries"><span class="nav-text">Dictionaries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Paralellization"><span class="nav-text">Paralellization</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
