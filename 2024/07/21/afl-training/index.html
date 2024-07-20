@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/07/21/afl-training/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="环境搭建12345678# 拉镜像docker pull aflplusplus&#x2F;aflplusplus:latest# 监听2222端口通过ssh连sudo docker run -it --privileged -e PASSMETHOD&#x3D;env -e PASS&#x3D;123123 -p 2222:2222 ghcr.io&#x2F;mykter&#x2F;fuzz-training# 直接进入shellsudo do">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fuzzing with AFL workshop">
+<meta property="og:url" content="http://example.com/2024/07/21/afl-training/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="环境搭建12345678# 拉镜像docker pull aflplusplus&#x2F;aflplusplus:latest# 监听2222端口通过ssh连sudo docker run -it --privileged -e PASSMETHOD&#x3D;env -e PASS&#x3D;123123 -p 2222:2222 ghcr.io&#x2F;mykter&#x2F;fuzz-training# 直接进入shellsudo do">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-02_17-31-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-19_20-23-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-02_10-37-37.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-06-19_20-23-56.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-03_10-17-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-03_10-17-54.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-02_17-43-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-02_17-56-07.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-03_10-10-58.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-19_19-46-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-19_22-11-19.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-19_22-14-19.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-19_22-14-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-19_22-15-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-19_23-50-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_00-31-25.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_00-37-28.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_11-36-52.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_12-10-52.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-03_16-49-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-04_09-49-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_13-16-46.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_13-17-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_16-34-10.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_16-35-22.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_19-42-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_19-52-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_19-59-18.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_20-08-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_20-23-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_20-35-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_20-38-09.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_20-59-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_21-17-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_22-14-28.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_23-53-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_23-53-26.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-20_23-56-46.png">
+<meta property="article:published_time" content="2024-07-20T16:00:02.009Z">
+<meta property="article:modified_time" content="2024-07-20T16:04:31.511Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="fuzz">
+<meta property="article:tag" content="afl-training-workshop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-07-02_17-31-45.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Fuzzing with AFL workshop -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            $logo-title-font-size = 1.7rem
+$desktop-search-icon-font-size = 1.5rem
+$navbar-bar-line-height = 2.5px
+$logo-image-box-width = 34px
+
+@import '../../common/variables'
+
+.navbar-container
+  font-family 'Chillax-Variable', sans-serif
+  width 100%
+  height 100%
+  box-sizing border-box
+  display flex
+  align-items center
+  justify-content center
+  background $nav-color-bg
+  -webkit-backdrop-filter blur(10px)
+  backdrop-filter blur(10px)
+  padding-top $scroll-progress-bar-height
+  hover-style(
+    false,
+    0,
+    0
+  )
+
+  .navbar-content
+    position relative
+    height 100%
+    width $main-content-width
+    max-width $content-max-width
+    display flex
+    flex-direction row
+    justify-content space-between
+    align-items center
+    z-index $z-index-5
+    transition max-width 0.3s ease
+
+    &.has-home-banner
+      max-width $content-max-width * 1.2
+
+    +redefine-tablet()
+      width $main-content-width-tablet
+
+    +redefine-mobile()
+      width $main-content-width-mobile
+
+    .left
+      display flex
+      align-items center
+      //transform-origin bottom
+      //transition-t('transform', '0', '0.15', 'ease')
+      //
+      //.navbar-shrink &
+      //  transform scale(0.9)
+      //  transform-origin bottom
+
+      if (hexo-config('defaults.logo') && hexo-config('defaults.logo') != '')
+        .logo-image
+          width $logo-image-box-width
+          height $logo-image-box-width
+          margin-right 12px
+
+          +redefine-tablet()
+            width: $logo-image-box-width * 0.9
+            height: $logo-image-box-width * 0.9
+
+          +redefine-mobile()
+            width: $logo-image-box-width * 0.8
+            height: $logo-image-box-width * 0.8
+
+          img
+            border-radius 6px
+            width 100%
+
+      .logo-title
+        font-size $logo-title-font-size
+        font-weight 520
+        //letter-spacing 1px
+        line-height 1
+        color var(--first-text-color)
+        transform translateY(1px)
+
+        h1
+          margin 0
+          font-size $logo-title-font-size
+          font-weight 520
+          //letter-spacing 1px
+          line-height 1
+          color var(--first-text-color)
+          transform translateY(1px)
+
+          +redefine-tablet()
+            font-size: $logo-title-font-size * 0.9
+
+          +redefine-mobile()
+            font-size: $logo-title-font-size * 0.8
+
+        +redefine-tablet()
+          font-size: $logo-title-font-size * 0.9
+
+        +redefine-mobile()
+          font-size: $logo-title-font-size * 0.8
+
+    .right
+      .desktop
+        .navbar-list
+          display flex
+          gap 24px
+          align-items center
+
+          +redefine-tablet()
+            display none
+
+          .navbar-item
+            float left
+            // padding 5px
+            position relative
+            font-size 1rem
+            font-weight 450
+            cursor pointer
+            color var(--default-text-color)
+
+            a
+              display block
+              padding 5px
+
+            a .fa-chevron-down
+              transform rotate(0deg)
+              transition transform 0.3s ease
+
+            &:hover a .fa-chevron-down
+              transform rotate(180deg)
+
+            &:hover .has-dropdown
+              &::after
+                display none !important
+
+            &:hover a, .active
+              &::after
+                content ''
+                position absolute
+                bottom -5px
+                left 50%
+                width 100%
+                height 2px
+                transform translateX(-50%)
+                border-radius $redefine-border-radius-large
+                background var(--primary-color)
+                transition-t('transform, bottom', '0, 0', '0.2, 0.2', 'linear, linear')
+
+                .navbar-shrink &
+                  bottom -($navbar-shrink-height / 2 - 17)
+
+            &.search
+              font-size $desktop-search-icon-font-size
+              margin-left 26px
+
+              i
+                color var(--default-text-color)
+
+            .sub-menu
+              position absolute
+              right auto
+              left 50%
+              -webkit-transform translate(-50%, 0)
+              -o-transform translate(-50%, 0)
+              transform translate(-50%, 0)
+              margin-top 0px
+              width auto
+              text-align center
+              list-style none
+              padding 0 10px
+              border-radius $redefine-border-radius-large
+              // visibility hidden
+              max-height 0px
+              overflow hidden
+              transition-t('all', '0', '0.2', 'linear')
+
+              li a
+                white-space nowrap
+                color var(--default-text-color)
+                font-size 1rem
+                padding 3px 15px
+                display block
+                text-align center
+                border-radius 8px
+                transition-t('all', '0', '0.2', 'linear')
+
+                &:hover
+                  color var(--primary-color)
+                  background-color var(--third-background-color)
+
+        .navbar-list .navbar-item:hover .sub-menu
+          // visibility visible
+          max-height 500px
+          transition-t('all', '0', '0.2', 'ease')
+          redefine-container(
+            false,
+            0,
+            0,
+            10px,
+            5px
+          )
+
+      .mobile
+        display flex
+        justify-content space-between
+        align-items center
+
+        .icon-item
+          display none
+          position relative
+          cursor pointer
+          font-size 18px
+          margin-left 12px
+          width 20px
+          height 20px
+          color var(--default-text-color)
+
+          i
+            color var(--default-text-color)
+
+          &:first-child
+            margin-left 0
+
+          +redefine-tablet()
+            display flex
+            justify-content center
+            align-items center
+
+        .navbar-bar
+          .navbar-bar-middle
+            width 18px
+            height $navbar-bar-line-height
+            position relative
+            background var(--default-text-color)
+
+            .navbar-drawer-show &
+              background transparent
+
+            &::before, &::after
+              content ''
+              position absolute
+              left 0
+              width 100%
+              height $navbar-bar-line-height
+              background var(--default-text-color)
+              transition-t('transform', '0', '0.38', 'ease')
+
+            &::before
+              top -6px
+
+              .navbar-drawer-show &
+                transform translateY(6px) rotate(45deg)
+
+            &::after
+              bottom -6px
+
+              .navbar-drawer-show &
+                transform translateY(-6px) rotate(-45deg)
+
+  .navbar-drawer
+    padding $navbar-height 0 20px 0
+    transform scaleY(0)
+    transform-origin top
+    z-index $z-index-2
+    opacity 0
+    max-height 100vh
+    overflow-y auto
+    transition-t('transform,opacity', '0,0.1', '0.38,0.38', 'ease,ease')
+
+    .navbar-drawer-show &
+      transform scaleY(1)
+      opacity 1
+
+  .window-mask
+    position absolute
+    top 0
+    width 100%
+    height 100vh
+    background rgba(0, 0, 0, 0.4)
+    z-index $z-index-1
+    visibility hidden
+    opacity 0
+    transition-t('transform, opacity', '0, 0', '0.38, 0.38', 'ease, ease')
+
+    .navbar-drawer-show &
+      visibility visible
+      opacity 1
+
+.navbar-drawer-show
+  overflow hidden
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                <div class="w-full flex items-center pt-6 justify-start">
+                    <h1 class="article-title-regular text-second-text-color text-4xl md:text-6xl font-bold px-2 sm:px-6 md:px-8 py-3">Fuzzing with AFL workshop</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-07-21 00:02</span>
+        <span class="mobile">2024-07-21 00:02</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-07-21 00:04:31</span>
+            <span class="mobile">2024-07-21 00:04:31</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/fuzz/">fuzz</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/fuzz/afl-training/">afl-training</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/fuzz/">fuzz</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/afl-training-workshop/">afl-training-workshop</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">拉镜像</span></span><br><span class="line">docker pull aflplusplus/aflplusplus:latest</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">监听2222端口通过ssh连</span></span><br><span class="line">sudo docker run -it --privileged -e PASSMETHOD=env -e PASS=123123 -p 2222:2222 ghcr.io/mykter/fuzz-training</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">直接进入shell</span></span><br><span class="line">sudo docker run -v -it --privileged -e PASSMETHOD=env -e PASS=123123 -p 2222:2222 ghcr.io/mykter/fuzz-training:latest /bin/bash</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">另外启一个terminal输入下面的指令，密码是上面PASS的值</span></span><br><span class="line">ssh fuzzer@127.0.0.1 -p 2222</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>Reference</strong></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/mykter/afl-training" >https://github.com/mykter/afl-training <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="常见错误"><a href="#常见错误" class="headerlink" title="常见错误"></a>常见错误</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-02_17-31-45.png"
+                      alt="nipaste_2024-07-02_17-31-4"
+                ></p>
+<p>docker 起的时候加个 –privileged 参数就可以了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -v -it --privileged -e PASSMETHOD=env -e PASS=mhl123 -p 2222:2222 ghcr.io/mykter/fuzz-training:latest /bin/bash</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+<h2 id="AFL-基本架构"><a href="#AFL-基本架构" class="headerlink" title="AFL++基本架构"></a>AFL++基本架构</h2><p>Fuzzding theory 中的基本理论：<code>越多的状态被发现，漏洞被发现的可能性越高</code>，为了衡量这一指标使用<strong>代码覆盖率</strong>作为表示状态数量的指标。现在的绝大多数主流 fuzzer 都以获得更高的代码覆盖率作为目标，称为<strong>覆盖率指引</strong>（coverage-guided）。</p>
+<p>AFL++ 同样是一个覆盖率引导的 Fuzzer，其通常以<strong>边</strong>（edge，定义为控制流图中由一个基本块到另一基本块的控制流转移）作为代码覆盖率测试粒度，并使用<strong>位图</strong>（bitmap）存储代码覆盖率，其基本结构如下图所示：</p>
+<ul>
+<li><code>afl-fuzz</code> ：AFL++ 本体，负责管控一切</li>
+<li><code>input 文件夹</code>：<strong>原始输入语料库</strong>，AFL++ 将其中的文件作为初始输入喂给待测目标程序</li>
+<li><code>harness</code> ： <strong>待测目标</strong>，afl 执行待测目标获得覆盖率信息，再通过覆盖率信息对输入进行编译喂给待测目标，并持续循环该过程；harness 可以是待测目标本体，也可以是<strong>自行编写的 wrapper</strong></li>
+<li><code>queue</code> ：输入队列，在获取到覆盖率信息后，afl 会将触发了新的状态的输入放到 queue 中，在下次执行时从 queue 中取出新的测试用例并进行变异</li>
+<li><code>crashes</code>：存放崩溃信息的文件夹</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-19_20-23-57.png"
+                      alt="nipaste_2024-06-19_20-23-5"
+                ></p>
+<p>为获得覆盖率信息，可以通过<strong>代码插桩</strong>的方式，即<strong>不改变程序原有逻辑</strong>，通过向程序中<strong>插入额外的探针代码</strong>，从而获取程序执行信息。</p>
+<p>代码插桩的方式主要分为两类：</p>
+<ul>
+<li><strong>静态插桩</strong>：主要针对<strong>有目标代码源码</strong>的情况，在编译期间进行代码插桩，从而最大程度保留了程序的执行效率</li>
+<li><strong>动态插桩</strong>：主要针对仅<strong>有二进制可执行程序</strong>的情况，在运行时动态识别指令并进行替换，这种方式会极大程度损耗程序执行效率</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-02_10-37-37.png"
+                      alt="nipaste_2024-07-02_10-37-3"
+                ></p>
+<h2 id="面板说明"><a href="#面板说明" class="headerlink" title="面板说明"></a>面板说明</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-06-19_20-23-56.png"
+                      alt="nipaste_2024-06-19_20-23-5"
+                ></p>
+<p>面板基本说明如下：</p>
+<ul>
+<li><code>process time</code>：总运行时间、上次发现新路径时间、上次崩溃时间、上次挂起时间</li>
+<li><code>overall result</code> ：所有输入循环次数、总路径数、独特崩溃数、独特挂起数</li>
+<li><code>cycle progress</code> ：当前队列循环执行情况</li>
+<li><code>map coverage</code> ：所命中的分支元组对位图可承载的比例（当前输入&#x2F;整个输入语料库）、元组命中计数</li>
+<li><code>stage progress</code> ：正在运行的输入 <em>类型</em> 、当前阶段执行进度、总执行数、每秒执行数</li>
+<li><code>findings in depth</code> ：优权路径数（与最小化算法的路径模糊器相关）、发现的新的边数、总崩溃数量、总超时数</li>
+<li><code>fuzzing strategy yields</code> ：翻转位（从输入文件移除数量、达成该目标所需执行数、无法删除但被认为无效果的位比例，后同）、翻转字节、一些其他参数</li>
+<li><code>path geometry</code> ：路径深度（初始输入为 level 1，每次原地生成便多加一级）、等待执行的输入（从未执行）、优权等待执行的输入、该 fuzzer 所找到的路径数、其他 fuzzer 导入的路径数（afl++ 支持多路并行）、可靠性</li>
+</ul>
+<p>上述参数可以见<a class="link"   target="_blank" rel="noopener" href="https://lcamtuf.coredump.cx/afl/status_screen.txt" >官方文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="crash-分析"><a href="#crash-分析" class="headerlink" title="crash 分析"></a>crash 分析</h3><p>造成 crash 的输入会被做成一个个文件放在输出目录的 <code>default/crashes</code> 目录下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-03_10-17-02.png"
+                      alt="nipaste_2024-07-03_10-17-0"
+                ></p>
+<p>也可以使用 afl-analyze 来进行crash分析</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-analyze -i out/default/crashes/id:000000,sig:06,src:000003+000002,time:125963,op:splice,rep:2 ./my_harness</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-03_10-17-54.png"
+                      alt="nipaste_2024-07-03_10-17-5"
+                ></p>
+<h2 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h2><h3 id="1-AFL-training-harness"><a href="#1-AFL-training-harness" class="headerlink" title="1. AFL-training: harness"></a>1. AFL-training: harness</h3><p>在 <code>afl-traininig/harness</code> 目录下提供给一个待测库 <code>library.c</code> 以及相应的头文件 <code>library.h</code> ，其中定义了两个待测函数：</p>
+<p><strong>library.h</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">// an &#x27;nprintf&#x27; implementation - print the first len bytes of data</span><br><span class="line">void lib_echo(char *data, ssize_t len);</span><br><span class="line"></span><br><span class="line">// optimised multiply - returns x*y</span><br><span class="line">int  lib_mul(int x, int y);</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>library.c</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;assert.h&gt;</span><br><span class="line"></span><br><span class="line">#include &quot;library.h&quot;</span><br><span class="line"></span><br><span class="line">void lib_echo(char *data, ssize_t len)&#123;</span><br><span class="line">	if(strlen(data) == 0) &#123;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line">	char *buf = calloc(1, len);</span><br><span class="line">	strncpy(buf, data, len);</span><br><span class="line">	printf(&quot;%s&quot;,buf);</span><br><span class="line">	free(buf);</span><br><span class="line"></span><br><span class="line">	// A crash so we can tell the harness is working for lib_echo</span><br><span class="line">	if(data[0] == &#x27;p&#x27;) &#123;</span><br><span class="line">		if(data[1] == &#x27;o&#x27;) &#123;</span><br><span class="line">			if(data[2] ==&#x27;p&#x27;) &#123;</span><br><span class="line">				if(data[3] == &#x27;!&#x27;) &#123;</span><br><span class="line">					assert(0);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int  lib_mul(int x, int y)&#123;</span><br><span class="line">	if(x%2 == 0) &#123;</span><br><span class="line">		return y &lt;&lt; x;</span><br><span class="line">	&#125; else if (y%2 == 0) &#123;</span><br><span class="line">		return x &lt;&lt; y;</span><br><span class="line">	&#125; else if (x == 0) &#123;</span><br><span class="line">		return 0;</span><br><span class="line">	&#125; else if (y == 0) &#123;</span><br><span class="line">		return 0;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		return x * y;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>写一个 wrapper 程序 <code>harness.c</code> ，以 <code>lib_echo</code> 为例，这里接收用户输入作为该函数的输入</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;library.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">0x1000</span>];</span><br><span class="line">    <span class="type">size_t</span> len;</span><br><span class="line">    </span><br><span class="line">    len = read(<span class="number">0</span>, buf, <span class="number">0x1000</span>);</span><br><span class="line">    lib_echo(buf, len);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>首先把 <code>library.c</code> 编译为动态链接库：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -c -fPIC library.c -o library.o </span><br><span class="line">gcc -shared library.o -o library.so</span><br></pre></td></tr></table></figure></div>
+
+<p>然后编译</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ AFL_HARDEN=1 afl-clang-fast my_harness.c library.so  -o my_harness</span><br></pre></td></tr></table></figure></div>
+
+<p>最后将 <code>library.so</code> 的路径临时添加到当前的环境变量 <code>LD_LIBRARY_PATH</code> 中，否则没办法运行：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/root/afl-training/harness</span><br></pre></td></tr></table></figure></div>
+
+<p>建立一个 input 文件，随便往里面写点东西就可以进行fuzz了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i input/ -o out/ ./my_harness</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-02_17-43-02.png"
+                      alt="nipaste_2024-07-02_17-43-0"
+                ></p>
+<p>可以看到这里标红处显示不能有效 fuzz，这是因为虽然能够通过这种方式来 fuzz 动态链接库，<strong>但是没办法获取动态链接库中的代码覆盖率</strong>，因为覆盖率是通过代码插桩获得的，而仅在 <code>my_harness.c</code> 中进行了插桩。</p>
+<p>实际上的使用方法可以是，将 my_harness.c 和 library.c 一起使用 afl-clang 进行编译，从而完成对待测函数进行插桩，获取覆盖率信息。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AFL_HARDEN=1 afl-clang-fast harness.c library.c -o my_harness</span><br></pre></td></tr></table></figure></div>
+
+<p>很快就会发现报错了</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-02_17-56-07.png"
+                      alt="nipaste_2024-07-02_17-56-0"
+                ></p>
+<p>通过<strong>设置参数来实现对每个功能实现 fuzz</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;library.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span>&#123;</span><br><span class="line">        <span class="type">char</span> buf[<span class="number">0x1000</span>];</span><br><span class="line">        <span class="type">int</span> *ibuf;</span><br><span class="line">        <span class="type">int</span> len;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(argc &lt; <span class="number">2</span>)&#123;</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;I need more args&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(!<span class="built_in">strcmp</span>(argv[<span class="number">1</span>], <span class="string">&quot;echo&quot;</span>))&#123;</span><br><span class="line">                len = read(<span class="number">0</span>, buf, <span class="number">0x1000</span>);</span><br><span class="line">                lib_echo(buf, len);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(!<span class="built_in">strcmp</span>(argv[<span class="number">1</span>], <span class="string">&quot;mul&quot;</span>))&#123;</span><br><span class="line">                read(<span class="number">0</span>, buf, <span class="number">0x8</span>);</span><br><span class="line">                ibuf = (<span class="type">int</span>*)buf;</span><br><span class="line">                lib_mul(ibuf[<span class="number">0</span>], ibuf[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;invalid args&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>用如下命令进行编译</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AFL_HARDEN=1 afl-clang-fast my_harness.c library.c -o harness</span><br></pre></td></tr></table></figure></div>
+
+<p>然后开始进行fuzz</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i input/ -o out/ ./harness echo </span><br></pre></td></tr></table></figure></div>
+
+<p>花了7分钟左右跑出了第一个crash</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-03_10-10-58.png"
+                      alt="nipaste_2024-07-03_10-10-5"
+                ></p>
+<p>可以看到通过 fuzz 我们成功找到了能够让程序触发 assert 断言的输入。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-19_19-46-51.png"
+                      alt="nipaste_2024-07-19_19-46-5"
+                ></p>
+<h3 id="2-quickstart"><a href="#2-quickstart" class="headerlink" title="2. quickstart"></a>2. quickstart</h3><p>进入到 quickstart 目录，给了一个 vulnerable.c 文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd quickstart</span><br><span class="line">CC=afl-clang-fast AFL_HARDEN=1 make</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>vulnerable.c</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> INPUTSIZE 100</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">process</span><span class="params">(<span class="type">char</span> *input)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> *out;</span><br><span class="line">	<span class="type">char</span> *rest;</span><br><span class="line">	<span class="type">int</span> len;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">strncmp</span>(input, <span class="string">&quot;u &quot;</span>, <span class="number">2</span>) == <span class="number">0</span>)</span><br><span class="line">	&#123; <span class="comment">// upper case command</span></span><br><span class="line">		<span class="type">char</span> *rest;</span><br><span class="line">		len = strtol(input + <span class="number">2</span>, &amp;rest, <span class="number">10</span>); <span class="comment">// how many characters of the string to upper-case</span></span><br><span class="line">		rest += <span class="number">1</span>;							<span class="comment">// skip the first char (should be a space)</span></span><br><span class="line">		out = <span class="built_in">malloc</span>(len + <span class="built_in">strlen</span>(input));	<span class="comment">// could be shorter, but play it safe</span></span><br><span class="line">		<span class="keyword">if</span> (len &gt; (<span class="type">int</span>)<span class="built_in">strlen</span>(input))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;Specified length %d was larger than the input!\n&quot;</span>, len);</span><br><span class="line">			<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (out == <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;Failed to allocate memory\n&quot;</span>);</span><br><span class="line">			<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i != len; i++)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="type">char</span> c = rest[i];</span><br><span class="line">			<span class="keyword">if</span> (c &gt; <span class="number">96</span> &amp;&amp; c &lt; <span class="number">123</span>) <span class="comment">// ascii a-z</span></span><br><span class="line">			&#123;</span><br><span class="line">				c -= <span class="number">32</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			out[i] = c;</span><br><span class="line">		&#125;</span><br><span class="line">		out[len] = <span class="number">0</span>;</span><br><span class="line">		<span class="built_in">strcat</span>(out, rest + len); <span class="comment">// append the remaining text</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>, out);</span><br><span class="line">		<span class="built_in">free</span>(out);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">strncmp</span>(input, <span class="string">&quot;head &quot;</span>, <span class="number">5</span>) == <span class="number">0</span>)</span><br><span class="line">	&#123; <span class="comment">// head command</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">strlen</span>(input) &gt; <span class="number">6</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			len = strtol(input + <span class="number">4</span>, &amp;rest, <span class="number">10</span>);</span><br><span class="line">			rest += <span class="number">1</span>;		  <span class="comment">// skip the first char (should be a space)</span></span><br><span class="line">			rest[len] = <span class="string">&#x27;\0&#x27;</span>; <span class="comment">// truncate string at specified offset</span></span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, rest);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;head input was too small\n&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">strcmp</span>(input, <span class="string">&quot;surprise!\n&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// easter egg!</span></span><br><span class="line">		*(<span class="type">char</span> *)<span class="number">1</span> = <span class="number">2</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">char</span> *usage = <span class="string">&quot;Usage: %s\n&quot;</span></span><br><span class="line">				  <span class="string">&quot;Text utility - accepts commands and data on stdin and prints results to stdout.\n&quot;</span></span><br><span class="line">				  <span class="string">&quot;\tInput             | Output\n&quot;</span></span><br><span class="line">				  <span class="string">&quot;\t------------------+-----------------------\n&quot;</span></span><br><span class="line">				  <span class="string">&quot;\tu &lt;N&gt; &lt;string&gt;    | Uppercased version of the first &lt;N&gt; bytes of &lt;string&gt;.\n&quot;</span></span><br><span class="line">				  <span class="string">&quot;\thead &lt;N&gt; &lt;string&gt; | The first &lt;N&gt; bytes of &lt;string&gt;.\n&quot;</span>;</span><br><span class="line">	<span class="type">char</span> input[INPUTSIZE] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Slurp input</span></span><br><span class="line">	<span class="keyword">if</span> (read(STDIN_FILENO, input, INPUTSIZE) &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Couldn&#x27;t read stdin.\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="type">int</span> ret = process(input);</span><br><span class="line">	<span class="keyword">if</span> (ret)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, usage, argv[<span class="number">0</span>]);</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>简单来说实现了两个功能，其中一个是指定需要将字符串中需要将小写转换为大写的长度，另外一个是指定位置对字符串进行截断。其实还有一个隐藏功能，就是输入 <code>surprise!\n</code> 时，会触发内存引用错误。</p>
+<p><strong>注意事项：</strong>实际上前两个功能，也都存在漏洞，通过 fuzz 可以找到这些洞。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-19_22-11-19.png"
+                      alt="nipaste_2024-07-19_22-11-1"
+                ></p>
+<p>正常测试下，其功能如上所示。</p>
+<p>接下来尝试对目标进行 fuzz</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AFL_HARDEN=1 afl-clang-fast vulnerable.c -o vuln</span><br><span class="line">afl-fuzz -i inputs -o out ./vuln</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-19_22-14-19.png"
+                      alt="nipaste_2024-07-19_22-14-1"
+                ></p>
+<p>简单测试一下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-19_22-14-45.png"
+                      alt="nipaste_2024-07-19_22-14-4"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-19_22-15-03.png"
+                      alt="nipaste_2024-07-19_22-15-0"
+                ></p>
+<p>这里使用的是第一个功能，由于 len 被设置为了 0，所以在 strcat 的时候，会破坏 top chunk size，因此程序会崩溃。</p>
+<p>简单测试了一下，大概的错误类型如下，由于跑的时间比较短，所以输入为 <code>surprise!\n</code> 时的洞没有跑出来。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-19_23-50-06.png"
+                      alt="nipaste_2024-07-19_23-50-0"
+                ></p>
+<p>但从上面的输出来看，关于 u 和 head 这两个功能的洞算是都跑出来了，前面已经分析过 <code>u功能</code> 的漏洞了，这里在看一下 <code>head 功能</code> 的漏洞，即 id5。</p>
+<p>上面的方法比较笨，这里我们可以直接调用下面的脚本来查看具体的crashes文件内容</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cat_files_in_directory</span>(<span class="params">directory_path</span>):</span><br><span class="line">    <span class="comment"># 获取目录下的所有文件名</span></span><br><span class="line">    files = [os.path.join(directory_path, f) <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(directory_path) <span class="keyword">if</span> os.path.isfile(os.path.join(directory_path, f))]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 逐个文件执行cat命令</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;id&quot;</span> <span class="keyword">in</span> file:</span><br><span class="line">            filename = <span class="string">f&quot;================the content of <span class="subst">&#123;file&#125;</span>&quot;</span>.ljust(<span class="number">0x80</span>, <span class="string">&quot;=&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(filename)</span><br><span class="line">            subprocess.run([<span class="string">&#x27;cat&#x27;</span>, file])</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定目录路径</span></span><br><span class="line">directory_path = <span class="string">&#x27;out_1/default/crashes&#x27;</span></span><br><span class="line">cat_files_in_directory(directory_path)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_00-31-25.png"
+                      alt="nipaste_2024-07-20_00-31-2"
+                ></p>
+<p>这样看起来就快多了，同时我们也可以把 cat 换成执行指令，查看执行的效果都是些什么错误</p>
+<p>由于docker里面gdb环境不如pwndbg，这里可以直接从docker里面的crash文件拿出来，本地做分析，命令如下。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp &lt;containerId&gt;:/path/to/file/in/container /path/to/destination/on/host</span><br></pre></td></tr></table></figure></div>
+
+<p>由于 head 后的数字较大，导致len过大，从而在<code>rest[len] = &#39;\0&#39;</code>时内存地址溢出，从而发生错误。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_00-37-28.png"
+                      alt="nipaste_2024-07-20_00-37-2"
+                ></p>
+<h3 id="3-Libxml2"><a href="#3-Libxml2" class="headerlink" title="3. Libxml2"></a>3. Libxml2</h3><p>在介绍这一部分内容之前，首先来简单说明一下什么持久模式</p>
+<h4 id="persistent-mode"><a href="#persistent-mode" class="headerlink" title="persistent mode"></a>persistent mode</h4><p>关于持久模式（persistent mode）的说明文档见<a class="link"   target="_blank" rel="noopener" href="https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.persistent_mode.md" >这里 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，简单翻译如下</p>
+<blockquote>
+<p>在持久模式下，AFL++ 在单个进程中多次模糊测试目标，而不是每次执行模糊测试时都fork一个新进程。这是最有效的模糊测试方法，因为速度可以轻松提高 10 倍或 20 倍，且没有任何缺点。<em>所有专业模糊测试都使用此模式。</em></p>
+<p>持久模式要求目标可以在一个或多个函数中调用，并且其状态可以完全重置，以便可以执行多次调用而不会发生资源泄漏，并且之前的运行不会对将来的运行产生影响。</p>
+</blockquote>
+<p>举一个例子就是</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;what_you_need_for_your_target.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">__AFL_FUZZ_INIT();</span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// anything else here, e.g. command line arguments, initialization, etc.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __AFL_HAVE_MANUAL_CONTROL</span></span><br><span class="line">  __AFL_INIT();</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">char</span> *buf = __AFL_FUZZ_TESTCASE_BUF;  <span class="comment">// must be after __AFL_INIT</span></span><br><span class="line">                                                 <span class="comment">// and before __AFL_LOOP!</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (__AFL_LOOP(<span class="number">10000</span>)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> len = __AFL_FUZZ_TESTCASE_LEN;  <span class="comment">// don&#x27;t use the macro directly in a</span></span><br><span class="line">                                        <span class="comment">// call!</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (len &lt; <span class="number">8</span>) <span class="keyword">continue</span>;  <span class="comment">// check for a required/useful minimum input length</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Setup function call, e.g. struct target *tmp = libtarget_init() */</span></span><br><span class="line">    <span class="comment">/* Call function to be fuzzed, e.g.: */</span></span><br><span class="line">    target_function(buf, len);</span><br><span class="line">    <span class="comment">/* Reset state. e.g. libtarget_free(tmp) */</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>原本我们可能需要通过标准输入或者文件输入将内容输入到 buf 中，然后调用 <code>target_function</code>，实际上这样的情况下，每一次这样的过程都是需要一次 fork 系统调用，这增加了内核的开销，所以我们通过设置 <code>__AFL_LOOP(10000)</code>，可以在保证单个进程持续对目标进行 fuzz，而且会自动更新 buf 的内容。</p>
+<p>上面部分宏定义参考如下（以下宏定义能够在没有 afl-clang-fast&#x2F;lto 的情况下编译目标）：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __AFL_FUZZ_TESTCASE_LEN</span></span><br><span class="line">  <span class="type">ssize_t</span> fuzz_len;</span><br><span class="line">  <span class="meta">#<span class="keyword">define</span> __AFL_FUZZ_TESTCASE_LEN fuzz_len</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">char</span> fuzz_buf[<span class="number">1024000</span>];</span><br><span class="line">  <span class="meta">#<span class="keyword">define</span> __AFL_FUZZ_TESTCASE_BUF fuzz_buf</span></span><br><span class="line">  <span class="meta">#<span class="keyword">define</span> __AFL_FUZZ_INIT() void sync(void);</span></span><br><span class="line">  <span class="meta">#<span class="keyword">define</span> __AFL_LOOP(x) ((fuzz_len = read(0, fuzz_buf, sizeof(fuzz_buf))) &gt; 0 ? 1 : 0)</span></span><br><span class="line">  <span class="meta">#<span class="keyword">define</span> __AFL_INIT() sync()</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Deferred initialization</strong></p>
+<p>AFL++ 通过确保目标程序只执行一次（在main函数之前停下来，然后克隆当前进程对目标fuzz）来优化性能，这在一定程度上确实优化了性能，但是程序中往往还会存在其他比较耗时性的操作，如在 main 函数开始处解析一个大型的配置文件，那实际上每个fork出来的每个进程又要花时间去解析这些文件，这在一定程度上是非常耗时的，所以说延迟初始化的作用就体现出了。</p>
+<p><strong>注意事项：</strong>延迟初始化的位置如果选择的不对，可能会让程序出现故障，如下就是一些可能出现故障的例子：</p>
+<ul>
+<li>创建任何重要的线程或子进程 - 因为 forkserver 无法轻易克隆它们。</li>
+<li><code>setitimer()</code>通过或等效调用来初始化计时器。</li>
+<li>创建临时文件、网络套接字、偏移敏感文件描述符以及类似的共享状态资源 - 但前提是它们的状态对程序以后的行为有显著影响。</li>
+<li>对模糊输入的任何访问，包括读取有关其大小的元数据</li>
+</ul>
+<p>选择位置后，在适当的位置添加以下代码：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#ifdef __AFL_HAVE_MANUAL_CONTROL</span><br><span class="line">  __AFL_INIT();</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
+
+<p>这里使用 <code>#ifdef</code> 进行保护，但包含它们可确保程序在使用 afl-clang-fast&#x2F;afl-clang-lto&#x2F;afl-gcc-fast 以外的工具编译时继续正常工作。</p>
+<p><strong>Persistent mode</strong></p>
+<p>该操作的基本结构如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (__AFL_LOOP(<span class="number">1000</span>)) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Read input data. */</span></span><br><span class="line">  <span class="comment">/* Call library code to be fuzzed. */</span></span><br><span class="line">  <span class="comment">/* Reset state. */</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Exit normally. */</span></span><br></pre></td></tr></table></figure></div>
+
+<p>为什么说这个循环里面一般会放一些无状态的 API 呢，或者怎么理解这个无状态，简单理解就是，这里的操作不会影响后续的一些操作，可以一直重置状态。这里的重置状态就是我们每次 <code>call func </code>结束之后，可以立马更新数据，进入到下一次同样的操作中，下面的指令就是一个例子。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (__AFL_LOOP(<span class="number">1000</span>)) &#123;</span><br><span class="line">    <span class="type">int</span> len = __AFL_FUZZ_TESTCASE_LEN;</span><br><span class="line">    xmlDocPtr doc = xmlReadMemory((<span class="type">char</span> *)buf, len, <span class="string">&quot;https://mykter.com&quot;</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (doc != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        xmlFreeDoc(doc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Shared memory fuzzing</strong></p>
+<p>通过共享内存的方式又可以极大的提高 fuzz 的效率，这一点理解上不难，简单来说省去了每一次过程中分配内存</p>
+<p>，释放内存等耗时操作，具体使用如下。</p>
+<p>在 <code>#include</code> 指令之后，main 函数之前可以设置下面的命令。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__AFL_FUZZ_INIT();</span><br></pre></td></tr></table></figure></div>
+
+<p>设置共享内存，放在 <code>__AFL_LOOP</code> 之前</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unsigned char *buf = __AFL_FUZZ_TESTCASE_BUF;</span><br></pre></td></tr></table></figure></div>
+
+<p>下面这个命令放在<code>__AFL_LOOP</code> 循环的第一行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int len = __AFL_FUZZ_TESTCASE_LEN;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>下面就言归正传来看这道题目</p>
+<p><strong>环境搭建</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git submodule init &amp;&amp; git submodule update</span><br><span class="line">cd libxml2</span><br><span class="line">CC=afl-clang-fast ./autogen.sh # you could also use afl-clang-lto, which is usally the better choice, but - oddly - in this case it takes longer to find the bug with an lto build.</span><br><span class="line">AFL_USE_ASAN=1 make -j 4</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">./testModule <span class="comment"># if you have compiled with ASAN, the tests fail - there are illegal memory accesses in the built-in test harness!</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">leak detection doesn<span class="string">&#x27;t work in an unprivileged container as it can&#x27;</span>t attach to the process.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Run with ASAN_OPTIONS=detect_leaks=0 <span class="built_in">set</span> to <span class="built_in">disable</span> this ASAN feature, e.g.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ASAN_OPTIONS=detect_leaks=0 ./testModule</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>harness1.c</strong></p>
+<p>第一种写法的 harness 如下，这里我们不使用前面提到的任何优化</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;libxml/parser.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;libxml/tree.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    xmlInitParser();</span><br><span class="line">    xmlDocPtr doc = xmlReadFile(argv[<span class="number">1</span>], <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (doc != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        xmlFreeDoc(doc);</span><br><span class="line">    &#125;</span><br><span class="line">    xmlCleanupParser();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>编译 harness.c</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AFL_USE_ASAN=1 afl-clang-fast ./harness.c -I libxml2/include libxml2/.libs/libxml2.a -lz -lm -o harness</span><br></pre></td></tr></table></figure></div>
+
+<p>初始输入seed</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir input</span><br><span class="line">echo &quot;&lt;hi&gt;&lt;/hi&gt;&quot; &gt; input/hi.xml</span><br></pre></td></tr></table></figure></div>
+
+<p>设置好fuzz的字典然后就可以开始跑了，@@用来表示占位</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i input -o out -x /home/fuzzer/AFLplusplus/dictionaries/xml.dict ./harness @@</span><br></pre></td></tr></table></figure></div>
+
+<p>然后将近 50 分钟的时间跑出来了13个crash。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_11-36-52.png"
+                      alt="nipaste_2024-07-20_11-36-5"
+                ></p>
+<p><strong>harness2.c</strong></p>
+<p>第二种写法 harness 如下，这里我们把前面提到的优化全部加入进来，在看看速度怎么样</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;libxml/parser.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;libxml/tree.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">__AFL_FUZZ_INIT();</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="meta">#<span class="keyword">ifdef</span> __AFL_HAVE_MANUAL_CONTROL</span></span><br><span class="line">        __AFL_INIT();</span><br><span class="line">    <span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> *buf = __AFL_FUZZ_TESTCASE_BUF;  <span class="comment">// must be after __AFL_INIT</span></span><br><span class="line"></span><br><span class="line">    xmlInitParser();</span><br><span class="line">    <span class="keyword">while</span> (__AFL_LOOP(<span class="number">1000</span>)) &#123;</span><br><span class="line">        <span class="type">int</span> len = __AFL_FUZZ_TESTCASE_LEN;</span><br><span class="line">        xmlDocPtr doc = xmlReadMemory((<span class="type">char</span> *)buf, len, <span class="string">&quot;https://mykter.com&quot;</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (doc != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            xmlFreeDoc(doc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    xmlCleanupParser();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>编译 harness.c</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AFL_USE_ASAN=1 afl-clang-fast ./harness.c -I libxml2/include libxml2/.libs/libxml2.a -lz -lm -o harness</span><br></pre></td></tr></table></figure></div>
+
+<p>初始输入seed</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir input</span><br><span class="line">echo &quot;&lt;hi&gt;&lt;/hi&gt;&quot; &gt; input/hi.xml</span><br></pre></td></tr></table></figure></div>
+
+<p>设置好fuzz的字典然后就可以开始跑了，@@用来表示占位</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i input -o out -x /home/fuzzer/AFLplusplus/dictionaries/xml.dict ./harness @@</span><br></pre></td></tr></table></figure></div>
+
+<p>30分钟的时间爆了24个crash，可以看到在同样的路径探索基础上时间上是比前面的少了20分钟。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_12-10-52.png"
+                      alt="nipaste_2024-07-20_12-10-5"
+                ></p>
+<p>拿出里面的一个进行分析</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-03_16-49-31.png"
+                      alt="nipaste_2024-07-03_16-49-3"
+                ></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./fuzzer &lt; out/default/crashes/id:000013,sig:06,src:004587,time:4576851,op:havoc,rep:8</span><br></pre></td></tr></table></figure></div>
+
+<p>但仔细分析实际上这18个都是同一个地方，可以用 ASAN 打印出相关的漏洞信息</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-04_09-49-05.png"
+                      alt="nipaste_2024-07-04_09-49-0"
+                ></p>
+<p><strong>注意事项：</strong>这篇文章重心会放在学习 AFL++ 的特性上，对于具体的漏洞分析有兴趣的读者可以自行实践尝试。</p>
+<h3 id="4-heartbleed"><a href="#4-heartbleed" class="headerlink" title="4. heartbleed"></a>4. heartbleed</h3><p>题目为了降低难度，直接给了一个 handshake.cc 文件，我们需要做的就是修改这个文件来使得其成为一个 harness，从而可以对目标进行fuzz。</p>
+<p><strong>环境搭建</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd openssl</span><br><span class="line">CC=afl-clang-fast CXX=afl-clang-fast++ ./config -d</span><br><span class="line">AFL_USE_ASAN=1 make</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>handshake.cc</strong></p>
+<p>借助 gpt 完成了对源码中内容的解释</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 版权声明，表示这段代码是Google Inc.版权所有，并且遵循Apache License 2.0版本。</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/ssl.h&gt;</span>  <span class="comment">// 包含OpenSSL库的SSL功能头文件。</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/err.h&gt;</span>  <span class="comment">// 包含OpenSSL库的错误处理头文件。</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;assert.h&gt;</span>       <span class="comment">// 包含断言库，用于在运行时进行错误检查。</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span>       <span class="comment">// 包含标准整数类型定义。</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stddef.h&gt;</span>       <span class="comment">// 包含标准定义库。</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span>       <span class="comment">// 包含UNIX标准库。</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果没有定义CERT_PATH宏，则定义一个空的CERT_PATH宏。</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> CERT_PATH</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> CERT_PATH</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化SSL上下文的函数。</span></span><br><span class="line">SSL_CTX *<span class="title function_">Init</span><span class="params">()</span> &#123;</span><br><span class="line">  SSL_library_init();  <span class="comment">// 初始化SSL库。</span></span><br><span class="line">  SSL_load_error_strings();  <span class="comment">// 加载SSL错误信息。</span></span><br><span class="line">  ERR_load_BIO_strings();  <span class="comment">// 加载BIO错误信息。</span></span><br><span class="line">  OpenSSL_add_all_algorithms();  <span class="comment">// 添加所有加密算法。</span></span><br><span class="line"></span><br><span class="line">  SSL_CTX *sctx;</span><br><span class="line">  <span class="comment">// 创建新的SSL上下文，使用TLSv1方法，并断言成功。</span></span><br><span class="line">  assert (sctx = SSL_CTX_new(TLSv1_method()));</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 下面两个文件是用以下命令创建的：</span></span><br><span class="line">  <span class="comment">// openssl req -x509 -newkey rsa:512 -keyout server.key \</span></span><br><span class="line"><span class="comment">  // -out server.pem -days 9999 -nodes -subj /CN=a/</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 加载服务器证书文件，并断言成功。</span></span><br><span class="line">  assert(SSL_CTX_use_certificate_file(sctx, <span class="string">&quot;server.pem&quot;</span>,</span><br><span class="line">                                      SSL_FILETYPE_PEM));</span><br><span class="line">  <span class="comment">// 加载服务器私钥文件，并断言成功。</span></span><br><span class="line">  assert(SSL_CTX_use_PrivateKey_file(sctx, <span class="string">&quot;server.key&quot;</span>,</span><br><span class="line">                                     SSL_FILETYPE_PEM));</span><br><span class="line">  <span class="keyword">return</span> sctx;  <span class="comment">// 返回初始化的SSL上下文。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数，程序入口。</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="comment">// 初始化SSL上下文，并将其设置为静态变量。</span></span><br><span class="line">  <span class="type">static</span> SSL_CTX *sctx = Init();</span><br><span class="line">  <span class="comment">// 创建新的SSL对象。</span></span><br><span class="line">  SSL *server = SSL_new(sctx);</span><br><span class="line">  <span class="comment">// 创建新的内存BIO，用于SSL输入和输出。</span></span><br><span class="line">  BIO *sinbio = BIO_new(BIO_s_mem());</span><br><span class="line">  BIO *soutbio = BIO_new(BIO_s_mem());</span><br><span class="line">  <span class="comment">// 将内存BIO设置为SSL对象的输入和输出。</span></span><br><span class="line">  SSL_set_bio(server, sinbio, soutbio);</span><br><span class="line">  <span class="comment">// 将SSL对象设置为接受状态。</span></span><br><span class="line">  SSL_set_accept_state(server);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> 为了模拟握手的一端，我们需要在这里向sinbio写入数据。</span></span><br><span class="line">  BIO_write(sinbio, data, size);  <span class="comment">// 向sinbio写入数据。</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 执行SSL握手。</span></span><br><span class="line">  SSL_do_handshake(server);</span><br><span class="line">  <span class="comment">// 释放SSL对象。</span></span><br><span class="line">  SSL_free(server);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// 返回0，表示程序成功执行。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>有了前面 fuzz 的经验，我们知道为了对目标进行 fuzz，需要找到一个可以控制的数据输入点，那么在这道题中，可以很明显看到上面的 <code>BIO_write(sinbio, data, size);</code> 这一行会对设置的内存 BIO 数据区进行输入，从而完成后面的交互。</p>
+<p><strong>handshake.cc 1.0 版</strong></p>
+<p>下面的这个示例是不使用 persistent mode 的 harness</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Copyright 2016 Google Inc. All Rights Reserved.</span></span><br><span class="line"><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/ssl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/err.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;assert.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stddef.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> CERT_PATH</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> CERT_PATH</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">SSL_CTX *<span class="title function_">Init</span><span class="params">()</span> &#123;</span><br><span class="line">  SSL_library_init();</span><br><span class="line">  SSL_load_error_strings();</span><br><span class="line">  ERR_load_BIO_strings();</span><br><span class="line">  OpenSSL_add_all_algorithms();</span><br><span class="line">  SSL_CTX *sctx;</span><br><span class="line">  assert (sctx = SSL_CTX_new(TLSv1_method()));</span><br><span class="line">  <span class="comment">/* These two file were created with this command:</span></span><br><span class="line"><span class="comment">      openssl req -x509 -newkey rsa:512 -keyout server.key \</span></span><br><span class="line"><span class="comment">     -out server.pem -days 9999 -nodes -subj /CN=a/</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  assert(SSL_CTX_use_certificate_file(sctx, <span class="string">&quot;server.pem&quot;</span>,</span><br><span class="line">                                      SSL_FILETYPE_PEM));</span><br><span class="line">  assert(SSL_CTX_use_PrivateKey_file(sctx, <span class="string">&quot;server.key&quot;</span>,</span><br><span class="line">                                     SSL_FILETYPE_PEM));</span><br><span class="line">  <span class="keyword">return</span> sctx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="type">static</span> SSL_CTX *sctx = Init();</span><br><span class="line">  SSL *server = SSL_new(sctx);</span><br><span class="line">  BIO *sinbio = BIO_new(BIO_s_mem());</span><br><span class="line">  BIO *soutbio = BIO_new(BIO_s_mem());</span><br><span class="line">  SSL_set_bio(server, sinbio, soutbio);</span><br><span class="line">  SSL_set_accept_state(server);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* <span class="doctag">TODO:</span> To spoof one end of the handshake, we need to write data to sinbio</span></span><br><span class="line"><span class="comment">   * here */</span></span><br><span class="line">  <span class="meta">#<span class="keyword">ifdef</span> __AFL_HAVE_MANUAL_CONTROL</span></span><br><span class="line">  __AFL_INIT();</span><br><span class="line">  <span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">char</span> data[<span class="number">1000</span>];</span><br><span class="line">  <span class="type">int</span> size = read(STDIN_FILENO, data, <span class="number">1000</span>);</span><br><span class="line">  BIO_write(sinbio, data, size);</span><br><span class="line"></span><br><span class="line">  SSL_do_handshake(server);</span><br><span class="line">  SSL_free(server);		</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>编译命令</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AFL_USE_ASAN=1 afl-clang-fast++ -g handshake.cc openssl/libssl.a openssl/libcrypto.a -o handshake -I openssl/include -ldl</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>开始fuzz</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i in -o out ./handshake</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>注意：</strong>种子可以随便设置，对于这道题 afl 还是可以找到 crash 的。</p>
+<p><strong>handshake.cc 2.0 版</strong></p>
+<p>使用 persistent mode 的 harness 如下</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Copyright 2016 Google Inc. All Rights Reserved.</span></span><br><span class="line"><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/ssl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/err.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;assert.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stddef.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> CERT_PATH</span></span><br><span class="line"><span class="meta"># <span class="keyword">define</span> CERT_PATH</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">SSL_CTX *<span class="title function_">Init</span><span class="params">()</span> &#123;</span><br><span class="line">  SSL_library_init();</span><br><span class="line">  SSL_load_error_strings();</span><br><span class="line">  ERR_load_BIO_strings();</span><br><span class="line">  OpenSSL_add_all_algorithms();</span><br><span class="line">  SSL_CTX *sctx;</span><br><span class="line">  assert (sctx = SSL_CTX_new(TLSv1_method()));</span><br><span class="line">  <span class="comment">/* These two file were created with this command:</span></span><br><span class="line"><span class="comment">      openssl req -x509 -newkey rsa:512 -keyout server.key \</span></span><br><span class="line"><span class="comment">     -out server.pem -days 9999 -nodes -subj /CN=a/</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  assert(SSL_CTX_use_certificate_file(sctx, <span class="string">&quot;server.pem&quot;</span>,</span><br><span class="line">                                      SSL_FILETYPE_PEM));</span><br><span class="line">  assert(SSL_CTX_use_PrivateKey_file(sctx, <span class="string">&quot;server.key&quot;</span>,</span><br><span class="line">                                     SSL_FILETYPE_PEM));</span><br><span class="line">  <span class="keyword">return</span> sctx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__AFL_FUZZ_INIT();</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="type">static</span> SSL_CTX *sctx = Init();</span><br><span class="line">  SSL *server = SSL_new(sctx);</span><br><span class="line">  BIO *sinbio = BIO_new(BIO_s_mem());</span><br><span class="line">  BIO *soutbio = BIO_new(BIO_s_mem());</span><br><span class="line">  SSL_set_bio(server, sinbio, soutbio);</span><br><span class="line">  SSL_set_accept_state(server);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* <span class="doctag">TODO:</span> To spoof one end of the handshake, we need to write data to sinbio</span></span><br><span class="line"><span class="comment">   * here */</span></span><br><span class="line">  <span class="meta">#<span class="keyword">ifdef</span> __AFL_HAVE_MANUAL_CONTROL</span></span><br><span class="line">  __AFL_INIT();</span><br><span class="line">  <span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">  </span><br><span class="line">  <span class="type">unsigned</span> <span class="type">char</span> *data = __AFL_FUZZ_TESTCASE_BUF;;</span><br><span class="line">  <span class="keyword">while</span>(__AFL_LOOP(<span class="number">1000</span>))&#123;</span><br><span class="line">    <span class="type">int</span> size = __AFL_FUZZ_TESTCASE_LEN;</span><br><span class="line">    BIO_write(sinbio, data, size);</span><br><span class="line">    SSL_do_handshake(server);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  SSL_free(server);		</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>同样的编译和fuzz命令，两者的比较图如下：</p>
+<p><strong>正常模式下</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_13-16-46.png"
+                      alt="nipaste_2024-07-20_13-16-4"
+                ></p>
+<p><strong>持久模式</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_13-17-31.png"
+                      alt="nipaste_2024-07-20_13-17-3"
+                ></p>
+<p>可以看到持久模式虽然执行速度很快，但其稳定性很低，这不方便我们分析测试目标，所以说这里依然采用稳定的方式进行fuzz。</p>
+<p>经过一段时间之后出来了两个crash。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_16-34-10.png"
+                      alt="nipaste_2024-07-20_16-34-1"
+                ></p>
+<p>可以通过 ASAN 看到具体的漏洞信息，心脏滴血漏洞会越界泄露内存中的数据信息。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_16-35-22.png"
+                      alt="nipaste_2024-07-20_16-35-2"
+                ></p>
+<h3 id="5-ntpq"><a href="#5-ntpq" class="headerlink" title="5. ntpq"></a>5. ntpq</h3><p>NTP（Network Time Protocol，网络时间协议）是一种用于在计算机系统之间同步时钟的协议。NTP 的主要目的是通过网络将计算机的时间设置为与参考时钟一致，以确保在分布式系统中时间的一致性。</p>
+<p><code>ntpq</code> 是一个网络时间协议 (NTP) 查询工具，用于与 NTP 服务器通信，检查和管理系统时间同步状态。<code>ntpq</code> 工具通常用于获取有关 NTP 守护程序运行状态的信息。以下是一些常见的用途和功能：</p>
+<ol>
+<li><strong>显示NTP服务器状态</strong>：<code>ntpq</code> 可以查询本地或远程 NTP 服务器，显示其当前状态，包括服务器列表、偏移量、延迟等信息。常用命令是 <code>ntpq -p</code>，它会列出 NTP 服务器的对等体 (peers) 状态。</li>
+<li><strong>查询服务器配置信息</strong>：<code>ntpq</code> 允许用户查询 NTP 服务器的配置信息和统计数据。这可以帮助诊断和解决时间同步问题。</li>
+<li><strong>监控和管理NTP守护程序</strong>：<code>ntpq</code> 工具可以用于监控 NTP 守护程序的性能，并执行管理任务，例如启用或禁用特定的 NTP 对等体。</li>
+<li><strong>交互模式</strong>：通过启动 <code>ntpq</code> 而不带任何选项，用户可以进入交互模式，在此模式下可以逐个输入命令来查询和管理 NTP 服务器。</li>
+</ol>
+<p><strong>测试的 ntpq 的版本是 4.2.2</strong></p>
+<p>模糊测试的漏洞目标是<a class="link"   target="_blank" rel="noopener" href="https://xorl.wordpress.com/2009/04/13/cve-2009-0159-ntp-remote-stack-overflow/" >CVE-2009-0159: NTP Remote Stack Overflow <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，是在<code>cookedprint</code>函数中出的问题。</p>
+<p>这里思考如何实现利用<code>afl-fuzz</code>对网络收发包程序<code>ntpq</code>的模糊测试，比较好的方式直接对目标函数<code>cookedprint</code> 进行针对性的 fuzz，以避免直接用 afl 构造 ntpq 数据包。</p>
+<p><code>cookedprint</code>函数原型如下所示，从标准输入中获取<code>datatype</code>、<code>length</code>、<code>data</code>以及<code>status</code>，并将<code>fp</code>重定向给<code>stdout</code>，并对函数进行调用就可以了。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ntpq.c: 3000 </span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * cookedprint - output variables in cooked mode</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span></span><br><span class="line"><span class="title function_">cookedprint</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="type">int</span> datatype,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> length,</span></span><br><span class="line"><span class="params">        <span class="type">char</span> *data,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> status,</span></span><br><span class="line"><span class="params">        FILE *fp</span></span><br><span class="line"><span class="params">        )</span></span><br><span class="line">&#123;</span><br></pre></td></tr></table></figure></div>
+
+<p>test_harness 如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __AFL_HAVE_MANUAL_CONTROL</span></span><br><span class="line">        __AFL_INIT();</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">        <span class="type">int</span> datatype=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> status=<span class="number">0</span>;</span><br><span class="line">        <span class="type">char</span> data[<span class="number">1024</span>*<span class="number">16</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="type">int</span> length=<span class="number">0</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __AFL_HAVE_MANUAL_CONTROL</span></span><br><span class="line">        <span class="keyword">while</span> (__AFL_LOOP(<span class="number">1000</span>)) &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">                datatype=<span class="number">0</span>;</span><br><span class="line">                status=<span class="number">0</span>;</span><br><span class="line">                <span class="built_in">memset</span>(data,<span class="number">0</span>,<span class="number">1024</span>*<span class="number">16</span>);</span><br><span class="line">                read(<span class="number">0</span>, &amp;datatype, <span class="number">1</span>);</span><br><span class="line">                read(<span class="number">0</span>, &amp;status, <span class="number">1</span>);</span><br><span class="line">                length = read(<span class="number">0</span>, data, <span class="number">1024</span> * <span class="number">16</span>);</span><br><span class="line">                cookedprint(datatype, length, data, status, <span class="built_in">stdout</span>);</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __AFL_HAVE_MANUAL_CONTROL</span></span><br><span class="line">        &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>将上面这段代码插入到 <code>ntpq/ntpq.c</code> 的 <code>main</code> 函数中，删除原来的 <code>return ntpqmain(argc, argv);</code>。开始尝试对目标进行fuzz</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CC=afl-clang-fast ./configure &amp;&amp; AFL_HARDEN=1 make -C ntpq</span><br><span class="line">mkdir in</span><br><span class="line">echo 123 &gt; in/seed</span><br><span class="line">afl-fuzz -i in -o out -x ntpq.dict ntp-4.2.2/ntpq/ntpq</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_19-42-06.png"
+                      alt="nipaste_2024-07-20_19-42-0"
+                ></p>
+<p>在很短的时间之内，爆出了很多 crash。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_19-52-23.png"
+                      alt="nipaste_2024-07-20_19-52-2"
+                ></p>
+<p>然后可以来看看覆盖率如何，可以使用 llvm 中对 gcov 的支持来查看覆盖率。简单来说<code>gcov</code>是一个测试代码覆盖率的工具，是一个命令行方式的控制台程序，需要结合<code>lcov</code>,<code>gcovr</code>等前端图形工具才能实现统计数据图形化。</p>
+<p>执行下面的指令</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ntp-4.2.2</span><br><span class="line">make distclean</span><br><span class="line">CC=clang CFLAGS=&quot;--coverage -g -O0&quot; ./configure &amp;&amp; make -C ntpq</span><br></pre></td></tr></table></figure></div>
+
+<p>然后调用<code>ntpq</code>运行<code>out/queue</code>目录下所有的文件，该目录下存储的是会触发新路径的文件，运行一次即可记录所有覆盖的路径：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for F in out/default/queue/id* ; do ./ntp-4.2.2/ntpq/ntpq &lt; $F &gt; /dev/null ; done</span><br></pre></td></tr></table></figure></div>
+
+<p>生成<code>gcov</code>报告：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ntp-4.2.2/ntpq </span><br><span class="line">llvm-cov-11 gcov ntpq.c</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_19-59-18.png"
+                      alt="nipaste_2024-07-20_19-59-1"
+                ></p>
+<p>在生成的报告中，我们主要来关注<code>cookedprint</code>函数，其中前面是<code>-</code>的表示是没有对应生成代码的区域（变量声明之类的语句）；前面是数字的表示执行了的次数；前面是<code>#####</code>的表示是没有执行到的代码，可以通过观察覆盖率然后调整种子提升模糊测试效率。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_20-08-35.png"
+                      alt="nipaste_2024-07-20_20-08-3"
+                ></p>
+<p>可以根据这些覆盖率信息来动态调整模糊测试的信息。</p>
+<h3 id="6-sendmail"><a href="#6-sendmail" class="headerlink" title="6. sendmail"></a>6. sendmail</h3><p><strong>1301</strong></p>
+<p><strong>环境搭建</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">make clean</span><br><span class="line">CC=afl-clang-fast make</span><br><span class="line">mkdir in</span><br><span class="line">echo a &gt; in/1</span><br><span class="line">afl-fuzz -i in -o out ./m1-bad @@</span><br></pre></td></tr></table></figure></div>
+
+<p>经过三分钟之后，结果如下发现了7个crash</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_20-23-35.png"
+                      alt="nipaste_2024-07-20_20-23-3"
+                ></p>
+<p>在<code>HINTS.md</code>文件中给出，一个好的种子的设置可以用来快速帮助发现 crash，这里我们知道程序是一个 MIME 协议的解析器，所以这里使用如下种子：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;a=\nb=&quot; &gt; in/multiline</span><br></pre></td></tr></table></figure></div>
+
+<p>这搞了个鸡毛，到4 min 的时候，才 fuzz 出了第一个漏洞。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_20-35-57.png"
+                      alt="nipaste_2024-07-20_20-35-5"
+                ></p>
+<p>利用前面的脚本，打印出所有的 crash 信息</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_20-38-09.png"
+                      alt="nipaste_2024-07-20_20-38-0"
+                ></p>
+<p>然后尝试使用 afl-tmin 对目标测试集进行精简</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-tmin -i out/default/crashes/id:000000,sig:11,src:000046,time:64639,op:havoc,rep:4 -o minimized_out ./m1-bad @@</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_20-59-49.png"
+                      alt="nipaste_2024-07-20_20-59-4"
+                ></p>
+<p><strong>1305</strong></p>
+<p>作者在 HINTS.md 提醒我们可以采用 persisten mode 和延迟初始化来提高性能。</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp prescan-overflow-bad-fuzz.c prescan-overflow-bad.c # 直接用作者写好的harness</span><br><span class="line">CC=afl-clang-fast AFL_USE_ASAN=1 make #编译</span><br><span class="line">echo -n &quot;michael@mykter.com&quot; &gt; in/seed #设置初始输入为邮箱地址</span><br><span class="line">afl-fuzz -i in -o out ./prescan-bad</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_21-17-49.png"
+                      alt="nipaste_2024-07-20_21-17-4"
+                ></p>
+<p>可以看到这里是采用了 persisten mode 的，所以实际fuzz的过程还是比较快的，结果略（比较慢）。</p>
+<h3 id="7-date"><a href="#7-date" class="headerlink" title="7. date"></a>7. date</h3><p><code>date</code>命令是关于时间的命令，它可以用来查看、更改系统时间，它是<code>coreutils</code>组件中的一个程序。</p>
+<p>可以通过设置不同的<code>TZ</code>环境变量来显示不同的时间：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">henry@henry:~/Desktop$ date</span><br><span class="line">2024年 07月 20日 星期六 21:23:16 CST</span><br><span class="line">henry@henry:~/Desktop$ TZ=&#x27;Asia/Tokyo&#x27; date</span><br><span class="line">2024年 07月 20日 星期六 22:23:21 JST</span><br><span class="line">henry@henry:~/Desktop$ date</span><br><span class="line">2024年 07月 20日 星期六 21:23:42 CST</span><br><span class="line">henry@henry:~/Desktop$ TZ=&#x27;Asia/Tokyo&#x27; date</span><br><span class="line">2024年 07月 20日 星期六 22:23:49 JST</span><br><span class="line">henry@henry:~/Desktop$ TZ=&#x27;America/Los_Angeles&#x27; date</span><br><span class="line">2024年 07月 20日 星期六 06:23:55 PDT</span><br><span class="line">henry@henry:~/Desktop$ TZ=&#x27;Europe/London&#x27; date</span><br><span class="line">2024年 07月 20日 星期六 14:24:00 BST</span><br></pre></td></tr></table></figure></div>
+
+<p>环境搭建</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> coreutils</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./bootstrap <span class="comment"># may finish with some errors to do with &#x27;po&#x27; files, which can be ignored</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">this old version doesn<span class="string">&#x27;t work with modern compilers, we need to apply a patch</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">this patch can get overwritten by certain make targets - if you get an error during compilation about fseeko.c, try re-applying the patch</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="string">patch --follow-symlinks -p1 &lt; ../coreutils-8.29-gnulib-fflush.patch</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="string">CC=afl-clang-fast ./configure</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="string">make # this will build everything. you can try `make src/date`, but the makefile doesn&#x27;</span>t specify all of the dependencies properly so this will probably fail <span class="keyword">until</span> you<span class="string">&#x27;ve built everything once</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="string">./src/date</span></span></span><br><span class="line">Mon Jul  3 08:11:23 PDT 2017</span><br></pre></td></tr></table></figure></div>
+
+<p>由于目前<code>afl</code>对从标准输入以及文件中读取的数据的<code>fuzz</code>支持的比较友好，对于环境变量的<code>fuzz</code>要进行一定的转换，主要途径有以下三种：</p>
+<ul>
+<li>从源码中找到相应的获取<code>TZ</code>环境变量（<code>getenv</code>）的地方，把代码修改成从标准输入获取数据；</li>
+<li>编写<code>harness</code>，在程序的开头设置<code>TZ</code>环境变量，然后继续运行；</li>
+<li>编写自定义的<code>getenv</code>函数并使用<code>LD_PRELOAD</code>来对函数进行<code>hook</code>，实现每次调用<code>getenv</code>函数时都从<code>stdin</code>中获取数据。</li>
+</ul>
+<p>三种方式的优劣如下：</p>
+<ul>
+<li>在源代码中找到所有读取 TZ 环境变量的实例，并将其替换为从标准输入（stdin）中读取。</li>
+<li>编写一个测试框架（harness），它先设置环境变量，然后程序继续正常执行（例如修改 date.c 的 main 函数）。</li>
+<li>使用 LD_PRELOAD 来替换 getenv 的调用，使用一个自定义的包装器（wrapper）从标准输入中获取值。</li>
+</ul>
+<p>第二种方式最简单，只需要在<code>src/date.c</code>的<code>main</code>函数开头加入从标准输入中获取数据并设置<code>TZ</code>环境变量的代码，<code>diff</code>代码如下所示。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ diff src/date.c date_back.c</span><br><span class="line">361,364d360</span><br><span class="line">&lt;   char env_data[0x400];</span><br><span class="line">&lt;   read(0, env_data, 0x400);</span><br><span class="line">&lt;   setenv(&quot;TZ&quot;, env_data, 1);</span><br></pre></td></tr></table></figure></div>
+
+<p>重新编译</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make clean </span><br><span class="line">AFL_USE_ASAN=1 make -j</span><br></pre></td></tr></table></figure></div>
+
+<p>设置种子进行fuzz</p>
+<p>由于开启了<code>ASAN</code>特性，所以运行的时候最好用<code>asan_cgroups/limit_memory.sh</code>以限制内存</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ~/AFLplusplus/examples/asan_cgroups/limit_memory.sh -u fuzzer ~/AFLplusplus/afl-fuzz -m none -i in -o out  ~/Desktop/coreutils/src/date --date &quot;2017-03-14T15:00-UTC&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>也可以直接对目标进行 fuzz</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -m none -i in -o out ~/Desktop/coreutils/src/date --date &quot;2017-03-14 15:00 UTC&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>不过很遗憾，我自己在尝试的过程中一直开在了 <code>bootstrap</code> 这一步，导致实验无法进行</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_22-14-28.png"
+                      alt="nipaste_2024-07-20_22-14-2"
+                ></p>
+<h3 id="8-cyber-grand-challenge"><a href="#8-cyber-grand-challenge" class="headerlink" title="8. cyber-grand-challenge"></a>8. cyber-grand-challenge</h3><p><code>README.md</code> 文件中对该题目的描述为：</p>
+<blockquote>
+<p>这个程序有两个漏洞。第一个漏洞很容易被利用。第二个漏洞看起来很难通过模糊测试发现——crash.input 有一个崩溃输入示例。这个没有 HINTS 或 ANSWERS 文件 - 因为二进制文件已经从 stdin 中获取输入，所以模糊测试非常简单 - 有关更多详细信息，请参阅 quickstart&#x2F;harness&#x2F;the other challenges。第二个漏洞非常难，我不知道如何找到它！</p>
+</blockquote>
+<p>所以说这里我们直接不浪费时间，搞完简单的直接下班</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CC=afl-clang-fast AFL_HARDEN=1 make</span><br><span class="line">afl-fuzz -i in -o out ./cromu_00007</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_23-53-05.png"
+                      alt="nipaste_2024-07-20_23-53-0"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_23-53-26.png"
+                      alt="nipaste_2024-07-20_23-53-2"
+                ></p>
+<p>下面的命令可以用输入文件，对测试目标进行分析</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-analyze -i sample.input ./cromu_00007</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-20_23-56-46.png"
+                      alt="nipaste_2024-07-20_23-56-4"
+                ></p>
+<p>​	</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a class="link"   target="_blank" rel="noopener" href="https://tttang.com/archive/1508/#toc_sendmail1305" >https://tttang.com/archive/1508/#toc_sendmail1305 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/254167#h2-6" >https://www.anquanke.com/post/id/254167#h2-6 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/mykter/afl-training" >https://github.com/mykter/afl-training <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://arttnba3.cn/2021/02/01/FUZZ-0X00-AFL-I/" >https://arttnba3.cn/2021/02/01/FUZZ-0X00-AFL-I/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> Fuzzing with AFL workshop</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-07-21 00:00:02</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-07-21 00:04:31
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/07/21/afl-training/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/fuzz/">#fuzz</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/afl-training-workshop/">#afl-training-workshop</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/07/18/Fuzz4ALL/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">看论文 Fuzz4All Universal Fuzzing with Large Language Models</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Fuzzing with AFL workshop</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-text">环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF"><span class="nav-text">常见错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AFL-%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="nav-text">AFL++基本架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E6%9D%BF%E8%AF%B4%E6%98%8E"><span class="nav-text">面板说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#crash-%E5%88%86%E6%9E%90"><span class="nav-text">crash 分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge"><span class="nav-text">Challenge</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-AFL-training-harness"><span class="nav-text">1. AFL-training: harness</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-quickstart"><span class="nav-text">2. quickstart</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Libxml2"><span class="nav-text">3. Libxml2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-heartbleed"><span class="nav-text">4. heartbleed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-ntpq"><span class="nav-text">5. ntpq</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-sendmail"><span class="nav-text">6. sendmail</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-date"><span class="nav-text">7. date</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-cyber-grand-challenge"><span class="nav-text">8. cyber-grand-challenge</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-text">Reference</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
