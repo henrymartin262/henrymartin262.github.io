@@ -13,35 +13,30 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2024/07/18/fuzz4all/"/>
+    <link rel="canonical" href="http://example.com/2024/07/29/llvm_ebpf/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="Fuzz4All: Universal Fuzzing with Large Language Models论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2308.04748  开源代码：https:&#x2F;&#x2F;github.com&#x2F;fuzz4all&#x2F;fuzz4all  1. INTRODUCTION本文针对的是对以编程语言或形式语言作为输入的系统（编译器，运行引擎，约束求解器）进行有效 fuzz">
+        <meta name="description" content="Reference https:&#x2F;&#x2F;arthurchiao.art&#x2F;blog&#x2F;ebpf-assembly-with-llvm-zh&#x2F;  LLVM eBPF 汇编编程学习介绍学习基于 LLVM eBPF 汇编开发 BPF 程序，之所以不用C，而用汇编的理由如下：  测试特定的 eBPF 指令流 对程序的某个特定部分进行深度调优  由于直接从字节码写程序非常耗时，所以Clang&#x2F;LLVM 为">
 <meta property="og:type" content="article">
-<meta property="og:title" content="看论文 Fuzz4All Universal Fuzzing with Large Language Models">
-<meta property="og:url" content="http://example.com/2024/07/18/Fuzz4ALL/index.html">
+<meta property="og:title" content="LLVM ebpf 汇编学习">
+<meta property="og:url" content="http://example.com/2024/07/29/llvm_ebpf/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Fuzz4All: Universal Fuzzing with Large Language Models论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2308.04748  开源代码：https:&#x2F;&#x2F;github.com&#x2F;fuzz4all&#x2F;fuzz4all  1. INTRODUCTION本文针对的是对以编程语言或形式语言作为输入的系统（编译器，运行引擎，约束求解器）进行有效 fuzz">
+<meta property="og:description" content="Reference https:&#x2F;&#x2F;arthurchiao.art&#x2F;blog&#x2F;ebpf-assembly-with-llvm-zh&#x2F;  LLVM eBPF 汇编编程学习介绍学习基于 LLVM eBPF 汇编开发 BPF 程序，之所以不用C，而用汇编的理由如下：  测试特定的 eBPF 指令流 对程序的某个特定部分进行深度调优  由于直接从字节码写程序非常耗时，所以Clang&#x2F;LLVM 为">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-17_15-44-54.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-17_16-59-44.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_11-31-46.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_11-38-23.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_14-14-21.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_14-37-09.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_14-40-13.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_14-48-30.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_14-57-52.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_15-04-44.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-18_15-06-37.png">
-<meta property="article:published_time" content="2024-07-18T07:29:25.635Z">
-<meta property="article:modified_time" content="2024-07-29T03:44:07.396Z">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-29_11-14-17.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-29_11-19-07.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-29_11-21-20.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-29_11-26-25.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-29_11-29-25.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-07-29_11-34-01.png">
+<meta property="article:published_time" content="2024-07-29T03:37:35.238Z">
+<meta property="article:modified_time" content="2024-07-29T03:45:48.188Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="fuzz，LLM">
+<meta property="article:tag" content="llvm，ebpf">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-07-17_15-44-54.png">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-07-29_11-14-17.png">
     
     
     <!--- Icon Part-->
@@ -53,7 +48,7 @@
     
     <title>
         
-            看论文 Fuzz4All Universal Fuzzing with Large Language Models -
+            LLVM ebpf 汇编学习 -
         
         Henry Martin
     </title>
@@ -379,10 +374,10 @@
             
                 
                 
-                <img src="/images/Snipaste_2024-07-18_15-43-34.png" alt="看论文 Fuzz4All Universal Fuzzing with Large Language Models" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                <img src="/images/Snipaste_2024-07-29_11-38-02.png" alt="LLVM ebpf 汇编学习" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
                 
                 <div class="w-full flex items-center absolute bottom-0 justify-start">
-                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">看论文 Fuzz4All Universal Fuzzing with Large Language Models</h1>
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">LLVM ebpf 汇编学习</h1>
                 </div>
             
             </div>
@@ -403,15 +398,15 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2024-07-18 15:29:25</span>
-        <span class="mobile">2024-07-18 15:29:25</span>
+        <span class="desktop">2024-07-29 11:37:35</span>
+        <span class="mobile">2024-07-29 11:37:35</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-07-29 11:44:07</span>
-            <span class="mobile">2024-07-29 11:44:07</span>
+            <span class="desktop">2024-07-29 11:45:48</span>
+            <span class="mobile">2024-07-29 11:45:48</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -435,7 +430,7 @@
                             <li>></li>
                         
                         <li>
-                            <a href="/categories/fuzz/paper/">paper</a>&nbsp;
+                            <a href="/categories/fuzz/llvm/">llvm</a>&nbsp;
                         </li>
                     
                     
@@ -449,7 +444,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/fuzz%EF%BC%8CLLM/">fuzz，LLM</a>&nbsp;
+                        <a href="/tags/llvm%EF%BC%8Cebpf/">llvm，ebpf</a>&nbsp;
                     </li>
                 
             </ul>
@@ -475,145 +470,119 @@
 
 
         <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-            <h1 id="Fuzz4All-Universal-Fuzzing-with-Large-Language-Models"><a href="#Fuzz4All-Universal-Fuzzing-with-Large-Language-Models" class="headerlink" title="Fuzz4All: Universal Fuzzing with Large Language Models"></a>Fuzz4All: Universal Fuzzing with Large Language Models</h1><p>论文链接：<a class="link"   target="_blank" rel="noopener" href="https://arxiv.org/pdf/2308.04748" >https://arxiv.org/pdf/2308.04748 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>开源代码：<a class="link"   target="_blank" rel="noopener" href="https://github.com/fuzz4all/fuzz4all" >https://github.com/fuzz4all/fuzz4all <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h2 id="1-INTRODUCTION"><a href="#1-INTRODUCTION" class="headerlink" title="1. INTRODUCTION"></a>1. INTRODUCTION</h2><p>本文针对的是对以编程语言或形式语言作为输入的系统（编译器，运行引擎，约束求解器）进行有效 fuzz 而提出的一种模糊测试模型，之所以针对这类系统进行模糊测试，是因为它们的 bug 会严重影响一些下游产品的安全性。</p>
-<p>传统的 fuzzer 可以被归类为基于生成的和基于变异的，但这种传统的模糊测试技巧面临以下限制和挑战：</p>
+            <p><strong>Reference</strong></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://arthurchiao.art/blog/ebpf-assembly-with-llvm-zh/" >https://arthurchiao.art/blog/ebpf-assembly-with-llvm-zh/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h1 id="LLVM-eBPF-汇编编程学习"><a href="#LLVM-eBPF-汇编编程学习" class="headerlink" title="LLVM eBPF 汇编编程学习"></a>LLVM eBPF 汇编编程学习</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>学习基于 LLVM eBPF 汇编开发 BPF 程序，之所以不用C，而用汇编的理由如下：</p>
+<ol>
+<li><strong>测试特定的 eBPF 指令流</strong></li>
+<li>对程序的某个特定部分进行<strong>深度调优</strong></li>
+</ol>
+<p>由于直接从字节码写程序非常耗时，所以Clang&#x2F;LLVM 为 ebpf 提供了一个编译后端，能从C 源码直接生成 ebpf 字节码（GCC 也可以但是没有 clang&#x2F;llvm 完善）。</p>
+<p><strong>几种 eBPF 汇编编程的方式：</strong></p>
+<ol>
+<li><strong>直接编写 eBPF 字节码程序</strong>。也就是编写<strong>可直接加载运行</strong>的 二进制 eBPF 程序（对开发者不友好）</li>
+<li><strong>直接用 eBPF 汇编语言编写</strong>，然后用<strong>专门的汇编器</strong> （例如 <a target="_blank" rel="noopener" href="https://github.com/solarflarecom/ebpf_asm"><code>ebpf_asm</code></a>）将其汇编（assemble）成字节码。</li>
+<li>用 LLVM 将 C 编译成 eBPF 汇编，然后<strong>手动修改生成的汇编程序</strong>， 最后再将其汇编（assemble）成字节码放到对象文件。</li>
+<li>在 C 中插入内联汇编，然后统一用 clang&#x2F;llvm 编译。</li>
+</ol>
+<p>上述四种方式 clang&#x2F;llvm 都支持，这里介绍第三种和第四种</p>
+<h2 id="Clang-LLVM-编译-eBPF"><a href="#Clang-LLVM-编译-eBPF" class="headerlink" title="Clang&#x2F;LLVM 编译 eBPF"></a>Clang&#x2F;LLVM 编译 eBPF</h2><p>bpf.c 内容如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat bpf.c</span><br><span class="line">int func() &#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>编译成为 eBPF 程序</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 注意 target 类型指定为 `bpf`</span><br><span class="line">clang -target bpf -Wall -O2 -c bpf.c -o bpf.o</span><br></pre></td></tr></table></figure></div>
+
+<p>复杂的程序使用下面的命令编译</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ clang -O2 -emit-llvm -c bpf.c -o - | \</span><br><span class="line">	llc -march=bpf -mcpu=probe -filetype=obj -o bpf.o</span><br></pre></td></tr></table></figure></div>
+
+<p>以上命令会将 C 源码<strong>编译成字节码</strong>，然后生成一个 <strong>ELF 格式</strong>的目标文件</p>
+<p><strong>查看elf文件中的eBPF字节码</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-29_11-14-17.png"
+                      alt="nipaste_2024-07-29_11-14-1"
+                ></p>
+<p><code>0xb7000000</code>：r0&#x3D;0</p>
+<p><code>0x95000000</code>：exit return r0</p>
+<p>ebpf 汇编语法<a class="link"   target="_blank" rel="noopener" href="https://github.com/iovisor/bpf-docs/blob/master/eBPF.md" >参考文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="C-生成-eBPF-汇编-手工修改"><a href="#C-生成-eBPF-汇编-手工修改" class="headerlink" title="C 生成 eBPF 汇编 + 手工修改"></a>C 生成 eBPF 汇编 + 手工修改</h2><p>还是使用前面的 bpf.c 文件</p>
+<h3 id="将-C-编译成-eBPF-汇编（clang）"><a href="#将-C-编译成-eBPF-汇编（clang）" class="headerlink" title="将 C 编译成 eBPF 汇编（clang）"></a>将 C 编译成 eBPF 汇编（<code>clang</code>）</h3><p>注意这里 -target 目标需要设置为 bpf，不然就会按默认方式生成汇编</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -target bpf -S -o bpf.s bpf.c</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-29_11-19-07.png"
+                      alt="nipaste_2024-07-29_11-19-0"
+                ></p>
+<p>从上图可以清晰的看到两种编译方式，生成的汇编代码语法是不相同的。</p>
+<h3 id="手动修改-ebpf-汇编"><a href="#手动修改-ebpf-汇编" class="headerlink" title="手动修改 ebpf 汇编"></a>手动修改 ebpf 汇编</h3><p>我们在生成的 ebpf 汇编程序中加一行指令<code>r0 = 3</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-29_11-21-20.png"
+                      alt="nipaste_2024-07-29_11-21-2"
+                ></p>
+<h3 id="将汇编程序-assemble-成-ELF-对象文件（llvm-mc）"><a href="#将汇编程序-assemble-成-ELF-对象文件（llvm-mc）" class="headerlink" title="将汇编程序 assemble 成 ELF 对象文件（llvm-mc）"></a>将汇编程序 assemble 成 ELF 对象文件（<code>llvm-mc</code>）</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">llvm-mc -triple bpf -filetype=obj -o bpf.o bpf.s</span><br></pre></td></tr></table></figure></div>
+
+<p>这一步将 ebpf 汇编文件生成了 ebpf 字节码文件，可以看到相较于前面的一行，这里多出来一行，即是我们添加的<code>r0 =3 </code>这一行命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">henry@henry:~/Documents/test$ readelf -x .text bpf.o</span><br><span class="line"></span><br><span class="line">Hex dump of section &#x27;.text&#x27;:</span><br><span class="line">  0x00000000 b7000000 00000000 95000000 00000000 ................</span><br><span class="line">  0x00000010 b7000000 03000000                   ........</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="变换成为可读的方式查看-ebpf-字节码"><a href="#变换成为可读的方式查看-ebpf-字节码" class="headerlink" title="变换成为可读的方式查看 ebpf 字节码"></a>变换成为可读的方式查看 ebpf 字节码</h3><p>当然上面的16进制的字节码并不好看，llvm_objdump 支持查看 ebpf 字节码程序</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># -d           : alias for --disassemble</span><br><span class="line"># --disassemble: display assembler mnemonics for the machine instructions</span><br><span class="line">llvm-objdump -d bpf.o</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-29_11-26-25.png"
+                      alt="nipaste_2024-07-29_11-26-2"
+                ></p>
+<h3 id="编译时嵌入调试符号或C源码"><a href="#编译时嵌入调试符号或C源码" class="headerlink" title="编译时嵌入调试符号或C源码"></a>编译时嵌入调试符号或C源码</h3><p>LLVM 还可以将调试信息嵌入到字节码文件当中，需要在 clang 编译时加上 -g 参数</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># -g: generate debug information.</span><br><span class="line">clang -target bpf -g -S -o bpf.s bpf.c</span><br><span class="line">llvm-mc -triple bpf -filetype=obj -o bpf.o bpf.s</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/Snipaste_2024-07-29_11-29-25.png"
+                      alt="nipaste_2024-07-29_11-29-2"
+                ></p>
+<p><strong>注意事项：</strong>用的是 -S（显示源码），不是 -d（反汇编）。</p>
+<h2 id="内联汇编"><a href="#内联汇编" class="headerlink" title="内联汇编"></a>内联汇编</h2><p>另一种生成和编译 eBPF 汇编的方式：<strong>直接在 C 程序中嵌入 eBPF 汇编</strong>。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">func</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> foobar = <span class="number">2</span>, r3 = <span class="number">3</span>, *foobar_addr = &amp;foobar;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">asm</span> <span class="title function_">volatile</span><span class="params">(<span class="string">&quot;lock *(u64 *)(%0+0) += %1&quot;</span> : <span class="comment">// 等价于：foobar += r3</span></span></span><br><span class="line"><span class="params">         <span class="string">&quot;=r&quot;</span>(foobar_addr) :</span></span><br><span class="line"><span class="params">         <span class="string">&quot;r&quot;</span>(r3), <span class="string">&quot;0&quot;</span>(foobar_addr))</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> foobar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>对于上述内联汇编的解释如下（GPT回答）：</strong></p>
+<p>在 GCC 的内联汇编语法中，输出操作数、输入操作数和修饰符（即约束）的位置和顺序是固定的，这使得我们可以确定 <code>%0</code>、<code>%1</code> 等占位符所对应的具体操作数。以下是这些部分的具体规则：</p>
+<ol>
+<li><strong>输出操作数（Output Operands）</strong>：位于冒号 <code>:</code> 之后的第一组，括在双引号 <code>&quot;&quot;</code> 中，并以等号 <code>=</code> 开头的表示输出操作数。输出操作数的约束通常以 <code>=</code> 开头，表示这是一个输出（即目标）操作数。</li>
+<li><strong>输入操作数（Input Operands）</strong>：位于输出操作数之后的第二组，括在双引号 <code>&quot;&quot;</code> 中，不以等号 <code>=</code> 开头的表示输入操作数。</li>
+</ol>
+<p>在内联汇编代码中，操作数列表中的位置决定了占位符 <code>%0</code>、<code>%1</code> 等所引用的具体操作数。下面是对应关系的一个例子：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm (&quot;&lt;汇编代码&gt;&quot; : &lt;输出操作数列表&gt; : &lt;输入操作数列表&gt;);</span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li><p><strong>目标系统和语言的紧耦合</strong></p>
-<p>比如说针对某种语言的模糊测试器，放到另外一种语言下就不能再使用了</p>
-</li>
-<li><p><strong>缺乏对新特性的支持</strong></p>
-<p>比如说传统模糊测试器只针对某种语言的某一个版本，而语言也是慢慢更新的，但这些模糊测试器并没有将这些更新的新特性加入到模糊测试器的考虑范围之内</p>
-</li>
-<li><p><strong>受限的生成能力</strong></p>
-<p>基于生成的模糊器其通常非常依赖输入语法和一些语义规则来确保输入的有效性，但这在一定程度上会回避一些难以建模的语言特征，这使得只覆盖到语言的部分特性，基于变异的模糊器也是如此</p>
-</li>
+<li><strong>%0</strong> 对应输出操作数列表中的第一个操作数。</li>
+<li><strong>%1</strong> 对应输入操作数列表中的第一个操作数。</li>
+<li><strong>%2</strong> 对应输入操作数列表中的第二个操作数，依此类推。</li>
 </ul>
-<p>这篇论文的工作在于：提出了一个可以针对不同语言输入（C，C++，GO）和这些语言不同的特征都能够有效进行模糊测试的基于 LLM 的模糊器。这个可以很好解决上面提出的三个问题，同时这篇文章做出的贡献在于：</p>
+<p>在上面 c 代码中：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asm (&quot;lock *(u64 *)(%0+0) += %1&quot;</span><br><span class="line">     : &quot;=r&quot;(foobar_addr)  // 输出操作数</span><br><span class="line">     : &quot;r&quot;(r3), &quot;0&quot;(foobar_addr)); // 输入操作数</span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li>利用 LLM 生成广泛有意义的输入进行测试</li>
-<li>通过自动将用户输入提取为有效生成SUT输入的 prompt</li>
-<li>迭代修改 prompt，连续生成新的模糊输入</li>
-<li>在真实世界的有效性</li>
+<li><strong>%0</strong> 对应第一个输出操作数 <code>&quot;=r&quot;(foobar_addr)</code>。</li>
+<li><strong>%1</strong> 对应第一个输入操作数 <code>&quot;r&quot;(r3)</code>。</li>
 </ul>
-<h2 id="2-BACKGROUND-AND-RELATED-WORK"><a href="#2-BACKGROUND-AND-RELATED-WORK" class="headerlink" title="2. BACKGROUND AND RELATED WORK"></a>2. BACKGROUND AND RELATED WORK</h2><p>与传统的 autoprompt 和基于代理的方法不同，论文中的 autoprompt 策略直接使用GPT4合成提示，并根据特定的模糊目标对提示进行评分。</p>
-<p>作者在这一部分提到了一些常见的模糊器，如 AFL，libfuzzer 并说明了这些模糊器由于受限的变异能力，并不能很好的生成有效输入，从而限制了新的路径的发现。PolyGlot 是一种与语言无关的模糊器，由于它有限的变异能力，还是达不到特定于某种语言设计的 fuzzer 覆盖水平。</p>
-<p>不同于其它的 LLM fuzzers，Fuzz4All还支持<strong>生成专注于选定特性的代码片段</strong>用于目标模糊测试，简单来说支持针对多个 SUT（测试系统 system under test）的模糊测试。</p>
-<h2 id="3-FUZZ4ALL-APPROACH"><a href="#3-FUZZ4ALL-APPROACH" class="headerlink" title="3. FUZZ4ALL APPROACH"></a>3. FUZZ4ALL APPROACH</h2><p>如下图所示，Fuzz4All 建立在两个模型之上，一是减少给定用户输入的 DLLM（distillation LLM），另一个是创建模糊输入的 GLLM （generation LLM）。</p>
+<p>因此，<code>%0</code> 引用了第一个输出操作数 <code>foobar_addr</code>，因为它是在输出操作数列表中的第一个位置上。</p>
+<h3 id="编译生成的字节码文件"><a href="#编译生成的字节码文件" class="headerlink" title="编译生成的字节码文件"></a>编译生成的字节码文件</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -target bpf -Wall -O2 -c inline_asm.c -o inline_asm.o</span><br></pre></td></tr></table></figure></div>
+
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-17_15-44-54.png"
-                      alt="nipaste_2024-07-17_15-44-5"
+                     data-src="/images/Snipaste_2024-07-29_11-34-01.png"
+                      alt="nipaste_2024-07-29_11-34-0"
                 ></p>
-<p>Fuzz4All通过使用大型的、最先进的<strong>DLLM</strong> 对多个不同的 candidate prompts 进行采样来执行 Autoprompting 步骤，每个 candidate prompts 被传递给<strong>GLLM</strong>以生成代码片段，从生成的代码片段中进行评分，并选出 best prompt，该 best prompt 会作为下一阶段 Fuzzing Loop 的 input prompt，这一阶段不断通过 generation LLM 生成模糊测试的有效输入，同时为了避免输出相同的输入示例，Fuzz4All 每次迭代的过程中都会更新 input prompt 来保证在下一个循环阶段，生成不一样的输入示例。</p>
-<h3 id="3-1-Autoprompting"><a href="#3-1-Autoprompting" class="headerlink" title="3.1 Autoprompting"></a>3.1 Autoprompting</h3><p>从前面的图可以看到，distillation LLM 接受技术文档，示例代码，包括代码规范作为输入，不像传统的fuzzers那样要求特定的输入格式，同时由于用户输入的一些信息可能是冗余的或者不相关的，所以 autoprompting 的目标正是剔除这些影响因素，生成有效的基于 llm 模糊测试的 input prompt。 </p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-17_16-59-44.png"
-                      alt="nipaste_2024-07-17_16-59-4"
-                ></p>
-<p>上图为 Autoprompting 实现的主要的一个算法逻辑，算法的实现思想也很简单，最终返回一个 input prompt，这里的  $M_D$ 可以理解为是 distillation LLM，Fuzz4All 首先使用温度为0的贪婪采样生成一个 candidate prompt，该算法通过低温先采样，得到具有高置信度的可信解，然后，算法继续在更高的温度下进行采样，以获得更多样化的 prompt。</p>
-<p>在经过 distllation LLM 的处理后，会生成多个 candidate prompts，为了评估这些 prompt 的有效性和表现，这里使用 generation LLM 生成对应这些 prompt 的代码片段，然后会对这些代码片段进行评分，从而选出最优的 prompt 用于下一阶段的训练。评分的依据可以是覆盖率，发现的bug数，或者生成的输入示例的复杂性，$M_G$ 可以理解为是 generation LLM，负责选出最终计算出来的最高分的 input prompt。</p>
-<h3 id="3-2-Fuzzing-Loop"><a href="#3-2-Fuzzing-Loop" class="headerlink" title="3.2 Fuzzing Loop"></a>3.2 Fuzzing Loop</h3><p>这一步需要以前一步最后生成的的 input prompt 作为输入，并且该阶段的目标是通过 GLLM（gneration LLM）去产生足够多样化的模糊测试输入示例。但碍于 LLMs 的概率本质，对同样的输入多次采样可能会生成相同或者相似的代码片段，为了避免这一问题论文中采用<strong>示例代码片段</strong>和<strong>自然语言指令</strong>来引导生成多样化的代码片段。</p>
-<p>模糊测试循环的高级思想是通过从<strong>先前的迭代中选择一个示例模糊测试输入并指定生成策略</strong>，不断地增加原始 input prompt。生成策略被设计为关于如何处理所提供的代码示例的指令，这些策略受到传统模糊器的启发，比如基于生成的模糊测试和基于变体的模糊测试。</p>
-<p>在每次新的模糊循环迭代之前，Fuzz4All将一个示例和生成策略附加到输入提示符中，使GLLM能够不断地创建新的模糊输入。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_11-31-46.png"
-                      alt="nipaste_2024-07-18_11-31-4"
-                ></p>
-<p>可以从上图理解整个 fuzzing loop 所做的事，其实归纳为<strong>三个核心点</strong>就是：</p>
-<ul>
-<li><p><strong>generate-new</strong></p>
-<p>通过 initial prompt 和 generate-new 指令，让 GLLM 生成一个代码片段示例，该示例作为下一个步骤的 example</p>
-</li>
-<li><p><strong>mutate-existing</strong></p>
-<p>这一步将上一步产生的 example 进行变异（其它输入都没有变化），然后交给 GLLM 再次生成变异后的代码片段</p>
-</li>
-<li><p><strong>semantic-equiv</strong></p>
-<p>这一步顾名思义在前一步代码示例的基础上，生意在语法上等价的另外一种代码片段，比如在上面的例子中多了个 <code>:named a</code>，虽然在语法上是等价的，但在找 bug 时，这种替换却是有效的</p>
-</li>
-</ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_11-38-23.png"
-                      alt="nipaste_2024-07-18_11-38-2"
-                ></p>
-<p>上述算法即为 Fuzzing loop 整个过程的伪代码实现，$M_G$ 即代表 GLLM，首先初始化一个 genStrats 的向量，里面分别定义了三种策略，其次第三行生成第一批原始模糊测试示例。第5行到第9行是 fuzzing loop 的主要部分，第6行会从先前产生的所有输入示例中随机选择示例用来测试，同时，第7行又从 genStrats 的三种策略中随机选择一种作为 GLLM 的下一步输入（第8行）。如果用户定义的oracle识别出意外的行为，例如，崩溃，那么算法将向检测到的错误集合添加一个(第9行)。最后，循环的终止条件设置为了耗尽所有 fuzzing budget 时停止。</p>
-<p><strong>Oracle</strong></p>
-<p>上述伪代码中有一个 Oracle，这个函数实际上是根据输入示例，来检查对应的 SUT 的行为以检测错误，这个 Oracle 可以是由用户定义，比如说我们可以将分段错误和内部断言失败作为定义 Oracle 检测错误的标准。</p>
-<h2 id="4-EXPERIMENTAL-DESIGN"><a href="#4-EXPERIMENTAL-DESIGN" class="headerlink" title="4. EXPERIMENTAL DESIGN"></a>4. EXPERIMENTAL DESIGN</h2><h3 id="4-1-Implementation"><a href="#4-1-Implementation" class="headerlink" title="4.1 Implementation"></a>4.1 Implementation</h3><p>Fuzz4All主要由python实现，与传统的fuzzers(如Csmith (&gt;80K LoC))相比，Fuzz4All具有非常轻量级的实现。由前面的内容介绍可以知道，Fuzz4All 实际上由两个关键阶段构成即 Autoprompting 和 Fuzzing Loop，而这两个阶段的核心构成组件为 DLLM 和 GLLM。</p>
-<p>Fuzz4All <strong>使用 GPT4 作为 DLLM</strong> 来执行 Autoprompting，因为该模型对于广泛的基于nlp的推理任务来说是最先进的。对于 Fuzzing Loop，<strong>使用 StarCoder 模型的 hug Face 实现作为 GLLM</strong>。</p>
-<h3 id="4-2-Systems-Under-Test-and-Baselines"><a href="#4-2-Systems-Under-Test-and-Baselines" class="headerlink" title="4.2  Systems Under Test and Baselines"></a>4.2  Systems Under Test and Baselines</h3><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_14-14-21.png"
-                      alt="nipaste_2024-07-18_14-14-2"
-                ></p>
-<p>上图显示了不同的测试对象，如 GCC，Clang，同时作为对比还有一些 Baseline 工具，如 CSMITH，这是针对 C 编译器而实现的一种模糊器。</p>
-<h2 id="5-RESULTS"><a href="#5-RESULTS" class="headerlink" title="5. RESULTS"></a>5. RESULTS</h2><h3 id="5-1-RQ1-Comparison-against-Existing-Fuzzers"><a href="#5-1-RQ1-Comparison-against-Existing-Fuzzers" class="headerlink" title="5.1 RQ1: Comparison against Existing Fuzzers"></a>5.1 RQ1: Comparison against Existing Fuzzers</h3><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_14-37-09.png"
-                      alt="nipaste_2024-07-18_14-37-0"
-                ></p>
-<p>在模糊测试中覆盖路径是用来衡量模糊测试效果非常重要的一个指标，上图即反映了 24h 内 Fuzz4All 和其他对比模糊器的覆盖路径情况，其实还是可以明显看出 Fuzz4All 的覆盖路径表现还是非常不错的相较于其它几个，并且一直在保持着上升的状态，而其他几个模糊器似乎在经过短暂一段时间之后，覆盖率逐渐平稳不在升高。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_14-40-13.png"
-                      alt="nipaste_2024-07-18_14-40-1"
-                ></p>
-<p>上图就明显的反映了覆盖路径提升的一个具体效果，从个人观点来看，这个确实可以理解为 Fuzz4All 的一个优势，但从上图中可以看到实际上 Fuzz4All 生成的有效输入（valid）并不高，而且显著低于其他模糊器。</p>
-<h3 id="5-2-RQ2-Effectiveness-of-Targeted-Fuzzing"><a href="#5-2-RQ2-Effectiveness-of-Targeted-Fuzzing" class="headerlink" title="5.2 RQ2: Effectiveness of Targeted Fuzzing"></a>5.2 RQ2: Effectiveness of Targeted Fuzzing</h3><p>下表通过命中率和覆盖路径来作为衡量 Fuzz4All 在针对目标模糊测试时的有效性。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_14-48-30.png"
-                      alt="nipaste_2024-07-18_14-48-3"
-                ></p>
-<p>首先来简单解释下上面表格的含义，每一列代表针对某个语言的某一个特性进行模糊测试，如针对 C 中的 typedef  来进行特征模糊测试，来方便针对根据具体特征发现更多的 bug。表格中每一个具体的数值代表的是命中率，可以理解为生成的输入中能够满足某一特性的部分，同时，可以发现 Fuzz4All 在这一方面是有优势的，相较于 General 来说命中率少的可怜，但从覆盖路径这一角度来说传统模糊器在路径探索方面依然表现出不错的性能。</p>
-<h3 id="5-3-RQ3-Ablation-Study"><a href="#5-3-RQ3-Ablation-Study" class="headerlink" title="5.3 RQ3: Ablation Study"></a>5.3 RQ3: Ablation Study</h3><p>这一部分可以看做是灵敏度分析，通过简单的控制变量，来发现实验过程中采用的一些策略是否起了比较重要的作用。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_14-57-52.png"
-                      alt="nipaste_2024-07-18_14-57-5"
-                ></p>
-<p>如上图所示，比如说在 AutoPrompting 阶段，定义了三种不同的类型实现，第一种是直接不提供 initial prompt。第二种是将用户提供的 input 直接作为 Fuzzing Loop 的输入，而不经过 DLLM 处理。第三种就是论文中所采用的阶段。</p>
-<p>可以看到在探索路径上明显有了提高，这说明 DLLM 这一步还是有存在的必要的，但生成的有效输入占比上却出现了降低（笑）。</p>
-<p>表格中下面的 Fuzzing Loop 分析也是同理，可以做参考。</p>
-<h3 id="5-4-RQ4-Bug-Finding"><a href="#5-4-RQ4-Bug-Finding" class="headerlink" title="5.4 RQ4: Bug Finding"></a>5.4 RQ4: Bug Finding</h3><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_15-04-44.png"
-                      alt="nipaste_2024-07-18_15-04-4"
-                ></p>
-<p>这是 Fuzz4All 总的一个 bug 产出，同时作者还列出了几个 Fuzz4All 具体的 bug 示例代码如下</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/Snipaste_2024-07-18_15-06-37.png"
-                      alt="nipaste_2024-07-18_15-06-3"
-                ></p>
-<p>从总体上可以看到这些代码是十分简洁的，但它们都有一个共同的特点，就是里面加入了很多针对目标语言和编译器的新特性，导致了 bug 的发现，这是其他模糊器没有的一个优点。</p>
-<h2 id="论文总结"><a href="#论文总结" class="headerlink" title="论文总结"></a>论文总结</h2><p>这篇论文是发表在 ICSE 软工的一个顶会，文章比较突出的一个特点就是在传统 Fuzz 的过程上加上了 LLM 助力，这算是一个比较新颖的方式，这里提一下我认为这篇文章的优点：</p>
-<ul>
-<li>在传统 Fuzz 加上了 LLM</li>
-<li>在路径探索上表现出不错的效果</li>
-<li>如论文的名字一样 Fuzz4All，实现了针对多个目标进行模糊测试</li>
-<li>由于 LLM 的灵活性，Fuzz4All 可以根据当下的一些新特性来产生特定于其他模糊器的输入</li>
-</ul>
-<p>同时我也认为基于这篇文章还有一些待挖掘的点（知识有限，一点拙见）：</p>
-<ul>
-<li>DLLM 直接是由调用 GPT4 实现（fuzzing的能力受限于 GPT4 的一些具体的环境），是否可以训练出一套针对目标系统的 LLM，这样可能会在路径探索和有效性上表现得更好，同时也能发现更多的 bug</li>
-<li>说是 Fuzz4All，但是实际上其本质还是在现有的模型上套了一层娃，连接了 fuzz 和 LLM 这两个部分，从某种程度上来说，我觉得这一部分可以尝试做的更好，以增强对目标体系的针对性。</li>
-</ul>
+<p>这种方式无需像前一种需要将编译和汇编步骤分开</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>前面两种方式最后都可以成功生成 ebpf 字节码文件，但不一定能通过 ebpf verifier 的检查。</p>
 
         </div>
 
@@ -621,18 +590,18 @@
             <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
                 <div class="article-copyright-info-container">
     <ul>
-        <li><strong>Title:</strong> 看论文 Fuzz4All Universal Fuzzing with Large Language Models</li>
+        <li><strong>Title:</strong> LLVM ebpf 汇编学习</li>
         <li><strong>Author:</strong> henry</li>
         <li><strong>Created at
-                :</strong> 2024-07-18 15:29:25</li>
+                :</strong> 2024-07-29 11:37:35</li>
         
             <li>
                 <strong>Updated at
-                    :</strong> 2024-07-29 11:44:07
+                    :</strong> 2024-07-29 11:45:48
             </li>
         
         <li>
-            <strong>Link:</strong> https://henrymartin262.github.io/2024/07/18/Fuzz4ALL/
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/07/29/llvm_ebpf/
         </li>
         <li>
             <strong>
@@ -654,7 +623,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/fuzz%EF%BC%8CLLM/">#fuzz，LLM</a>&nbsp;
+                        <a href="/tags/llvm%EF%BC%8Cebpf/">#llvm，ebpf</a>&nbsp;
                     </li>
                 
             </ul>
@@ -665,29 +634,14 @@
         
             <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
                 
-                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-                        <a class="prev"
-                        rel="prev"
-                        href="/2024/07/21/afl-training/"
-                        >
-                            <span class="left arrow-icon flex justify-center items-center">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">Fuzzing with AFL workshop</span>
-                                <span class="post-nav-item">Prev posts</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="next"
                         rel="next"
-                        href="/2024/07/15/llvm_note/"
+                        href="/2024/07/21/afl-training/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">LLVM 学习笔记</span>
+                                <span class="post-nav-title-item">Fuzzing with AFL workshop</span>
                                 <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -747,8 +701,8 @@
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">看论文 Fuzz4All Universal Fuzzing with Large Language Models</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fuzz4All-Universal-Fuzzing-with-Large-Language-Models"><span class="nav-text">Fuzz4All: Universal Fuzzing with Large Language Models</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-INTRODUCTION"><span class="nav-text">1. INTRODUCTION</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-BACKGROUND-AND-RELATED-WORK"><span class="nav-text">2. BACKGROUND AND RELATED WORK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-FUZZ4ALL-APPROACH"><span class="nav-text">3. FUZZ4ALL APPROACH</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Autoprompting"><span class="nav-text">3.1 Autoprompting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Fuzzing-Loop"><span class="nav-text">3.2 Fuzzing Loop</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-EXPERIMENTAL-DESIGN"><span class="nav-text">4. EXPERIMENTAL DESIGN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Implementation"><span class="nav-text">4.1 Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Systems-Under-Test-and-Baselines"><span class="nav-text">4.2  Systems Under Test and Baselines</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-RESULTS"><span class="nav-text">5. RESULTS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-RQ1-Comparison-against-Existing-Fuzzers"><span class="nav-text">5.1 RQ1: Comparison against Existing Fuzzers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-RQ2-Effectiveness-of-Targeted-Fuzzing"><span class="nav-text">5.2 RQ2: Effectiveness of Targeted Fuzzing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-RQ3-Ablation-Study"><span class="nav-text">5.3 RQ3: Ablation Study</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-RQ4-Bug-Finding"><span class="nav-text">5.4 RQ4: Bug Finding</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E6%80%BB%E7%BB%93"><span class="nav-text">论文总结</span></a></li></ol></li></ol>
+        <div class="page-title">LLVM ebpf 汇编学习</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LLVM-eBPF-%E6%B1%87%E7%BC%96%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0"><span class="nav-text">LLVM eBPF 汇编编程学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-LLVM-%E7%BC%96%E8%AF%91-eBPF"><span class="nav-text">Clang&#x2F;LLVM 编译 eBPF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E7%94%9F%E6%88%90-eBPF-%E6%B1%87%E7%BC%96-%E6%89%8B%E5%B7%A5%E4%BF%AE%E6%94%B9"><span class="nav-text">C 生成 eBPF 汇编 + 手工修改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86-C-%E7%BC%96%E8%AF%91%E6%88%90-eBPF-%E6%B1%87%E7%BC%96%EF%BC%88clang%EF%BC%89"><span class="nav-text">将 C 编译成 eBPF 汇编（clang）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E4%BF%AE%E6%94%B9-ebpf-%E6%B1%87%E7%BC%96"><span class="nav-text">手动修改 ebpf 汇编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E6%B1%87%E7%BC%96%E7%A8%8B%E5%BA%8F-assemble-%E6%88%90-ELF-%E5%AF%B9%E8%B1%A1%E6%96%87%E4%BB%B6%EF%BC%88llvm-mc%EF%BC%89"><span class="nav-text">将汇编程序 assemble 成 ELF 对象文件（llvm-mc）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E6%8D%A2%E6%88%90%E4%B8%BA%E5%8F%AF%E8%AF%BB%E7%9A%84%E6%96%B9%E5%BC%8F%E6%9F%A5%E7%9C%8B-ebpf-%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-text">变换成为可读的方式查看 ebpf 字节码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E6%97%B6%E5%B5%8C%E5%85%A5%E8%B0%83%E8%AF%95%E7%AC%A6%E5%8F%B7%E6%88%96C%E6%BA%90%E7%A0%81"><span class="nav-text">编译时嵌入调试符号或C源码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E8%81%94%E6%B1%87%E7%BC%96"><span class="nav-text">内联汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E7%94%9F%E6%88%90%E7%9A%84%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6"><span class="nav-text">编译生成的字节码文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
 
     </div>
 </div>
