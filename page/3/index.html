@@ -13,14 +13,14 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/archives/2023/11/"/>
+    <link rel="canonical" href="http://example.com/page/3/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
         <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2023/11/index.html">
+<meta property="og:url" content="http://example.com/page/3/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -35,8 +35,6 @@
     <!--- Page Info-->
     
     <title>
-        
-            Archive: 2023/11 -
         
         Henry Martin
     </title>
@@ -110,6 +108,39 @@
 <main class="page-container" id="swup">
 
     
+        <style>
+    .home-article-item,
+    .sidebar-links,
+    .sidebar-content,
+    a.page-number,
+    a.extend,
+    .sidebar-links .links:hover,
+    .right-bottom-tools,
+    footer.footer {
+        background-color: var(--background-color-transparent-80) !important;
+    }
+    .right-bottom-tools:hover,
+    a.page-number:hover,
+    a.extend:hover {
+        background-color: var(--primary-color) !important;
+    }
+    .site-info,
+    .home-article-sticky-label {
+        background-color: var(--background-color-transparent-15) !important;
+    }
+    .home-article-sticky-label {
+        backdrop-filter: none !important;
+    }
+    .home-banner-background {
+        filter: blur(15px);
+    }
+</style>
+
+<div class="home-banner-background">
+</div>
+
+
+    
 
     <div class="main-content-container">
 
@@ -121,9 +152,9 @@
         <div class="left">
             
             <a class="logo-title" href="/">
-                
+                <h1>
                 Henry Martin
-                
+                </h1>
             </a>
         </div>
 
@@ -135,7 +166,7 @@
                         
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="" 
+                                <a class="active" 
                                     href="/"  >
                                     
                                         
@@ -151,7 +182,7 @@
                         
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="active" 
+                                <a class="" 
                                     href="/archives"  >
                                     
                                         
@@ -250,7 +281,7 @@
             
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group active" 
                         href="/"  >
                              
                                 
@@ -265,7 +296,7 @@
             
                 
                     <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group active" 
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
                         href="/archives"  >
                              
                                 
@@ -351,247 +382,218 @@
         <div class="main-content-body">
 
             
+                <div class="home-sidebar-container">
+    <div class="sticky-container sticky">
+        
+            
+                <div class="sidebar-links">
+                    <div class="site-info">
+                        <div class="site-name">Henry Martin</div>
+                        
+                    </div>
+                    
+                        
+                            
+                                <a class="links" href="/archives">
+                                    
+                                        <i class="fa-regular fa-archive icon-space"></i>
+                                    
+                                    <span class="link-name">Archives</span>
+                                </a>
+                            
+                        
+                            
+                                <a class="links" href="/tags">
+                                    
+                                        <i class="fa-regular fa-tags icon-space"></i>
+                                    
+                                    <span class="link-name">Tags</span>
+                                </a>
+                            
+                        
+                            
+                                <a class="links" href="/categories">
+                                    
+                                        <i class="fa-regular fa-folder icon-space"></i>
+                                    
+                                    <span class="link-name">Categories</span>
+                                </a>
+                            
+                        
+                    
+                </div>
+            
+            <div class="sidebar-content"  marginTop >
+                <div class="avatar flex justify-center">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="author flex flex-col justify-center my-2.5 mx-0">
+                    <div class="name">henry</div>
+                    
+                        <div class="label">Lv3</div>
+                    
+                </div>
+                <div class="statistics">
+                    <a class="item" href="/tags">
+                        <div class="number">43</div>
+                        <div class="label">Tags</div>
+                    </a>
+                    <a class="item" href="/categories">
+                        <div class="number">22</div>
+                        <div class="label">Categories</div>
+                    </a>
+                    <a class="item" href="/archives">
+                        <div class="number">22</div>
+                        <div class="label">Posts</div>
+                    </a>
+                </div>
+            </div>
+        
+
+    </div>
+</div>
+
+            
 
             <div class="main-content">
 
                 
-                    <div class="archive-container ">
-    
+                    <div class="home-content-container">
+    <ul class="home-article-list">
+        
+            <li class="home-article-item">
 
-<div class="archive-list-container">
-    
-        <section class="archive-item">
-            <div class="archive-item-header">
-                <span class="archive-year">2024</span>
-                <span class="archive-year-post-count">[19]</span>
-            </div>
-            <ul class="article-list">
-              
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2023/11/24/ret2dir/">
+                            ret2dir &amp; physmap spray
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            ret2dir &amp; physmap spray介绍​	ret2dir 用来绕过 smep、smap、pxn 等用户空间与内核空间隔离的防护手段。
+​	论文链接：http://www.cs.columbia.edu/~vpk/papers/re...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Nov 24 2023 14:40:29 GMT+0800">
+                
+                    2023-11-24
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
                 
                     
-                    <li class="article-item" date-is='07-31'>
-                
-                
-                    <a href="/2024/07/31/1.0_Introduction/">
-                        <span class="article-title">南大《软件分析》1.0 Introduction</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/2024/07/31/2.0_IR/">
-                        <span class="article-title">南大《软件分析》2.0 IR</span>
-                    </a>
-                
-              
+                        
+                        <li>
+                            <a href="/categories/kernel/">kernel</a>&nbsp;
+                        </li>
+                    
+                    
                 
                     
-                    <li class="article-item" date-is='07-30'>
-                
-                
-                    <a href="/2024/07/30/solidity_study/">
-                        <span class="article-title">blockchain solidity基础</span>
-                    </a>
-                
-              
-                
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/kernel/ret2dir/">ret2dir</a>&nbsp;
+                        </li>
                     
-                    <li class="article-item" date-is='07-29'>
-                
-                
-                    <a href="/2024/07/29/llvm_ebpf/">
-                        <span class="article-title">LLVM ebpf 汇编学习</span>
-                    </a>
-                
-              
-                
                     
-                    <li class="article-item" date-is='07-21'>
                 
-                
-                    <a href="/2024/07/21/afl-training/">
-                        <span class="article-title">Fuzzing with AFL workshop</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='07-18'>
-                
-                
-                    <a href="/2024/07/18/Fuzz4ALL/">
-                        <span class="article-title">看论文 Fuzz4All Universal Fuzzing with Large Language Models</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='07-15'>
-                
-                
-                    <a href="/2024/07/15/llvm_note/">
-                        <span class="article-title">LLVM 学习笔记</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/2024/07/15/fuzzing101/">
-                        <span class="article-title">fuzz101 Exercise</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='06-19'>
-                
-                
-                    <a href="/2024/06/19/MS17-010/">
-                        <span class="article-title">深入理解分析 MS17-010</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='06-16'>
-                
-                
-                    <a href="/2024/06/16/data_process/">
-                        <span class="article-title">Deep Learning学习day1-数据操作</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='05-17'>
-                
-                
-                    <a href="/2024/05/17/windows-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">
-                        <span class="article-title">Windows 异常处理 &amp; 例题</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='05-15'>
-                
-                
-                    <a href="/2024/05/15/winpwn-%E5%85%A5%E9%97%A8/">
-                        <span class="article-title">Windows pwn 入门</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='05-11'>
-                
-                
-                    <a href="/2024/05/11/angr-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-                        <span class="article-title">angr 学习笔记</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='04-26'>
-                
-                
-                    <a href="/2024/04/26/CorCTF2022-Corjail/">
-                        <span class="article-title">CorCTF2022-Corjail</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='04-10'>
-                
-                
-                    <a href="/2024/04/10/Dirty-pagetable-study/">
-                        <span class="article-title">Dirty Pagetable 学习 &amp; 例题</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/2024/04/10/Cross-Cache-Attack/">
-                        <span class="article-title">Cross-Cache Attack 学习笔记</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='04-06'>
-                
-                
-                    <a href="/2024/04/06/nssround21-wp/">
-                        <span class="article-title">NSS2024#21-wp</span>
-                    </a>
-                
-              
-                
-                    
-                    <li class="article-item" date-is='04-02'>
-                
-                
-                    <a href="/2024/04/02/CorCTF2021/">
-                        <span class="article-title">CorCTF2021-fire_of_salvation &amp; wall_of_perdition</span>
-                    </a>
-                
-              
-                
-                
-                    <a href="/2024/04/02/balsnCTF2019-krazynote/">
-                        <span class="article-title">balsn2019-krazynote</span>
-                    </a>
-                
-              
             </ul>
-        </section>
-    
-        <section class="archive-item">
-            <div class="archive-item-header">
-                <span class="archive-year">2023</span>
-                <span class="archive-year-post-count">[3]</span>
-            </div>
-            <ul class="article-list">
-              
-                
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
                     
-                    <li class="article-item" date-is='11-28'>
-                
-                
-                    <a href="/2023/11/28/kernelHeap/">
-                        <span class="article-title">exploit Kernel Heap</span>
-                    </a>
-                
-              
-                
+                        <li>
+                            
+                            <a href="/tags/kernel/">kernel</a>&nbsp;
+                        </li>
                     
-                    <li class="article-item" date-is='11-24'>
-                
-                
-                    <a href="/2023/11/24/ret2dir/">
-                        <span class="article-title">ret2dir &amp; physmap spray</span>
-                    </a>
-                
-              
-                
+                        <li>
+                            | 
+                            <a href="/tags/rop/">rop</a>&nbsp;
+                        </li>
                     
-                    <li class="article-item" date-is='11-23'>
-                
-                
-                    <a href="/2023/11/23/hello-world/">
-                        <span class="article-title">Hello World</span>
-                    </a>
-                
-              
-            </ul>
-        </section>
-    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2023/11/24/ret2dir/">Read more<span class="seo-reader-text">ret2dir &amp; physmap spray</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2023/11/23/hello-world/">
+                            Hello World
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            Welcome to Hexo ! This is your very first post. Check documentation  for more info. If you get any problems when using Hexo, ...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Thu Nov 23 2023 21:39:35 GMT+0800">
+                
+                    2023-11-23
+                
+            </span>
+        </span>
+        
+        
+    </div>
+
+    <a href="/2023/11/23/hello-world/">Read more<span class="seo-reader-text">Hello World</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
+                </div>
+            </li>
+        
+    </ul>
+
+    <div class="home-paginator px-7 py-5">
+        <div class="paginator">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+</div>
+
+    </div>
+</div>
+
+                    <div class="comment-container pjax"></div>
                 
 
             </div>
@@ -747,6 +749,7 @@
         containers: ["#swup"],
     });
 </script>
+
 
 
 
