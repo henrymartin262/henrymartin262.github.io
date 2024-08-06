@@ -13,41 +13,38 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2024/08/01/3.0_reaching_definitions/"/>
+    <link rel="canonical" href="http://example.com/2024/08/06/4.0_data_flow_analysis/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》3.0 Data Flow Analysis由于这一部分我个人认为如果只看这里的笔记的话可能较难理解，因为我只会写一些重点，但因此也可能会让大家不明所以。 标题提到了数据流分析，那这里肯">
+        <meta name="description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》4.0 Data Flow Analysis这里介绍上一节没有介绍完的另外两个数据分析方法。 1.0 Live Variables Analysis首先来直接看 Live variabl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="南大《软件分析》3.0 Data Flow Analysis">
-<meta property="og:url" content="http://example.com/2024/08/01/3.0_Reaching_Definitions/index.html">
+<meta property="og:title" content="南大《软件分析》4.0 Data Flow Analysis">
+<meta property="og:url" content="http://example.com/2024/08/06/4.0_Data_Flow_Analysis/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》3.0 Data Flow Analysis由于这一部分我个人认为如果只看这里的笔记的话可能较难理解，因为我只会写一些重点，但因此也可能会让大家不明所以。 标题提到了数据流分析，那这里肯">
+<meta property="og:description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》4.0 Data Flow Analysis这里介绍上一节没有介绍完的另外两个数据分析方法。 1.0 Live Variables Analysis首先来直接看 Live variabl">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-03-06.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-13-39.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-12-59.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-19-11.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-24-16.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-26-38.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-30-43.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-36-50.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-39-20.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_11-40-32.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_14-22-17.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_14-27-46.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_14-31-27.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_14-33-20.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_14-38-57.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-01_14-47-51.png">
-<meta property="article:published_time" content="2024-08-01T07:00:25.598Z">
-<meta property="article:modified_time" content="2024-08-01T07:04:56.518Z">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_15-52-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-11-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-24-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-25-53.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-29-37.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-39-11.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-50-33.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-53-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_16-54-42.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_17-00-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_17-02-54.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_17-06-42.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-06_17-08-42.png">
+<meta property="article:published_time" content="2024-08-06T09:11:02.716Z">
+<meta property="article:modified_time" content="2024-08-06T09:13:11.847Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="software，static analysis">
-<meta property="article:tag" content="program">
+<meta property="article:tag" content="Live Variables Analysis，static analysis">
+<meta property="article:tag" content="Available Expressions Analysis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-08-01_11-03-06.png">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-08-06_15-52-31.png">
     
     
     <!--- Icon Part-->
@@ -59,7 +56,7 @@
     
     <title>
         
-            南大《软件分析》3.0 Data Flow Analysis -
+            南大《软件分析》4.0 Data Flow Analysis -
         
         Henry Martin
     </title>
@@ -497,10 +494,10 @@ mjx-container[display="true"] + br {
             
                 
                 
-                <img src="/images/Snipaste_2024-08-01_15-01-35.png" alt="南大《软件分析》3.0 Data Flow Analysis" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                <img src="/images/Snipaste_2024-08-06_17-12-29.png" alt="南大《软件分析》4.0 Data Flow Analysis" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
                 
                 <div class="w-full flex items-center absolute bottom-0 justify-start">
-                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">南大《软件分析》3.0 Data Flow Analysis</h1>
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">南大《软件分析》4.0 Data Flow Analysis</h1>
                 </div>
             
             </div>
@@ -521,15 +518,15 @@ mjx-container[display="true"] + br {
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2024-08-01 15:25</span>
-        <span class="mobile">2024-08-01 15:25</span>
+        <span class="desktop">2024-08-06 17:11:02</span>
+        <span class="mobile">2024-08-06 17:11:02</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-08-01 15:04:56</span>
-            <span class="mobile">2024-08-01 15:04:56</span>
+            <span class="desktop">2024-08-06 17:13:11</span>
+            <span class="mobile">2024-08-06 17:13:11</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -567,11 +564,11 @@ mjx-container[display="true"] + br {
             <ul>
                 
                     <li>
-                        <a href="/tags/software%EF%BC%8Cstatic-analysis/">software，static analysis</a>&nbsp;
+                        <a href="/tags/Live-Variables-Analysis%EF%BC%8Cstatic-analysis/">Live Variables Analysis，static analysis</a>&nbsp;
                     </li>
                 
                     <li>
-                        | <a href="/tags/program/">program</a>&nbsp;
+                        | <a href="/tags/Available-Expressions-Analysis/">Available Expressions Analysis</a>&nbsp;
                     </li>
                 
             </ul>
@@ -599,81 +596,72 @@ mjx-container[display="true"] + br {
         <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
             <p>课程环境：<a class="link" target="_blank" rel="noopener" href="https://tai-e.pascal-lab.net/lectures.html">https://tai-e.pascal-lab.net/lectures.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p>课程视频：<a class="link" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1b7411K7P4">https://www.bilibili.com/video/BV1b7411K7P4 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h1 id="南大《软件分析》3-0-Data-Flow-Analysis"><a href="#南大《软件分析》3-0-Data-Flow-Analysis" class="headerlink" title="南大《软件分析》3.0 Data Flow Analysis"></a>南大《软件分析》3.0 Data Flow Analysis</h1><p>由于这一部分我个人认为如果只看这里的笔记的话可能较难理解，因为我只会写一些重点，但因此也可能会让大家不明所以。</p>
-<p>标题提到了<strong>数据流分析</strong>，那这里肯定要提一下什么是数据流分析，它要做什么，以及它是建立在什么之上来做的。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-03-06.png" alt="nipaste_2024-08-01_11-03-0"></p>
-<p>上面这张图给出了答案，</p>
-<p>第一它要研究的是，<strong>特定程序数据是怎么在CFG上流动的</strong></p>
-<p>第二它是<strong>建立在程序控制流图（CFG）的基础之上</strong>，具体包括CFG的节点和边。</p>
-<p>其中对于 must analysis 和 may analysis 的概念一定要理解清楚，可以对应第一部分 Introduction 中的 sound 和 complete 来理解，静态分析方法一般要么做 may analysis（大多数情况），要么做 must analysis，两种都有特定情况下的需求，且它们都可以说是 safety analysis。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-13-39.png" alt="nipaste_2024-08-01_11-13-3"></p>
-<p>这里有几个关键概念需要理解，就是上图中其实标有颜色的部分都指一些具体的情况（后面会有例子帮助理解）：</p>
-<ul>
-<li><strong>Abstraction</strong>：即你要对程序如何进行抽象</li>
-<li><strong>safe-appromixmation</strong>：这里面包含两种方式 may analysis 和 must analysis</li>
-<li><strong>Nodes</strong>：可以在这里定义 transfer function，即转换规则</li>
-<li><strong>Edges</strong>：Control flow handling 这里牵扯到对CFG中的一些边定义处理规则</li>
-</ul>
-<p>明白下面的内容，可以更好帮助理解，简单来说这些东西并不固定，是可以人为根据需求来定义的。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-12-59.png" alt="nipaste_2024-08-01_11-12-5"></p>
-<h2 id="Preliminaries-of-Data-Flow-Analysis"><a href="#Preliminaries-of-Data-Flow-Analysis" class="headerlink" title="Preliminaries of Data Flow Analysis"></a>Preliminaries of Data Flow Analysis</h2><p>在数据流分析当中，有些内容是统一规定好的，其实这一部分就是定义一些符号，方便后面的各种分析方法的表示，比如说程序（单个命令或者一个基本块）的输入输出状态，这个其实比较好理解，输入状态在经过执行之后总会有一个对应的输出状态（即使这两个状态可能相同）。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-19-11.png" alt="nipaste_2024-08-01_11-19-1"></p>
-<p><strong>Transfer Function 的约束规则如下：</strong></p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-24-16.png" alt="nipaste_2024-08-01_11-24-1"></p>
-<p><strong>Control Flow 的约束规则如下：</strong></p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-26-38.png" alt="nipaste_2024-08-01_11-26-3"></p>
-<p>理解上面的两个约束规则是重要的，后面的分析都建立在这两个基础之上。</p>
-<h2 id="Reaching-Definitions-Analysis"><a href="#Reaching-Definitions-Analysis" class="headerlink" title="Reaching Definitions Analysis"></a>Reaching Definitions Analysis</h2><p>这一部分就正式开始介绍第一个数据流分析方法 Reaching Definitions Analysis，注意这里不会引入 <code>Method calls</code> 和 <code>Aliases</code>，后期会介绍（老师说这里提前引入比较影响理解）。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-30-43.png" alt="nipaste_2024-08-01_11-30-4"></p>
-<p>上图给出了 Reaching Definitions 的定义，其实单看这个定义是非常抽象的（简直不是人话）。</p>
-<p><strong>重要部分：</strong>按照我的理解就是（已上图中下方的路径来进行说明），你在程序状态点 p 处<strong>定义（definition）</strong>了一个变量 v，ok，这里是重点，假如存在一条执行路径使得 p 可以到达 q 点，且这个过程中 v 没有被重新定义（意思就是没有被重新赋值），那么我们就说状态点 p 处的<strong>定义（definition）</strong>可以到达状态点 q。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-36-50.png" alt="nipaste_2024-08-01_11-36-5"></p>
-<p>文章开头有提到，不同的分析方法，可能对应不同的 Abstraction，Transfer Fcuntion，Control Flow，包括 Safe-approximation，上图即对应的是 Reaching Definition 对这些概念的定义，<strong>注意上面的两个公式</strong>。</p>
-<p>关于 gen 和 kill 的内容可以结合下面这张图来具体分析：</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-39-20.png" alt="nipaste_2024-08-01_11-39-2"></p>
-<p>现在就是重点部分了，即 Reaching Definitions Analysis 的具体算法：</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_11-40-32.png" alt="nipaste_2024-08-01_11-40-3"></p>
-<p>这里逐行进行解释：</p>
-<ul>
-<li><strong>第一行</strong>：2.0 IR 部分有提到，程序的CFG会设置一个entry和exit基本块，由于entry没有IR所以输出自然也是空集</li>
-<li><strong>第二行，第三行</strong>：对除了 entry 之外的所有基本块的输出进行初始化，且内容全部设置为空集</li>
-<li><strong>第四行</strong>：进入到一个 while 循环，循环终止条件设置为不在有 out 发生改变（是一个迭代过程）</li>
-<li><strong>第五行</strong>：只要前面有一个基本块的 out 发生变化，就会进入到这个 for 循环语句，循环的对象是除了 entry 块之外的所有基本块。</li>
-<li><strong>第六行和第七行：</strong>这部分其实前面已经提到过，分别对应 Control Flow 和 Transfer Function 的转换规则。</li>
-</ul>
-<p>当然仅仅是这样，依然还有可能不明白，再来结合一个具体的例子来进行理解。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_14-22-17.png" alt="nipaste_2024-08-01_14-22-1"></p>
-<p>先来解释下这张图的构成，原CFG中总共有8个定义（可以理解为总共有8次为变量重新赋值），并为每一次定义都以一个符号表示，比如说上图中的 D1 和 D2，图中左上角也分别给出了这8个定义所对应的 bit 位，根据前面的算法，我们知道 OUT[Entry] 和 OUT[B1] 一开始均被初始化为 全0（黑色数字）。</p>
-<blockquote>
-<p>IN[B1] = 0000 0000，且B1的 gen = {D1, D2}，kill = {D5, D7, D4}，由于D5和D7处x均被重新定义，所以要 </p>
-<p>kill 掉，D4 处y被重新定义，也要 kill 掉。所以根据前面计算 OUT[B] 的公式，gen = 1100 0000，</p>
-<p>kill = 0001 1010，由于 IN[B] 为0，所以最后 OUT[B] = 1100 0000。</p>
-</blockquote>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_14-27-46.png" alt="nipaste_2024-08-01_14-27-4"></p>
-<p>大家可以尝试着自己算一遍（<strong>这里面其实有很多细节需要注意</strong>），最后一次迭代过程结束之后，最终结果如上图所示，由于所有基本块（不包括entry）的输出都变为了非零，所以自然而然会再次进入 while 循环，然后在从头开始根据上一次的输出，来重新计算 OUT[B]，这就是迭代的过程。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_14-31-27.png" alt="nipaste_2024-08-01_14-31-2"></p>
-<p>上图为第二次迭代之后的结果，可以发现这一次只有 B2 和 B3 的输出发生了变化，但依然还是满足while循环的条件（只要有一个输出发生变化，必须要重新遍历所有基本块）。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_14-33-20.png" alt="nipaste_2024-08-01_14-33-2"></p>
-<p>到第三次的时候，会发现所有基本块的输出都没有发生变化了，这意味这我们得到了最终的结果。到这里可能有同学会问，难道后续的迭代遍历 OUT[B] 一定保持不变嘛？这个问题其实可以从公式中找到答案：</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_14-38-57.png" alt="nipaste_2024-08-01_14-38-5"></p>
-<p>要知道 gen 和 kill 的内容只需我们知道基本块时就可以提前计算好，因为基本块的内容是固定的，相对应的其计算出来的 gen 和 kill 也不会发生变化了，唯一会发生变化的只有 IN[B] 了。因此只有 IN[B] 不会发生变化，输出自然也不会发生变化了。</p>
-<p><strong>这里细心的同学可能会注意到，上面随着每次的迭代过程，每一个块的 OUT 的内容只会由 0 变为1，或者还是保持之前的 1，其实可以由我们上面的解释来说明这个问题。</strong></p>
-<p>由于一个 CFG 的基本块的所有 OUT 的状态是有限的，且其状态位只能从 0-&gt;1，1-&gt;1，因此其迭代也必然是有限的。</p>
-<p>如果觉得我没有说清楚，也可以参考下面的这张图的解释</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-01_14-47-51.png" alt="nipaste_2024-08-01_14-47-5"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这里提两个非常重要的概念：</p>
-<blockquote>
-<p>In <strong>each data-flow analysis application,</strong> we associate with every program point a <strong>data-flow value</strong> that represents an abstraction of the set of all possible <strong>program states</strong> that can be observed for that point.</p>
-</blockquote>
-<p>这个概念稍微绕了点，简单来说就是在数据流分析中把抽象的程序状态用一系列值（比如说我们前面举得例子中的一系列bit位）来表示 OUT[B]。</p>
-<blockquote>
-<p>Data-flow analysis is to <strong>find a solution</strong> to a set of <strong>safe-approximation directed constraints</strong> on the IN[s]’s and OUT[s]’s, for all statements s.</p>
-<ul>
-<li>-constraints based on semantics of statements (<strong>transfer functions</strong>)</li>
-<li>-constraints based on the <strong>flows of control</strong></li>
-</ul>
-</blockquote>
-<p>上面这个概念提出了数据分析的目的在于找到一个约束解，比如我们前面举得例子中，迭代到最后所有的输出值都不变了，这些值就是我们最后得到的约束解。</p>
+<h1 id="南大《软件分析》4-0-Data-Flow-Analysis"><a href="#南大《软件分析》4-0-Data-Flow-Analysis" class="headerlink" title="南大《软件分析》4.0 Data Flow Analysis"></a>南大《软件分析》4.0 Data Flow Analysis</h1><p>这里介绍上一节没有介绍完的另外两个数据分析方法。</p>
+<h2 id="1-0-Live-Variables-Analysis"><a href="#1-0-Live-Variables-Analysis" class="headerlink" title="1.0 Live Variables Analysis"></a>1.0 Live Variables Analysis</h2><p>首先来直接看 Live variables analysis （为方便说明后文用 <strong>LVA</strong> 表示）的定义如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_15-52-31.png" alt="nipaste_2024-08-06_15-52-3"></p>
+<p>需要注意的是上面黑框中红色的部分，不同于我们之前说的 Reaching Definition analysis（RDA），在 RDA 中我们是以 <strong>Definition</strong> 为核心定义的，而这里目标换为了<strong>变量</strong>。</p>
+<p>再来看看上面这张图，可以发现变量 v 在整个路径上<strong>没有被重新定义过</strong>，且在一点处对 v 进行了 use(v)，我们<strong>就说 v 在这条路径上是 live 的</strong>。</p>
+<p>简单来说就是想要知道这个变量值是否在后面会被使用。这个方法可以用于为变量分配寄存器的过程，设想这样一个场景，当前寄存器都在使用状态中，但此时需要加载一个新的内存值，我们需要决定覆盖哪个寄存器，这时候 LVA 就派上用处了，我们可以通过分析在某一个点 p 时，v 如果为 live 则保留其值，否则如果为 dead 则覆盖存放该值的寄存器。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-11-05.png" alt="nipaste_2024-08-06_16-11-0"></p>
+<p>我们简单通过一些例子来说明 LVA 的具体过程，需要记住的是 LVA 是 backward analysis，就是倒着往前分析，首先 OUT[B] = {v}，这是因为 S1 中有使用 v。再来看看 B 中对应不同情况时，IN[B] 的值。</p>
+<table>
+<thead>
+<tr>
+<th>情况</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k = n</td>
+<td>v 没有被 def(define)，因此也就是说 v 仍然是 live 的</td>
+</tr>
+<tr>
+<td>k = v</td>
+<td>v 被 use，但是也没有被 def，因此 v 的值仍然在这一点是 live 的</td>
+</tr>
+<tr>
+<td>v = 2</td>
+<td>v 被 def，OUT[B] - def = {v} - {v} = ∅</td>
+</tr>
+<tr>
+<td>v = v-1</td>
+<td>v 被 use 的同时也被 def，从执行的角度来思考，先计算 v-1(use)，在赋值 v(def)，<strong>由于是 backward analysis（重要）</strong>，所以 IN[B] = {v}</td>
+</tr>
+<tr>
+<td>v = 2   k = v</td>
+<td>对于这个情况我们可以分为两步完成，LVA 会先看到 k = v（第二种情况），执行完的结果是 OUT[B] = {v}，再来看 v = 2（第三种情况），执行完最后的结果是 IN[B] = {}</td>
+</tr>
+<tr>
+<td>k = v      v = 2</td>
+<td>跟上面的分析方法，同理，倒着一步一步来就可以了</td>
+</tr>
+</tbody></table>
+<p>接下来是 LVA 的算法实现部分</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-24-31.png" alt="nipaste_2024-08-06_16-24-3"></p>
+<p>需要好好理解这一部分，对每一步（每一个运算）都要理解其含义，不仅如此可以结合后面的练习，来体验这个算法的过程。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-25-53.png" alt="nipaste_2024-08-06_16-25-5"></p>
+<p>这是一个初始状态，从后面开始依次分析，<code>z = 2p</code>，p 被 use ，因此其对应位设置为1，z 被重定义，且由于z对应的位置已经是dead，故也还是0，最后的结果 IN[B] = 000 1000。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-29-37.png" alt="nipaste_2024-08-06_16-29-3"></p>
+<p>最后整个过程迭代完的结果如上所示，如果可以把上面所有的过程都自己手算一遍，相信你一定可以完全理解 LVA  的算法。（笑）</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>我认为对于 LVA，需要重点掌握的是它抽象的对象是<strong>变量</strong>。其次它是一个 <strong>may analysis</strong>，什么意思呢，就是说只要后面存在一条路径满足 LVA 的条件，我就认为这个变量是 live 的，这一点在公式中具体体现为 <code>U</code> 操作。另外一个就是它是一个 <strong>backward analysis</strong>，就是从后往前分析，这其实跟我们分析的问题有关，因为我们研究的是一个变量在后面的过程中是否 live。</p>
+<p><strong>需要注意的是，其实也可以使用 forward analysis，只不过这里来说 backward 更方便</strong></p>
+<h2 id="2-0-Available-Expressions-Analysis"><a href="#2-0-Available-Expressions-Analysis" class="headerlink" title="2.0 Available Expressions Analysis"></a>2.0 Available Expressions Analysis</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-39-11.png" alt="nipaste_2024-08-06_16-39-1"></p>
+<p>首先还是直接来看定义，还是比较抽象的一个东西，大概的意思就是说从 entry 到 p 的所有路径都必须经过 <code>x op y</code> 的测试，这里的测试就指的是 x 和 y 当中任意一个变量在这个过程中没有被重新定义。</p>
+<p>实际上 <strong>Available Expressions Analysis</strong> （AEA）可以被拿来用作编译优化，因为试想如果一个表达式的值在后面会被经常使用到，那我们可以直接用一个临时变量计算出它的值，然后后面直接用临时变量来在进行其他运算。</p>
+<p><strong>注意事项：在 AEA 中，我们需要抽象的对象是 <code>x op y</code>，且根据其定义，不难理解其实一个 must analysis，因为 AEA 要求的是所有路径都必须满足特定的条件</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-50-33.png" alt="nipaste_2024-08-06_16-50-3"></p>
+<p>这里也是给出了一个简单的例子用来理解 AEA 的过程，关键在于理解 gen 和 kill 是如何产生的，然后就套用公式得到输出。需要注意的是不同于 RDA 和 LVA，AEA 在计算 IN[B] 时是一个交集操作（体现在要所有路径都满足条件）。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-53-44.png" alt="nipaste_2024-08-06_16-53-4"></p>
+<p>因此像上面这个例子中时，最后的交集之后，结果就为空，AEA 的完整算法如下。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_16-54-42.png" alt="nipaste_2024-08-06_16-54-4"></p>
+<p>值得注意的是初始化过程中的 <code>OUT[B] = U</code>，从直观上理解就是认为这些表达式值都是可用的。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_17-00-41.png" alt="nipaste_2024-08-06_17-00-4"></p>
+<p>对于 B1 来说，<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.464ex;" xmlns="http://www.w3.org/2000/svg" width="4.365ex" height="1.464ex" role="img" focusable="false" viewBox="0 -442 1929.3 647"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D454" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path></g><g data-mml-node="mi" transform="translate(477,0)"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="msub" transform="translate(943,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(633,-150) scale(0.707)"><path data-c="1D44F" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path></g></g></g></g></svg></mjx-container> = {p-1}，<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="4.182ex" height="1.927ex" role="img" focusable="false" viewBox="0 -694 1848.3 851.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D458" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path></g><g data-mml-node="mi" transform="translate(521,0)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(866,0)"><path data-c="1D459" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z"></path></g><g data-mml-node="msub" transform="translate(1164,0)"><g data-mml-node="mi"><path data-c="1D459" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z"></path></g><g data-mml-node="mi" transform="translate(331,-150) scale(0.707)"><path data-c="1D44F" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path></g></g></g></g></svg></mjx-container> = {2*y，y+3}，但由于 IN[B1] = {0}，所以最后的结果就是 10000。同理最后迭代完毕之后的结果如下图所示：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_17-02-54.png" alt="nipaste_2024-08-06_17-02-5"></p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>和 LVA 一样，对于 AEA，需要重点掌握的是它抽象的对象是<strong>表达式</strong>。其次它是一个 <strong>must analysis</strong>，什么意思呢，就是说每条路径都要满足 AEA 的条件，这一点在公式中具体体现为 <code>∩</code> 操作。另外一个就是它是一个 <strong>forward analysis</strong>，这一点在前面的计算过程中有所体现。</p>
+<h2 id="3-0-三种分析方法对比"><a href="#3-0-三种分析方法对比" class="headerlink" title="3.0 三种分析方法对比"></a>3.0 三种分析方法对比</h2><p>实际上这三种方法，我个人认为如果是初学的话还是比较容易混淆的（比如我），一些方法就是可以结合具体的实际使用案例来帮助理解这三种分析方法，下面是三种分析方法老师总结的表格（<strong>非常重要</strong>），对我们理解这三种分析方法的共同点和不同点很有帮助。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_17-06-42.png" alt="nipaste_2024-08-06_17-06-4"></p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-06_17-08-42.png" alt="nipaste_2024-08-06_17-08-4"></p>
 
         </div>
 
@@ -681,18 +669,18 @@ mjx-container[display="true"] + br {
             <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
                 <div class="article-copyright-info-container">
     <ul>
-        <li><strong>Title:</strong> 南大《软件分析》3.0 Data Flow Analysis</li>
+        <li><strong>Title:</strong> 南大《软件分析》4.0 Data Flow Analysis</li>
         <li><strong>Author:</strong> henry</li>
         <li><strong>Created at
-                :</strong> 2024-08-01 15:00:25</li>
+                :</strong> 2024-08-06 17:11:02</li>
         
             <li>
                 <strong>Updated at
-                    :</strong> 2024-08-01 15:04:56
+                    :</strong> 2024-08-06 17:13:11
             </li>
         
         <li>
-            <strong>Link:</strong> https://henrymartin262.github.io/2024/08/01/3.0_Reaching_Definitions/
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/08/06/4.0_Data_Flow_Analysis/
         </li>
         <li>
             <strong>
@@ -714,11 +702,11 @@ mjx-container[display="true"] + br {
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/software%EF%BC%8Cstatic-analysis/">#software，static analysis</a>&nbsp;
+                        <a href="/tags/Live-Variables-Analysis%EF%BC%8Cstatic-analysis/">#Live Variables Analysis，static analysis</a>&nbsp;
                     </li>
                 
                     <li class="tag-item">
-                        <a href="/tags/program/">#program</a>&nbsp;
+                        <a href="/tags/Available-Expressions-Analysis/">#Available Expressions Analysis</a>&nbsp;
                     </li>
                 
             </ul>
@@ -729,29 +717,14 @@ mjx-container[display="true"] + br {
         
             <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
                 
-                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-                        <a class="prev"
-                        rel="prev"
-                        href="/2024/08/06/4.0_Data_Flow_Analysis/"
-                        >
-                            <span class="left arrow-icon flex justify-center items-center">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">南大《软件分析》4.0 Data Flow Analysis</span>
-                                <span class="post-nav-item">Prev posts</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="next"
                         rel="next"
-                        href="/2024/07/31/2.0_IR/"
+                        href="/2024/08/01/3.0_Reaching_Definitions/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">南大《软件分析》2.0 IR</span>
+                                <span class="post-nav-title-item">南大《软件分析》3.0 Data Flow Analysis</span>
                                 <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -811,8 +784,8 @@ mjx-container[display="true"] + br {
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">南大《软件分析》3.0 Data Flow Analysis</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%97%E5%A4%A7%E3%80%8A%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90%E3%80%8B3-0-Data-Flow-Analysis"><span class="nav-text">南大《软件分析》3.0 Data Flow Analysis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Preliminaries-of-Data-Flow-Analysis"><span class="nav-text">Preliminaries of Data Flow Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reaching-Definitions-Analysis"><span class="nav-text">Reaching Definitions Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
+        <div class="page-title">南大《软件分析》4.0 Data Flow Analysis</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%97%E5%A4%A7%E3%80%8A%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90%E3%80%8B4-0-Data-Flow-Analysis"><span class="nav-text">南大《软件分析》4.0 Data Flow Analysis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-Live-Variables-Analysis"><span class="nav-text">1.0 Live Variables Analysis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-Available-Expressions-Analysis"><span class="nav-text">2.0 Available Expressions Analysis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-0-%E4%B8%89%E7%A7%8D%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95%E5%AF%B9%E6%AF%94"><span class="nav-text">3.0 三种分析方法对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li></ol></li></ol>
 
     </div>
 </div>
