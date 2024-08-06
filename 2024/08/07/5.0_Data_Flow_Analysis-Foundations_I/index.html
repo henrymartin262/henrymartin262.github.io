@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/08/07/5.0_data_flow_analysis-foundations_i/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》5.0 Data Flow Analysis - Foundations I这一节实际上是提出了一种形式化的东西，来方便完成对前面一些数据流分析的数学化描述，有些地方还是稍微有些抽象的，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="南大《软件分析》5.0 Data Flow Analysis - Foundations I">
+<meta property="og:url" content="http://example.com/2024/08/07/5.0_Data_Flow_Analysis-Foundations_I/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》5.0 Data Flow Analysis - Foundations I这一节实际上是提出了一种形式化的东西，来方便完成对前面一些数据流分析的数学化描述，有些地方还是稍微有些抽象的，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-09-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-14-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-19-19.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-20-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-23-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-26-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-30-20.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-31-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-36-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-39-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-40-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-42-24.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-42-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-47-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-49-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-51-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-52-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-54-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-57-00.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_01-57-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_02-00-26.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_02-03-01.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_02-04-25.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_02-08-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_02-09-08.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_02-10-20.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-07_02-15-16.png">
+<meta property="article:published_time" content="2024-08-06T18:20:07.155Z">
+<meta property="article:modified_time" content="2024-08-06T18:24:40.204Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Live Variables Analysis，static analysis">
+<meta property="article:tag" content="Available Expressions Analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-08-07_01-09-41.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            南大《软件分析》5.0 Data Flow Analysis - Foundations I -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            $logo-title-font-size = 1.7rem
+$desktop-search-icon-font-size = 1.5rem
+$navbar-bar-line-height = 2.5px
+$logo-image-box-width = 34px
+
+@import '../../common/variables'
+
+.navbar-container
+  font-family 'Chillax-Variable', sans-serif
+  width 100%
+  height 100%
+  box-sizing border-box
+  display flex
+  align-items center
+  justify-content center
+  background $nav-color-bg
+  -webkit-backdrop-filter blur(10px)
+  backdrop-filter blur(10px)
+  padding-top $scroll-progress-bar-height
+  hover-style(
+    false,
+    0,
+    0
+  )
+
+  .navbar-content
+    position relative
+    height 100%
+    width $main-content-width
+    max-width $content-max-width
+    display flex
+    flex-direction row
+    justify-content space-between
+    align-items center
+    z-index $z-index-5
+    transition max-width 0.3s ease
+
+    &.has-home-banner
+      max-width $content-max-width * 1.2
+
+    +redefine-tablet()
+      width $main-content-width-tablet
+
+    +redefine-mobile()
+      width $main-content-width-mobile
+
+    .left
+      display flex
+      align-items center
+      //transform-origin bottom
+      //transition-t('transform', '0', '0.15', 'ease')
+      //
+      //.navbar-shrink &
+      //  transform scale(0.9)
+      //  transform-origin bottom
+
+      if (hexo-config('defaults.logo') && hexo-config('defaults.logo') != '')
+        .logo-image
+          width $logo-image-box-width
+          height $logo-image-box-width
+          margin-right 12px
+
+          +redefine-tablet()
+            width: $logo-image-box-width * 0.9
+            height: $logo-image-box-width * 0.9
+
+          +redefine-mobile()
+            width: $logo-image-box-width * 0.8
+            height: $logo-image-box-width * 0.8
+
+          img
+            border-radius 6px
+            width 100%
+
+      .logo-title
+        font-size $logo-title-font-size
+        font-weight 520
+        //letter-spacing 1px
+        line-height 1
+        color var(--first-text-color)
+        transform translateY(1px)
+
+        h1
+          margin 0
+          font-size $logo-title-font-size
+          font-weight 520
+          //letter-spacing 1px
+          line-height 1
+          color var(--first-text-color)
+          transform translateY(1px)
+
+          +redefine-tablet()
+            font-size: $logo-title-font-size * 0.9
+
+          +redefine-mobile()
+            font-size: $logo-title-font-size * 0.8
+
+        +redefine-tablet()
+          font-size: $logo-title-font-size * 0.9
+
+        +redefine-mobile()
+          font-size: $logo-title-font-size * 0.8
+
+    .right
+      .desktop
+        .navbar-list
+          display flex
+          gap 24px
+          align-items center
+
+          +redefine-tablet()
+            display none
+
+          .navbar-item
+            float left
+            // padding 5px
+            position relative
+            font-size 1rem
+            font-weight 450
+            cursor pointer
+            color var(--default-text-color)
+
+            a
+              display block
+              padding 5px
+
+            a .fa-chevron-down
+              transform rotate(0deg)
+              transition transform 0.3s ease
+
+            &:hover a .fa-chevron-down
+              transform rotate(180deg)
+
+            &:hover .has-dropdown
+              &::after
+                display none !important
+
+            &:hover a, .active
+              &::after
+                content ''
+                position absolute
+                bottom -5px
+                left 50%
+                width 100%
+                height 2px
+                transform translateX(-50%)
+                border-radius $redefine-border-radius-large
+                background var(--primary-color)
+                transition-t('transform, bottom', '0, 0', '0.2, 0.2', 'linear, linear')
+
+                .navbar-shrink &
+                  bottom -($navbar-shrink-height / 2 - 17)
+
+            &.search
+              font-size $desktop-search-icon-font-size
+              margin-left 26px
+
+              i
+                color var(--default-text-color)
+
+            .sub-menu
+              position absolute
+              right auto
+              left 50%
+              -webkit-transform translate(-50%, 0)
+              -o-transform translate(-50%, 0)
+              transform translate(-50%, 0)
+              margin-top 0px
+              width auto
+              text-align center
+              list-style none
+              padding 0 10px
+              border-radius $redefine-border-radius-large
+              // visibility hidden
+              max-height 0px
+              overflow hidden
+              transition-t('all', '0', '0.2', 'linear')
+
+              li a
+                white-space nowrap
+                color var(--default-text-color)
+                font-size 1rem
+                padding 3px 15px
+                display block
+                text-align center
+                border-radius 8px
+                transition-t('all', '0', '0.2', 'linear')
+
+                &:hover
+                  color var(--primary-color)
+                  background-color var(--third-background-color)
+
+        .navbar-list .navbar-item:hover .sub-menu
+          // visibility visible
+          max-height 500px
+          transition-t('all', '0', '0.2', 'ease')
+          redefine-container(
+            false,
+            0,
+            0,
+            10px,
+            5px
+          )
+
+      .mobile
+        display flex
+        justify-content space-between
+        align-items center
+
+        .icon-item
+          display none
+          position relative
+          cursor pointer
+          font-size 18px
+          margin-left 12px
+          width 20px
+          height 20px
+          color var(--default-text-color)
+
+          i
+            color var(--default-text-color)
+
+          &:first-child
+            margin-left 0
+
+          +redefine-tablet()
+            display flex
+            justify-content center
+            align-items center
+
+        .navbar-bar
+          .navbar-bar-middle
+            width 18px
+            height $navbar-bar-line-height
+            position relative
+            background var(--default-text-color)
+
+            .navbar-drawer-show &
+              background transparent
+
+            &::before, &::after
+              content ''
+              position absolute
+              left 0
+              width 100%
+              height $navbar-bar-line-height
+              background var(--default-text-color)
+              transition-t('transform', '0', '0.38', 'ease')
+
+            &::before
+              top -6px
+
+              .navbar-drawer-show &
+                transform translateY(6px) rotate(45deg)
+
+            &::after
+              bottom -6px
+
+              .navbar-drawer-show &
+                transform translateY(-6px) rotate(-45deg)
+
+  .navbar-drawer
+    padding $navbar-height 0 20px 0
+    transform scaleY(0)
+    transform-origin top
+    z-index $z-index-2
+    opacity 0
+    max-height 100vh
+    overflow-y auto
+    transition-t('transform,opacity', '0,0.1', '0.38,0.38', 'ease,ease')
+
+    .navbar-drawer-show &
+      transform scaleY(1)
+      opacity 1
+
+  .window-mask
+    position absolute
+    top 0
+    width 100%
+    height 100vh
+    background rgba(0, 0, 0, 0.4)
+    z-index $z-index-1
+    visibility hidden
+    opacity 0
+    transition-t('transform, opacity', '0, 0', '0.38, 0.38', 'ease, ease')
+
+    .navbar-drawer-show &
+      visibility visible
+      opacity 1
+
+.navbar-drawer-show
+  overflow hidden
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2024-08-07_02-19-47.png" alt="南大《软件分析》5.0 Data Flow Analysis - Foundations I" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">南大《软件分析》5.0 Data Flow Analysis - Foundations I</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-08-07 02:20:07</span>
+        <span class="mobile">2024-08-07 02:20:07</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-08-07 02:24:40</span>
+            <span class="mobile">2024-08-07 02:24:40</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/software/">software</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/software/static-analysis/">static analysis</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Live-Variables-Analysis%EF%BC%8Cstatic-analysis/">Live Variables Analysis，static analysis</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Available-Expressions-Analysis/">Available Expressions Analysis</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <p>课程环境：<a class="link" target="_blank" rel="noopener" href="https://tai-e.pascal-lab.net/lectures.html">https://tai-e.pascal-lab.net/lectures.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>课程视频：<a class="link" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1b7411K7P4">https://www.bilibili.com/video/BV1b7411K7P4 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h1 id="南大《软件分析》5-0-Data-Flow-Analysis-Foundations-I"><a href="#南大《软件分析》5-0-Data-Flow-Analysis-Foundations-I" class="headerlink" title="南大《软件分析》5.0 Data Flow Analysis - Foundations I"></a>南大《软件分析》5.0 Data Flow Analysis - Foundations I</h1><p>这一节实际上是提出了一种形式化的东西，<strong>来方便完成对前面一些数据流分析的数学化描述</strong>，有些地方还是稍微有些抽象的，建议结合具体的例子来进行理解。</p>
+<h2 id="1-0-介绍"><a href="#1-0-介绍" class="headerlink" title="1.0 介绍"></a>1.0 介绍</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-09-41.png" alt="nipaste_2024-08-07_01-09-4"></p>
+<p>这张图给出了前面提到的三种数据流分析中采用的迭代算法的另外一种视角。即它将每一次迭代的结果全部用<code> (OUT[n1], OUT[n2], …, OUT[nk])</code> 表示，就是把那些 0101 数字的东西连在一起，并用 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.05ex;" xmlns="http://www.w3.org/2000/svg" width="2.895ex" height="1.981ex" role="img" focusable="false" viewBox="0 -853.7 1279.7 875.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D449" d="M52 648Q52 670 65 683H76Q118 680 181 680Q299 680 320 683H330Q336 677 336 674T334 656Q329 641 325 637H304Q282 635 274 635Q245 630 242 620Q242 618 271 369T301 118L374 235Q447 352 520 471T595 594Q599 601 599 609Q599 633 555 637Q537 637 537 648Q537 649 539 661Q542 675 545 679T558 683Q560 683 570 683T604 682T668 681Q737 681 755 683H762Q769 676 769 672Q769 655 760 640Q757 637 743 637Q730 636 719 635T698 630T682 623T670 615T660 608T652 599T645 592L452 282Q272 -9 266 -16Q263 -18 259 -21L241 -22H234Q216 -22 216 -15Q213 -9 177 305Q139 623 138 626Q133 637 76 637H59Q52 642 52 648Z"></path></g><g data-mml-node="mi" transform="translate(861.3,363) scale(0.707)"><path data-c="1D458" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path></g></g></g></g></svg></mjx-container> 表示这些数据集合。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-14-23.png" alt="nipaste_2024-08-07_01-14-2"></p>
+<p>这是我们之前学过的 Reaching Difinitions Analysis 算法过程，在最后迭代的过程中，结果与上一次的一致，我们就认为是找到了一个<strong>最终的解</strong>，同时 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="2.613ex" height="1.902ex" role="img" focusable="false" viewBox="0 -683 1155 840.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mi" transform="translate(861,-150) scale(0.707)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g></g></g></g></svg></mjx-container> 我们也可以理解为是一个不动点，即满足 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="9.694ex" height="2.262ex" role="img" focusable="false" viewBox="0 -750 4284.6 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D44B" d="M42 0H40Q26 0 26 11Q26 15 29 27Q33 41 36 43T55 46Q141 49 190 98Q200 108 306 224T411 342Q302 620 297 625Q288 636 234 637H206Q200 643 200 645T202 664Q206 677 212 683H226Q260 681 347 681Q380 681 408 681T453 682T473 682Q490 682 490 671Q490 670 488 658Q484 643 481 640T465 637Q434 634 411 620L488 426L541 485Q646 598 646 610Q646 628 622 635Q617 635 609 637Q594 637 594 648Q594 650 596 664Q600 677 606 683H618Q619 683 643 683T697 681T738 680Q828 680 837 683H845Q852 676 852 672Q850 647 840 637H824Q790 636 763 628T722 611T698 593L687 584Q687 585 592 480L505 384Q505 383 536 304T601 142T638 56Q648 47 699 46Q734 46 734 37Q734 35 732 23Q728 7 725 4T711 1Q708 1 678 1T589 2Q528 2 496 2T461 1Q444 1 444 10Q444 11 446 25Q448 35 450 39T455 44T464 46T480 47T506 54Q523 62 523 64Q522 64 476 181L429 299Q241 95 236 84Q232 76 232 72Q232 53 261 47Q262 47 267 47T273 46Q276 46 277 46T280 45T283 42T284 35Q284 26 282 19Q279 6 276 4T261 1Q258 1 243 1T201 2T142 2Q64 2 42 0Z"></path></g><g data-mml-node="mo" transform="translate(1129.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mi" transform="translate(2185.6,0)"><path data-c="1D439" d="M48 1Q31 1 31 11Q31 13 34 25Q38 41 42 43T65 46Q92 46 125 49Q139 52 144 61Q146 66 215 342T285 622Q285 629 281 629Q273 632 228 634H197Q191 640 191 642T193 659Q197 676 203 680H742Q749 676 749 669Q749 664 736 557T722 447Q720 440 702 440H690Q683 445 683 453Q683 454 686 477T689 530Q689 560 682 579T663 610T626 626T575 633T503 634H480Q398 633 393 631Q388 629 386 623Q385 622 352 492L320 363H375Q378 363 398 363T426 364T448 367T472 374T489 386Q502 398 511 419T524 457T529 475Q532 480 548 480H560Q567 475 567 470Q567 467 536 339T502 207Q500 200 482 200H470Q463 206 463 212Q463 215 468 234T473 274Q473 303 453 310T364 317H309L277 190Q245 66 245 60Q245 46 334 46H359Q365 40 365 39T363 19Q359 6 353 0H336Q295 2 185 2Q120 2 86 2T48 1Z"></path></g><g data-mml-node="mo" transform="translate(2934.6,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(3323.6,0)"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path></g><g data-mml-node="mo" transform="translate(3895.6,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg></mjx-container>。</p>
+<p>前面有说过，我们得到了一个最终解，可是不禁要问，这个算法是否能在有限时间呢迭代结束，这个解是否唯一，且这个解是否是我们所要的最优解。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-19-19.png" alt="nipaste_2024-08-07_01-19-1"></p>
+<h2 id="2-0-Partial-Order"><a href="#2-0-Partial-Order" class="headerlink" title="2.0 Partial Order"></a>2.0 Partial Order</h2><p>后面这部分就是一些比较繁琐的数学东西（但是并不难），耐心一点还是能理解的。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-20-51.png" alt="nipaste_2024-08-07_01-20-5"></p>
+<p>首先给出了一个偏序（poset）的定义，<strong>P 可以理解为一个集合</strong>，<strong>⊑ 可以理解为是一种运算</strong>。偏序分别要满足上面的三个性质：</p>
+<ul>
+<li>自反性</li>
+<li>反对称</li>
+<li>传递性</li>
+</ul>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-23-57.png" alt="nipaste_2024-08-07_01-23-5"></p>
+<p>比如说上面这个例子，给定一个整数集合，且 ⊑ 表示 ≤，发现它是满足上面的三个性质的，因此  (S, ⊑) 是一个偏序（实际上这里也没有严格证明，就用几个数字带进去方便理解下，明白这个道理就行）。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-26-39.png" alt="nipaste_2024-08-07_01-26-3"></p>
+<p>上面这个例子也是一样，满足三个性质，但是我们可以发现 pin 和 sin 之间并不存在这种子集的关系，但这时候依然不影响 (S, ⊑) 是一个偏序，因为定义中并不强制要求每一对元素之间都要满足 ⊑ 的关系。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-30-20.png" alt="nipaste_2024-08-07_01-30-2"></p>
+<h2 id="3-0-Bounds"><a href="#3-0-Bounds" class="headerlink" title="3.0 Bounds"></a>3.0 Bounds</h2><p>这一部分实际上就是定义了一些上下界的概念，分别如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-31-44.png" alt="nipaste_2024-08-07_01-31-4"></p>
+<p>分别对应了四个概念，<strong>upper bound，lower bound，least upper bound，greatest lower bound</strong>。对于这四个概念<strong>务必要认真理解</strong>，后面基本上大多数内容都是与这四个概念有关。</p>
+<p>这里可以简单解释一下 <strong>upper bound</strong>，就是说对于一个偏序poset，存在一个  u∈P，且对于其子集S中所有的元素，都满足x ⊑ u，那么就称 u <strong>为 S</strong> 的最大边界。lower bound 也是同理。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-36-32.png" alt="nipaste_2024-08-07_01-36-3"></p>
+<p>从前面的概念也可以看出  upper bound 和 lower bound 可以不唯一，只要满足条件就行，但是需要注意的是 u 和 l 一定是在 P 之内的。</p>
+<p><strong>least upper bound：</strong>其实就是所有 upper bound 里面最小的值。</p>
+<p><strong>greatest lower bound：</strong>同理，所有 lower bound 里面最大的值。</p>
+<p><strong>注意事项：前面图片里面的一些数学符号也建议记住，后面多用符号来表示</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-39-44.png" alt="nipaste_2024-08-07_01-39-4"></p>
+<p>上图也是一种符号的情况。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-40-49.png" alt="nipaste_2024-08-07_01-40-4"></p>
+<p>需要理解的是，并不是所有的 poset 都有 glb（greatest lower bound） 存在的，如上图所示，但如果一个 poset 有 lub 和 glb 那它一定是唯一的，可以用定义来证明。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-42-24.png" alt="nipaste_2024-08-07_01-42-2"></p>
+<h2 id="4-0-Lattice"><a href="#4-0-Lattice" class="headerlink" title="4.0 Lattice"></a>4.0 Lattice</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-42-51.png" alt="nipaste_2024-08-07_01-42-5"></p>
+<p>Lattice（格）的概念是建立在 poset 的基础之上的，简而言之就是当一个 poset 中的任意两个元素 a，b，如果对应的这两个元素的最小最大上界（lub）和最大最小下界（glb）都存在，则称其为一个 Lattice。Lattice 关注的核心在于<strong>元素对之间</strong>的比较。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-47-12.png" alt="nipaste_2024-08-07_01-47-1"></p>
+<p>在上面这个例子中，比如说有 5,7 两个数，其 lub = 7（并操作），其 glb = 5（交操作）</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-49-13.png" alt="nipaste_2024-08-07_01-49-1"></p>
+<p>这个例子前面有提到过，之前我们说它是一个 poset，可是在这里它并不是一个 Lattice，原因在于 Lattice 要求任意两个元素之间都存在 lub 和 glb，显然上面的 pin 和 sin 在图中并不在一个 lub 包含它俩。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-51-06.png" alt="nipaste_2024-08-07_01-51-0"></p>
+<p>但是这张图中，我们可以到找到，任意两个元素对都是在图中可以找到 lub 和 glb 的。</p>
+<h2 id="5-0-Complete-lattice"><a href="#5-0-Complete-lattice" class="headerlink" title="5.0 Complete lattice"></a>5.0 Complete lattice</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-52-13.png" alt="nipaste_2024-08-07_01-52-1"></p>
+<p>如果说前面的 lattice 研究的是<strong>两个元素对</strong>之间的关系，那么 complete lattice 就是研究<strong>两个元素子集</strong>之间的关系。借助上面 Lattice 的定义来理解。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-54-38.png" alt="nipaste_2024-08-07_01-54-3"></p>
+<p>那上面这种之前举过得例子肯定就不是一个 complete lattice，原因在于前面只是元素之间的比较，那一旦有了集合，其元素有可能就是无限的，那么就可能存在两个元素子集并不存在 lub 或这 glb。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-57-00.png" alt="nipaste_2024-08-07_01-57-0"></p>
+<p>但对于这个图来说，还是仍然满足 complete lattice 的条件。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_01-57-45.png" alt="nipaste_2024-08-07_01-57-4"></p>
+<p>上图的两个定义也是需要掌握的，比如说 <code>T = ⊔P</code>，代表的是整个 <code>complete lattice 的 top</code>，同理 <code>⊥ = ⊓P </code>bottom 也是。</p>
+<h2 id="6-0-Product-Lattice"><a href="#6-0-Product-Lattice" class="headerlink" title="6.0 Product Lattice"></a>6.0 Product Lattice</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_02-00-26.png" alt="nipaste_2024-08-07_02-00-2"></p>
+<p>这一部分相当于是将前面的东西又进行了一次整合，一切都是为了后面的数据流分析做形式化验证准备，x 和 y 可以分别理解为一次迭代过程的输入和输出。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_02-03-01.png" alt="nipaste_2024-08-07_02-03-0"></p>
+<p>这里又从 lattice 的角度来给出了数据流分析的框架，具体表现为三个方面，同时也是我们前面在数据流分析方法中提到的三个非常重要的内容。</p>
+<p>这时候就可以对前面一些提出来的问题进行回答了。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_02-04-25.png" alt="nipaste_2024-08-07_02-04-2"></p>
+<p>第一个问题算法能否保证终止或者达到固定点或者总是有一个解？</p>
+<p>​	由于算法的单调性，可以保证上面的内容。</p>
+<p>第二个问题是否有多个固定点（对应的解），我们求出来的解是否是最优解？</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_02-08-05.png" alt="nipaste_2024-08-07_02-08-0"></p>
+<p>根据不动点的定义，我们发现不动点其实并不唯一。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_02-09-08.png" alt="nipaste_2024-08-07_02-09-0"></p>
+<p>上图给出了单调性的描述，很容易理解，但下面的不动点理论，理解起来还是稍微有点抽象的，<strong>证明不动点的存在性</strong>如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_02-10-20.png" alt="nipaste_2024-08-07_02-10-2"></p>
+<p>需要理解的是对于一个 lattice 来说 ⊥ 表示它的最小边界，而基于转换规则计算出来的 f(⊥)，也一定是在这个 lattice 的范围之内的，所以说根据定义就有了第二行<code>⊥⊑f(⊥)</code>的内容。</p>
+<p><strong>证明最后的结果是最小固定点的证明：</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-07_02-15-16.png" alt="nipaste_2024-08-07_02-15-1"></p>
+<p>虽然说这一部分老师不要求强制掌握，但是理解了这些证明过程实际上是有助于后面的数据流分析的。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有点累，歇了</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 南大《软件分析》5.0 Data Flow Analysis - Foundations I</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-08-07 02:20:07</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-08-07 02:24:40
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/08/07/5.0_Data_Flow_Analysis-Foundations_I/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Live-Variables-Analysis%EF%BC%8Cstatic-analysis/">#Live Variables Analysis，static analysis</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/Available-Expressions-Analysis/">#Available Expressions Analysis</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/08/06/4.0_Data_Flow_Analysis/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">南大《软件分析》4.0 Data Flow Analysis</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">南大《软件分析》5.0 Data Flow Analysis - Foundations I</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%97%E5%A4%A7%E3%80%8A%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90%E3%80%8B5-0-Data-Flow-Analysis-Foundations-I"><span class="nav-text">南大《软件分析》5.0 Data Flow Analysis - Foundations I</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-0-%E4%BB%8B%E7%BB%8D"><span class="nav-text">1.0 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-Partial-Order"><span class="nav-text">2.0 Partial Order</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-0-Bounds"><span class="nav-text">3.0 Bounds</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-0-Lattice"><span class="nav-text">4.0 Lattice</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-0-Complete-lattice"><span class="nav-text">5.0 Complete lattice</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-0-Product-Lattice"><span class="nav-text">6.0 Product Lattice</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
