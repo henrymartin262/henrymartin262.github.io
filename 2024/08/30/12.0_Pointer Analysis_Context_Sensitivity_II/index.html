@@ -13,39 +13,47 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2024/08/30/11.0_pointer analysis_context_sensitivity_i/"/>
+    <link rel="canonical" href="http://example.com/2024/08/30/12.0_pointer analysis_context_sensitivity_ii/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》11.0 Pointer Analysis Context Sensitivity I这一节内容讲的是上下文敏感技术，实际上我们前面学的 pointer analysis 都是上下文不敏">
+        <meta name="description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》12.0 Pointer Analysis Context Sensitivity II这一部分主要是介绍加入了 CS 之后的指针分析算法，同时还会介绍前面提到的上下文敏感策略。 Con">
 <meta property="og:type" content="article">
-<meta property="og:title" content="南大《软件分析》11.0 Pointer Analysis Context Sensitivity I">
-<meta property="og:url" content="http://example.com/2024/08/30/11.0_Pointer%20Analysis_Context_Sensitivity_I/index.html">
+<meta property="og:title" content="南大《软件分析》12.0 Pointer Analysis Context Sensitivity I">
+<meta property="og:url" content="http://example.com/2024/08/30/12.0_Pointer%20Analysis_Context_Sensitivity_II/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》11.0 Pointer Analysis Context Sensitivity I这一节内容讲的是上下文敏感技术，实际上我们前面学的 pointer analysis 都是上下文不敏">
+<meta property="og:description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》12.0 Pointer Analysis Context Sensitivity II这一部分主要是介绍加入了 CS 之后的指针分析算法，同时还会介绍前面提到的上下文敏感策略。 Con">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_10-24-35.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_10-29-10.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_10-32-14.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_10-41-07.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_10-47-41.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_10-52-27.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_10-56-02.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-03-09.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-07-40.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-11-45.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-21-03.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-21-28.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-26-18.png">
-<meta property="article:published_time" content="2024-08-30T03:29:31.616Z">
-<meta property="article:modified_time" content="2024-08-30T03:31:29.869Z">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-37-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-45-16.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-45-27.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_11-51-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_12-29-02.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_12-30-27.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_12-34-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_12-37-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_12-42-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_12-47-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-00-37.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-04-52.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-07-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-11-14.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-12-58.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-21-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-26-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-29-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-30-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-31-14.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-30_13-31-44.png">
+<meta property="article:published_time" content="2024-08-30T05:33:09.494Z">
+<meta property="article:modified_time" content="2024-08-30T05:34:19.889Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="pointer analysis">
 <meta property="article:tag" content="context sensitivity">
 <meta property="article:tag" content="call site">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-08-30_10-24-35.png">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-08-30_11-37-51.png">
     
     
     <!--- Icon Part-->
@@ -57,7 +65,7 @@
     
     <title>
         
-            南大《软件分析》11.0 Pointer Analysis Context Sensitivity I -
+            南大《软件分析》12.0 Pointer Analysis Context Sensitivity I -
         
         Henry Martin
     </title>
@@ -495,10 +503,10 @@ mjx-container[display="true"] + br {
             
                 
                 
-                <img src="/images/Snipaste_2024-08-30_11-30-39.png" alt="南大《软件分析》11.0 Pointer Analysis Context Sensitivity I" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                <img src="/images/Snipaste_2024-08-30_13-33-50.png" alt="南大《软件分析》12.0 Pointer Analysis Context Sensitivity I" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
                 
                 <div class="w-full flex items-center absolute bottom-0 justify-start">
-                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">南大《软件分析》11.0 Pointer Analysis Context Sensitivity I</h1>
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">南大《软件分析》12.0 Pointer Analysis Context Sensitivity I</h1>
                 </div>
             
             </div>
@@ -519,15 +527,15 @@ mjx-container[display="true"] + br {
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2024-08-30 11:29:31</span>
-        <span class="mobile">2024-08-30 11:29:31</span>
+        <span class="desktop">2024-08-30 13:33:09</span>
+        <span class="mobile">2024-08-30 13:33:09</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-08-30 11:31:29</span>
-            <span class="mobile">2024-08-30 11:31:29</span>
+            <span class="desktop">2024-08-30 13:34:19</span>
+            <span class="mobile">2024-08-30 13:34:19</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -601,34 +609,57 @@ mjx-container[display="true"] + br {
         <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
             <p>课程环境：<a class="link" target="_blank" rel="noopener" href="https://tai-e.pascal-lab.net/lectures.html">https://tai-e.pascal-lab.net/lectures.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p>课程视频：<a class="link" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1b7411K7P4">https://www.bilibili.com/video/BV1b7411K7P4 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h1 id="南大《软件分析》11-0-Pointer-Analysis-Context-Sensitivity-I"><a href="#南大《软件分析》11-0-Pointer-Analysis-Context-Sensitivity-I" class="headerlink" title="南大《软件分析》11.0 Pointer Analysis Context Sensitivity I"></a>南大《软件分析》11.0 Pointer Analysis Context Sensitivity I</h1><p>这一节内容讲的是上下文敏感技术，实际上我们前面学的 pointer analysis 都是上下文不敏感，这使得在实际的过程中会缺少精度，而上下文敏感就是为了能够提升分析精度。以下图为例：</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_10-24-35.png" alt="nipaste_2024-08-30_10-24-3"></p>
-<p>对于这段程序，在上下文不敏感中，其最终 PFG 如右边所示，导致最后常量传播的分析结果为 NAC，产生了误报，但实际上 i 会返回一个确定的结果 1，因为 n1 来自 One 这个对象。这里就需要引入上下文敏感技术来提高精度。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_10-29-10.png" alt="nipaste_2024-08-30_10-29-1"></p>
-<p>直观上来理解，上下文敏感就是尽可能将各调用上下文之间进行隔离，从而保证对象之间的正确传播。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_10-32-14.png" alt="nipaste_2024-08-30_10-32-1"></p>
-<p>上图给出了上下文不敏感产生不精确结果的原因，即在不同的调用环境下，方法内的变量可能会指向不同的对象，而 CI 将这些部分没有区分，全部传递到其返回的变量，从而造成结果的不准确性。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_10-41-07.png" alt="nipaste_2024-08-30_10-41-0"></p>
-<p>上下文敏感通过<strong>区分不同上下文之间的数据流来提高精度</strong>，一种比较传统的上下文敏感策略就是 call site sensitivity（调用点敏感，在 12.0 还会另外集中上下文敏感技术），<strong>这个策略实际上就是通过记录调用堆栈信息，来区分不同上下文</strong>。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_10-47-41.png" alt="nipaste_2024-08-30_10-47-4"></p>
-<p>这里指出在基于克隆的上下文敏感指针分析（call site 就是一种基于克隆的上下文敏感技术）中，每个方法都由一个或者多个上下文限定，并且每一个变量也被上下文所限定。后面会有例子来帮助理解这一概念，</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_10-52-27.png" alt="nipaste_2024-08-30_10-52-2"></p>
-<p>为了提高精度，上下文敏感必须也要将堆纳入到考虑对象，如上图所示上下文敏感堆抽象技术在 allocation site 抽象的基础上，提供了一个更细粒度的堆模型。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_10-56-02.png" alt="nipaste_2024-08-30_10-56-0"></p>
-<p>这里给出了为什么要建立堆抽象的原因。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-03-09.png" alt="nipaste_2024-08-30_11-03-0"></p>
-<p>这里基于一段程序给出了基于 call site 敏感技术不采用堆抽象和采用堆抽象最后得出结果的区别（强烈建议自己对着程序把右边这些结果算一遍，可以加深自己对程序的理解），可以看到 no C.S. heap 最后得到的结果并不精确，而采用堆抽象的 CS 最后可以返回正确的结果。</p>
-<h2 id="Context-Sensitive-Pointer-Analysis-Rules"><a href="#Context-Sensitive-Pointer-Analysis-Rules" class="headerlink" title="Context Sensitive Pointer Analysis: Rules"></a>Context Sensitive Pointer Analysis: Rules</h2><p>老样子，为了建立出 CS 指针分析算法，还需要设置对应的 Rules。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-07-40.png" alt="nipaste_2024-08-30_11-07-4"></p>
-<p>与前面指针分析的 Rules 大差不差，只不过这里将 context 也作为了考虑范畴，即程序中的方法（method），变量（variables），对象（objects），实例成员（instance fields）都是建立在上下文范畴之内的。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-11-45.png" alt="nipaste_2024-08-30_11-11-4"></p>
-<p>这四种rules对应的表示形式如上图所示。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-21-03.png" alt="nipaste_2024-08-30_11-21-0"></p>
-<p>对应 call 的 rule 比较复杂，所以这里单独将其列出来，对于上面 rule 中的一些上下文变换，需要学会理解，值得注意的是 Select 函数，这里先暂且不管其具体实现（后面会解释），只需要知道它会根据参数返回一个特定的上下文 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="1.745ex" height="1.848ex" role="img" focusable="false" viewBox="0 -805.6 771.3 816.6"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g><g data-mml-node="mi" transform="translate(466,363) scale(0.707)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"></path></g></g></g></g></svg></mjx-container>。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-21-28.png" alt="nipaste_2024-08-30_11-21-2"></p>
-<p>在 call site 敏感技术中，select 的返回结果如上图所示，即返回行号。</p>
-<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-26-18.png" alt="nipaste_2024-08-30_11-26-1"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过这段时间课程的学习，感觉到自己从其它视角对程序的理解更加深刻了。</p>
+<h1 id="南大《软件分析》12-0-Pointer-Analysis-Context-Sensitivity-II"><a href="#南大《软件分析》12-0-Pointer-Analysis-Context-Sensitivity-II" class="headerlink" title="南大《软件分析》12.0 Pointer Analysis Context Sensitivity II"></a>南大《软件分析》12.0 Pointer Analysis Context Sensitivity II</h1><p>这一部分主要是介绍加入了 CS 之后的指针分析算法，同时还会介绍前面提到的上下文敏感策略。</p>
+<h2 id="Context-Sensitive-Pointer-Analysis-Algorithms"><a href="#Context-Sensitive-Pointer-Analysis-Algorithms" class="headerlink" title="Context Sensitive Pointer Analysis: Algorithms"></a>Context Sensitive Pointer Analysis: Algorithms</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-37-51.png" alt="nipaste_2024-08-30_11-37-5"></p>
+<p>由于要建立一个在 CS 下的 PFG（pointer flow graph），所以需要对 Nodes 和 Edges 重新基于上下文这一概念重新定义。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-45-16.png" alt="nipaste_2024-08-30_11-45-1"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-45-27.png" alt="nipaste_2024-08-30_11-45-2"></p>
+<p>这里给出五种语句 new，assign，store，load，call 对应的 PFG 建立规则。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_11-51-02.png" alt="nipaste_2024-08-30_11-51-0"></p>
+<p>上图给出了整个 CS pointer analysis 的算法，与前面的 CI pointer analysis 的区别是为每个变量添加了一个上下文，同时在 ProcessCall 中还添加了一个 Select 算法用来决定当前环境下应该返回的上下文。事实上，从算法层面直观来看改变并不大，但是从理解上实际上是有一定难度的，需要明白每条语句是如何处理不同上下文的。</p>
+<p><strong>由于这一部分非常重要</strong>（指针分析是整个静态分析基础中的基础），<strong>这里算法中的一些部分进行简要解释</strong>：</p>
+<p>需要注意的是不止算法部分发生了变化，同时 RM 和 CG 的概念也发生了变化，即这两者在新的算法中被限制在了 C.S 中，如下图所示。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_12-29-02.png" alt="nipaste_2024-08-30_12-29-0"></p>
+<p>老样子 Δ 中依旧存放的是需要传播的对象，这些对象可能是在不同上下文中的，用 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="5.33ex" height="2.074ex" role="img" focusable="false" viewBox="0 -759 2356 916.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g><g data-mml-node="TeXAtom" transform="translate(466,363) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mo"><path data-c="2035" d="M12 501Q12 527 31 542T63 558Q73 560 77 560Q114 560 128 528Q133 518 188 293T244 61Q244 56 223 50T195 43Q192 43 190 45T102 263T14 486Q12 496 12 501Z"></path></g></g></g><g data-mml-node="mo" transform="translate(988.2,0)"><path data-c="3A" d="M78 370Q78 394 95 412T138 430Q162 430 180 414T199 371Q199 346 182 328T139 310T96 327T78 370ZM78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path></g><g data-mml-node="msub" transform="translate(1544,0)"><g data-mml-node="mi"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mi" transform="translate(518,-150) scale(0.707)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g></g></g></g></svg></mjx-container> 表示，算法的后面一部分会对整个  Δ 进行遍历，紧接着是对 store/load 语句的处理，分别有 <code>AddEdge(𝑐:𝑦, 𝑐′:𝑜𝑖.𝑓)</code> 和 <code>AddEdge(𝑐′:𝑜𝑖.𝑓, 𝑐:𝑦)</code>，由于 x 和 y 是处在同一个上下文中（<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="5.963ex" height="1.848ex" role="img" focusable="false" viewBox="0 -805.6 2635.4 816.6"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D45A" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="TeXAtom" transform="translate(911,363) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mi"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="mi" transform="translate(466,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1066,0)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"></path></g><g data-mml-node="mi" transform="translate(1427,0)"><path data-c="1D45F" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1878,0)"><path data-c="1D466" d="M21 287Q21 301 36 335T84 406T158 442Q199 442 224 419T250 355Q248 336 247 334Q247 331 231 288T198 191T182 105Q182 62 196 45T238 27Q261 27 281 38T312 61T339 94Q339 95 344 114T358 173T377 247Q415 397 419 404Q432 431 462 431Q475 431 483 424T494 412T496 403Q496 390 447 193T391 -23Q363 -106 294 -155T156 -205Q111 -205 77 -183T43 -117Q43 -95 50 -80T69 -58T89 -48T106 -45Q150 -45 150 -87Q150 -107 138 -122T115 -142T102 -147L99 -148Q101 -153 118 -160T152 -167H160Q177 -167 186 -165Q219 -156 247 -127T290 -65T313 -9T321 21L315 17Q309 13 296 6T270 -6Q250 -11 231 -11Q185 -11 150 11T104 82Q103 89 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g></g></g></g></g></svg></mjx-container>）的，因此这里它们两者的上下文是一样的用 𝑐 表示。</p>
+<p><strong>AddReachable</strong></p>
+<p>细心点的话可以发现，AddReachable 函数里面都是相同的上下文，这一点也可以从这个函数本身的功能来理解，因为它就是负责来解析当前方法中的 new 和 assign 语句，同时完成对 WL 和添加边的操作。而这些都是在一个方法内完成的，因此其上下文自然也是相同的（因为本质上不牵扯到函数调用）。</p>
+<p><strong>ProcessCall</strong></p>
+<p>这个函数其实可以根据前面提到的 call rule 来进行理解，在通过 select 选出上下文 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="1.745ex" height="1.848ex" role="img" focusable="false" viewBox="0 -805.6 771.3 816.6"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g><g data-mml-node="mi" transform="translate(466,363) scale(0.707)"><path data-c="1D461" d="M26 385Q19 392 19 395Q19 399 22 411T27 425Q29 430 36 430T87 431H140L159 511Q162 522 166 540T173 566T179 586T187 603T197 615T211 624T229 626Q247 625 254 615T261 596Q261 589 252 549T232 470L222 433Q222 431 272 431H323Q330 424 330 420Q330 398 317 385H210L174 240Q135 80 135 68Q135 26 162 26Q197 26 230 60T283 144Q285 150 288 151T303 153H307Q322 153 322 145Q322 142 319 133Q314 117 301 95T267 48T216 6T155 -11Q125 -11 98 4T59 56Q57 64 57 83V101L92 241Q127 382 128 383Q128 385 77 385H26Z"></path></g></g></g></g></svg></mjx-container>之后，然后进行后续的操作。</p>
+<h2 id="Context-Sensitivity-Variants"><a href="#Context-Sensitivity-Variants" class="headerlink" title="Context Sensitivity Variants"></a>Context Sensitivity Variants</h2><p>这一部分会对前面提到的 Select 算法进行详细解释</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_12-30-27.png" alt="nipaste_2024-08-30_12-30-2"></p>
+<p>前面接触的基于调用位置所在行来设置具体的上下文只是上下文敏感分析中的一种策略（Call-site sensitivity），这里还列出了另外两种策略 Object sensitivity 和 type sensitivity，同时给出了 Select 几个参数的含义。这里分别介绍这几种策略</p>
+<h2 id="Call-Site-Sensitivity"><a href="#Call-Site-Sensitivity" class="headerlink" title="Call-Site Sensitivity"></a>Call-Site Sensitivity</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_12-34-35.png" alt="nipaste_2024-08-30_12-34-3"></p>
+<p>这里给出了 call site sensitivity 的概念，看似说的很晦涩，实际上其实 call site 就是<strong>执行位置的调用堆栈</strong>（按这个来理解就可以了），这个调用堆栈的内容组成了 call chain</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_12-37-49.png" alt="nipaste_2024-08-30_12-37-4"></p>
+<p>上图就是一个例子，只不过他这里把调用堆栈用行号表示了，原理上是一样的，只不过可以发现在存在递归的函数中，可能存在无穷个上下文，尽管实际运行过程中可能是有穷的，但是由于这里是从静态分析的角度触发，因此在通常情况下会对 call chain 的长度进行限制，尽管这在一定程度上丢失了一部分精度。怎么来理解上下文减少就丢失精度呢，前面有提过上下文实际上就是各个执行环境之间的隔离，这种隔离可以让我们更好的来分析对象的传播，而上下文的减少，则意味着隔离的环境减少，导致变量指向的对象变多了，从而丢失精度。</p>
+<p><strong>k-Limiting Context Abstraction</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_12-42-45.png" alt="nipaste_2024-08-30_12-42-4"></p>
+<p>前面提到 call chain 的长度可能会过长，因此 K-CFA(k-Call-Site Sensitivity) 中的 K 就限制了 call chain 的长度。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_12-47-39.png" alt="nipaste_2024-08-30_12-47-3"></p>
+<p>同样的例子，对于 1-call-site 其结果如上图所示。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-00-37.png" alt="nipaste_2024-08-30_13-00-3"></p>
+<p>这里举了一个 1-call-site 的例子，可以看出最后 x 和 y 都返回了正确的结果。</p>
+<h2 id="Object-Sensitivity"><a href="#Object-Sensitivity" class="headerlink" title="Object Sensitivity"></a>Object Sensitivity</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-04-52.png" alt="nipaste_2024-08-30_13-04-5"></p>
+<p>前面 call site sesitivity 是以调用点位置为核心建立的，而 object sensitivity 实际上是以分配点位置为核心建立的（Essentially allocation-site sensitivity）。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-07-43.png" alt="nipaste_2024-08-30_13-07-4"></p>
+<p>这里给出一个例子来方便理解，最后x也是正确的返回了对象，但是如果是使用 1-call-site，结果如何呢</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-11-14.png" alt="nipaste_2024-08-30_13-11-1"> </p>
+<p>可以发现 1-call-site返回的结果并不准确，理由是 1-call-site 将 call site 长度只设置为了 1，导致在处理 doSet 函数时，数据	流在这里进行了汇合，从而导致返回的结果并不准确。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-12-58.png" alt="nipaste_2024-08-30_13-12-5"></p>
+<p>但是在有些情况下 1-call-site 会返回正确的结果，而 1-object 会返回错误的结果</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-21-41.png" alt="nipaste_2024-08-30_13-21-4"></p>
+<p>原因是在 1-object 的情况下，由于14行和15行的 this.id 的上下文都为 [<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.375ex;" xmlns="http://www.w3.org/2000/svg" width="2.085ex" height="1.372ex" role="img" focusable="false" viewBox="0 -441 921.6 606.6"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mn" transform="translate(518,-150) scale(0.707)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g></g></g></g></svg></mjx-container>]，从而导致两次调用使得  [<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.375ex;" xmlns="http://www.w3.org/2000/svg" width="2.085ex" height="1.372ex" role="img" focusable="false" viewBox="0 -441 921.6 606.6"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mn" transform="translate(518,-150) scale(0.707)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path></g></g></g></g></svg></mjx-container>:n] = {<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.439ex;" xmlns="http://www.w3.org/2000/svg" width="6.776ex" height="1.437ex" role="img" focusable="false" viewBox="0 -441 2994.9 635"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="TeXAtom" transform="translate(518,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mn"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path></g></g></g><g data-mml-node="mo" transform="translate(1275.1,0)"><path data-c="2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g data-mml-node="msub" transform="translate(1719.8,0)"><g data-mml-node="mi"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="TeXAtom" transform="translate(518,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mn"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z" transform="translate(500,0)"></path></g></g></g></g></g></svg></mjx-container>}。</p>
+<p>所以理论上，这两个策略的精确度是不能比较的，但在性能表现上 object sensitivity 是远远高于 call site 的。</p>
+<h2 id="Call-Site-vs-Object-Sensitivity"><a href="#Call-Site-vs-Object-Sensitivity" class="headerlink" title="Call-Site vs. Object Sensitivity"></a>Call-Site vs. Object Sensitivity</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-26-06.png" alt="nipaste_2024-08-30_13-26-0"></p>
+<p>从两位老师做出的实验成果也可以看出从精度和效率上 object 都是好于 call-site的。</p>
+<h2 id="Type-Sensitivity"><a href="#Type-Sensitivity" class="headerlink" title="Type Sensitivity"></a>Type Sensitivity</h2><p>但尽管 object 的效率高于 call site，在实际情况下想要让执行效率更快一点，所以就提出了 type sensitivity。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-29-44.png" alt="nipaste_2024-08-30_13-29-4"></p>
+<p>简单来说就是将同一个上下文中的所有 allocation site 看做是相同的。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-30-13.png" alt="nipaste_2024-08-30_13-30-1"></p>
+<p>最终实验数据结果比较如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-31-14.png" alt="nipaste_2024-08-30_13-31-1"></p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-30_13-31-44.png" alt="nipaste_2024-08-30_13-31-4"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此指针分析的内容彻底结束，虽然在内容上有了一定的理解，但后续仍需通过做实验来强化对这部分内容的理解。</p>
 
         </div>
 
@@ -636,18 +667,18 @@ mjx-container[display="true"] + br {
             <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
                 <div class="article-copyright-info-container">
     <ul>
-        <li><strong>Title:</strong> 南大《软件分析》11.0 Pointer Analysis Context Sensitivity I</li>
+        <li><strong>Title:</strong> 南大《软件分析》12.0 Pointer Analysis Context Sensitivity I</li>
         <li><strong>Author:</strong> henry</li>
         <li><strong>Created at
-                :</strong> 2024-08-30 11:29:31</li>
+                :</strong> 2024-08-30 13:33:09</li>
         
             <li>
                 <strong>Updated at
-                    :</strong> 2024-08-30 11:31:29
+                    :</strong> 2024-08-30 13:34:19
             </li>
         
         <li>
-            <strong>Link:</strong> https://henrymartin262.github.io/2024/08/30/11.0_Pointer Analysis_Context_Sensitivity_I/
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/08/30/12.0_Pointer Analysis_Context_Sensitivity_II/
         </li>
         <li>
             <strong>
@@ -688,29 +719,14 @@ mjx-container[display="true"] + br {
         
             <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
                 
-                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-                        <a class="prev"
-                        rel="prev"
-                        href="/2024/08/30/12.0_Pointer%20Analysis_Context_Sensitivity_II/"
-                        >
-                            <span class="left arrow-icon flex justify-center items-center">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">南大《软件分析》12.0 Pointer Analysis Context Sensitivity I</span>
-                                <span class="post-nav-item">Prev posts</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="next"
                         rel="next"
-                        href="/2024/08/28/10.0_Pointer_Analysis_Foundations_II/"
+                        href="/2024/08/30/11.0_Pointer%20Analysis_Context_Sensitivity_I/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">南大《软件分析》10.0 Pointer Analysis Foundations II</span>
+                                <span class="post-nav-title-item">南大《软件分析》11.0 Pointer Analysis Context Sensitivity I</span>
                                 <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -770,8 +786,8 @@ mjx-container[display="true"] + br {
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">南大《软件分析》11.0 Pointer Analysis Context Sensitivity I</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%97%E5%A4%A7%E3%80%8A%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90%E3%80%8B11-0-Pointer-Analysis-Context-Sensitivity-I"><span class="nav-text">南大《软件分析》11.0 Pointer Analysis Context Sensitivity I</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Context-Sensitive-Pointer-Analysis-Rules"><span class="nav-text">Context Sensitive Pointer Analysis: Rules</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
+        <div class="page-title">南大《软件分析》12.0 Pointer Analysis Context Sensitivity I</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%97%E5%A4%A7%E3%80%8A%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90%E3%80%8B12-0-Pointer-Analysis-Context-Sensitivity-II"><span class="nav-text">南大《软件分析》12.0 Pointer Analysis Context Sensitivity II</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Context-Sensitive-Pointer-Analysis-Algorithms"><span class="nav-text">Context Sensitive Pointer Analysis: Algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Context-Sensitivity-Variants"><span class="nav-text">Context Sensitivity Variants</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Call-Site-Sensitivity"><span class="nav-text">Call-Site Sensitivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object-Sensitivity"><span class="nav-text">Object Sensitivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Call-Site-vs-Object-Sensitivity"><span class="nav-text">Call-Site vs. Object Sensitivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-Sensitivity"><span class="nav-text">Type Sensitivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol>
 
     </div>
 </div>
