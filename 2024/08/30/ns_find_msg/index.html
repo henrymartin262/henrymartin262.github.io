@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/08/30/ns_find_msg/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="EnvFuzz 实战 evince如果对 envfuzz 不了解，可以看我前面的分析文章 。 本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 ev">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EnvFuzz 实战 evince">
+<meta property="og:url" content="http://example.com/2024/08/30/ns_find_msg/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="EnvFuzz 实战 evince如果对 envfuzz 不了解，可以看我前面的分析文章 。 本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 ev">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-20-36.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-24-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-54-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-57-54.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_17-47-22.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_17-48-10.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-29-53.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-34-07.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-46-55.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-08-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-29-32.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-33-33.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-37-18.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_20-50-35.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_20-56-46.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-01-33.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-02-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-11-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-18-18.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-20-47.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-15-40.png">
+<meta property="article:published_time" content="2024-08-30T06:02:03.847Z">
+<meta property="article:modified_time" content="2024-08-30T06:06:03.819Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="fuzz">
+<meta property="article:tag" content="envfuzz">
+<meta property="article:tag" content="evince">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-08-15_18-20-36.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            EnvFuzz 实战 evince -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2024-08-30_14-00-43.png" alt="EnvFuzz 实战 evince" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">EnvFuzz 实战 evince</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-08-30 14:02:03</span>
+        <span class="mobile">2024-08-30 14:02:03</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-08-30 14:06:03</span>
+            <span class="mobile">2024-08-30 14:06:03</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/fuzz/">fuzz</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/fuzz/real-world/">real world</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/fuzz/">fuzz</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/envfuzz/">envfuzz</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/evince/">evince</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="EnvFuzz-实战-evince"><a href="#EnvFuzz-实战-evince" class="headerlink" title="EnvFuzz 实战 evince"></a>EnvFuzz 实战 evince</h1><p>如果对 envfuzz 不了解，可以看我前面的分析<a class="link" target="_blank" rel="noopener" href="https://henrymartin262.github.io/2024/08/10/envFuzz/">文章 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>。</p>
+<p>本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 evince 配置文件的 crash，修改这个配置文件中的一个字节可以导致空指针。</p>
+<h2 id="SIGSEGV-fdbe-m00854-patch"><a href="#SIGSEGV-fdbe-m00854-patch" class="headerlink" title="SIGSEGV_fdbe_m00854.patch"></a>SIGSEGV_fdbe_m00854.patch</h2><h3 id="nl-find-msg"><a href="#nl-find-msg" class="headerlink" title="_nl_find_msg"></a>_nl_find_msg</h3><p>该函数位于 glibc 中</p>
+<p><strong>patch脚本：</strong></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /usr/share/locale-langpack/en/LC_MESSAGES/gtk30.mo /usr/share/locale-langpack/en/LC_MESSAGES/gtk30.mo.bak</span><br><span class="line"></span><br><span class="line">sudo <span class="built_in">cp</span> gtk30.mo /usr/share/locale-langpack/en/LC_MESSAGES/</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> /usr/share/locale-langpack/en/LC_MESSAGES/gtk30.mo.bak /usr/share/locale-langpack/en/LC_MESSAGES/gtk30.mo</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>调试脚本：</strong></p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gdb</span><br><span class="line"></span><br><span class="line">gdb.execute(<span class="string">"b gtk_get_option_group"</span>)</span><br><span class="line">gdb.execute(<span class="string">"b *0x7d1ba283c5cc"</span>) <span class="comment">#&lt;_nl_load_domain+1212&gt;:	call   0x7d1ba283abb0 &lt;_nl_find_msg&gt;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>out/crash/SIGSEGV_fdbe_m00854.patch: Segmentation fault</p>
+<p><strong>backtrace</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">► 0   0x7ffff6a3ad31 _nl_find_msg+385</span><br><span class="line">  1   0x7ffff6a3c5d1 _nl_load_domain+1217</span><br><span class="line">  2   0x7ffff6a3c0e5 _nl_find_domain+597</span><br><span class="line">  3   0x7ffff6a3b845 __dcigettext+773</span><br><span class="line">  4   0x7ffff7648a45 gtk_get_option_group+53</span><br><span class="line">  5   0x55555557e3cd main+157</span><br><span class="line">  6   0x7ffff6a29d90 __libc_start_call_main+128</span><br><span class="line">  7   0x7ffff6a29e40 __libc_start_main+128</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p><strong>mo_file_header</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Header for binary .mo file format.  */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mo_file_header</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">  <span class="comment">/* The magic number.  */</span></span><br><span class="line">  nls_uint32 magic;</span><br><span class="line">  <span class="comment">/* The revision number of the file format.  */</span></span><br><span class="line">  nls_uint32 revision;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* The following are only used in .mo files with major revision 0 or 1.  */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* The number of strings pairs.  */</span></span><br><span class="line">  nls_uint32 nstrings;</span><br><span class="line">  <span class="comment">/* Offset of table with start offsets of original strings.  */</span></span><br><span class="line">  nls_uint32 orig_tab_offset;</span><br><span class="line">  <span class="comment">/* Offset of table with start offsets of translated strings.  */</span></span><br><span class="line">  nls_uint32 trans_tab_offset;</span><br><span class="line">  <span class="comment">/* Size of hash table.  */</span></span><br><span class="line">  nls_uint32 hash_tab_size;</span><br><span class="line">  <span class="comment">/* Offset of first hash table entry.  */</span></span><br><span class="line">  nls_uint32 hash_tab_offset;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* The following are only used in .mo files with minor revision &gt;= 1.  */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* The number of system dependent segments.  */</span></span><br><span class="line">  nls_uint32 n_sysdep_segments;</span><br><span class="line">  <span class="comment">/* Offset of table describing system dependent segments.  */</span></span><br><span class="line">  nls_uint32 sysdep_segments_offset;</span><br><span class="line">  <span class="comment">/* The number of system dependent strings pairs.  */</span></span><br><span class="line">  nls_uint32 n_sysdep_strings;</span><br><span class="line">  <span class="comment">/* Offset of table with start offsets of original sysdep strings.  */</span></span><br><span class="line">  nls_uint32 orig_sysdep_tab_offset;</span><br><span class="line">  <span class="comment">/* Offset of table with start offsets of translated sysdep strings.  */</span></span><br><span class="line">  nls_uint32 trans_sysdep_tab_offset;</span><br><span class="line">};</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>loaded_l10nfile</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">loaded_l10nfile</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *filename;</span><br><span class="line">  <span class="type">int</span> decided;</span><br><span class="line"></span><br><span class="line">  <span class="type">const</span> <span class="type">void</span> *data;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">loaded_l10nfile</span> *<span class="title">next</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">loaded_l10nfile</span> *<span class="title">successor</span>[1];</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>loaded_domain</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* The representation of an opened message catalog.  */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">loaded_domain</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">  <span class="comment">/* Pointer to memory containing the .mo file.  */</span></span><br><span class="line"><span class="number">0x0</span>: <span class="type">const</span> <span class="type">char</span> *data;		</span><br><span class="line">  <span class="comment">/* 1 if the memory is mmap()ed, 0 if the memory is malloc()ed.  */</span></span><br><span class="line"><span class="number">0x8</span>: <span class="type">int</span> use_mmap;</span><br><span class="line">  <span class="comment">/* Size of mmap()ed memory.  */</span></span><br><span class="line"><span class="number">0x10</span>: <span class="type">size_t</span> mmap_size;</span><br><span class="line">  <span class="comment">/* 1 if the .mo file uses a different endianness than this machine.  */</span></span><br><span class="line"><span class="number">0x18</span>: <span class="type">int</span> must_swap;</span><br><span class="line">  <span class="comment">/* Pointer to additional malloc()ed memory.  */</span></span><br><span class="line"><span class="number">0x20</span>: <span class="type">void</span> *malloced;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Number of static strings pairs.  */</span></span><br><span class="line"><span class="number">0x28</span>: nls_uint32 nstrings;</span><br><span class="line">  <span class="comment">/* Pointer to descriptors of original strings in the file.  */</span></span><br><span class="line"><span class="number">0x30</span>: <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">string_desc</span> *<span class="title">orig_tab</span>;</span></span><br><span class="line">  <span class="comment">/* Pointer to descriptors of translated strings in the file.  */</span></span><br><span class="line"><span class="number">0x38</span>: <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">string_desc</span> *<span class="title">trans_tab</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Number of system dependent strings pairs.  */</span></span><br><span class="line"><span class="number">0x40</span>: nls_uint32 n_sysdep_strings;</span><br><span class="line">  <span class="comment">/* Pointer to descriptors of original sysdep strings.  */</span></span><br><span class="line"><span class="number">0x48</span>: <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">sysdep_string_desc</span> *<span class="title">orig_sysdep_tab</span>;</span></span><br><span class="line">  <span class="comment">/* Pointer to descriptors of translated sysdep strings.  */</span></span><br><span class="line"><span class="number">0x50</span>: <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">sysdep_string_desc</span> *<span class="title">trans_sysdep_tab</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Size of hash table.  */</span></span><br><span class="line"><span class="number">0x58</span>: nls_uint32 hash_size;</span><br><span class="line">  <span class="comment">/* Pointer to hash table.  */</span></span><br><span class="line"><span class="number">0x60</span>: <span class="type">const</span> nls_uint32 *hash_tab;</span><br><span class="line">  <span class="comment">/* 1 if the hash table uses a different endianness than this machine.  */</span></span><br><span class="line"><span class="number">0x68</span>: <span class="type">int</span> must_swap_hash_tab;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Cache of charset conversions of the translated strings.  */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">converted_domain</span> *<span class="title">conversions</span>;</span></span><br><span class="line">  <span class="type">size_t</span> nconversions;</span><br><span class="line">  gl_rwlock_define (, conversions_lock)</span><br><span class="line"></span><br><span class="line">  <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">expression</span> *<span class="title">plural</span>;</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> <span class="type">int</span> nplurals;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>sysdep_string_desc</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* In-memory representation of system dependent string.  */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sysdep_string_desc</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">  <span class="comment">/* Length of addressed string, including the trailing NUL.  */</span></span><br><span class="line">  <span class="type">size_t</span> length;</span><br><span class="line">  <span class="comment">/* Pointer to addressed string.  */</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *pointer;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h3><p><strong>漏洞代码（注释来自GPT）</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 查找 `msgid` 在 `DOMAIN_FILE` 和 `DOMAINBINDING` 中的翻译。</span></span><br><span class="line"><span class="comment">   如果找到翻译，返回它。 </span></span><br><span class="line"><span class="comment">   如果没有找到翻译，或者在转换过程中出现错误（例如特定消息目录的问题），则返回 `NULL`。</span></span><br><span class="line"><span class="comment">   如果在转换过程中内存分配失败（仅在 `ENCODING` 不为空或 `CONVERT` 为真时发生），返回 `(char *) -1`。 */</span></span><br><span class="line"><span class="type">char</span> *</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> IN_LIBGLOCALE</span></span><br><span class="line">_nl_find_msg (<span class="keyword">struct</span> loaded_l10nfile *domain_file,</span><br><span class="line">	      <span class="keyword">struct</span> binding *domainbinding, <span class="type">const</span> <span class="type">char</span> *encoding,</span><br><span class="line">	      <span class="type">const</span> <span class="type">char</span> *msgid,</span><br><span class="line">	      <span class="type">size_t</span> *lengthp)</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">_nl_find_msg (<span class="keyword">struct</span> loaded_l10nfile *domain_file,</span><br><span class="line">	      <span class="keyword">struct</span> binding *domainbinding,</span><br><span class="line">	      <span class="type">const</span> <span class="type">char</span> *msgid, <span class="type">int</span> convert,</span><br><span class="line">	      <span class="type">size_t</span> *lengthp)</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">{</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">loaded_domain</span> *<span class="title">domain</span>;</span></span><br><span class="line">  nls_uint32 nstrings;</span><br><span class="line">  <span class="type">size_t</span> act;</span><br><span class="line">  <span class="type">char</span> *result;</span><br><span class="line">  <span class="type">size_t</span> resultlen;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 如果 `domain_file` 尚未决定是否加载，调用 `_nl_load_domain` 来加载它。 */</span></span><br><span class="line">  <span class="keyword">if</span> (domain_file-&gt;decided &lt;= <span class="number">0</span>)</span><br><span class="line">    _nl_load_domain (domain_file, domainbinding);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 如果 `domain_file` 的数据为空，则返回 `NULL` 表示找不到翻译。 */</span></span><br><span class="line">  <span class="keyword">if</span> (domain_file-&gt;data == <span class="literal">NULL</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 将 `domain_file-&gt;data` 转换为 `loaded_domain` 结构，准备查找翻译。 */</span></span><br><span class="line">  domain = (<span class="keyword">struct</span> loaded_domain *) domain_file-&gt;data;</span><br><span class="line"></span><br><span class="line">  nstrings = domain-&gt;nstrings;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 开始定位 `msgid` 及其翻译。 */</span></span><br><span class="line">  <span class="keyword">if</span> (domain-&gt;hash_tab != <span class="literal">NULL</span>)</span><br><span class="line">    {</span><br><span class="line">      <span class="comment">/* 如果存在哈希表，则使用哈希表来加速查找。 */</span></span><br><span class="line">      nls_uint32 len = <span class="built_in">strlen</span> (msgid);</span><br><span class="line">      nls_uint32 hash_val = __hash_string (msgid);</span><br><span class="line">      nls_uint32 idx = hash_val % domain-&gt;hash_size;</span><br><span class="line">      nls_uint32 incr = <span class="number">1</span> + (hash_val % (domain-&gt;hash_size - <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">      <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	{</span><br><span class="line">	  <span class="comment">/* 使用哈希表中的索引查找对应的字符串条目。 */</span></span><br><span class="line">	  nls_uint32 nstr =</span><br><span class="line">	    W (domain-&gt;must_swap_hash_tab, domain-&gt;hash_tab[idx]);</span><br><span class="line"></span><br><span class="line">	  <span class="keyword">if</span> (nstr == <span class="number">0</span>)</span><br><span class="line">	    <span class="comment">/* 如果哈希表条目为空，表示找不到该 `msgid`，返回 `NULL`。 */</span></span><br><span class="line">	    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	  nstr--;</span><br><span class="line"></span><br><span class="line">	  <span class="comment">/* 比较 `msgid` 与哈希表中索引的原始字符串，以确定是否匹配。</span></span><br><span class="line"><span class="comment">	     使用 `&gt;=` 而不是 `==` 来比较长度，因为复数条目由带有嵌入式 NUL 的字符串表示。 */</span></span><br><span class="line">	  <span class="keyword">if</span> (nstr &lt; nstrings</span><br><span class="line">	      ? W (domain-&gt;must_swap, domain-&gt;orig_tab[nstr].length) &gt;= len</span><br><span class="line">		&amp;&amp; (<span class="built_in">strcmp</span> (msgid,</span><br><span class="line">			    domain-&gt;data + W (domain-&gt;must_swap,</span><br><span class="line">					      domain-&gt;orig_tab[nstr].offset))</span><br><span class="line">		    == <span class="number">0</span>)</span><br><span class="line">	      : domain-&gt;orig_sysdep_tab[nstr - nstrings].length &gt; len</span><br><span class="line">		&amp;&amp; (<span class="built_in">strcmp</span> (msgid,</span><br><span class="line">			    domain-&gt;orig_sysdep_tab[nstr - nstrings].pointer)</span><br><span class="line">		    == <span class="number">0</span>))</span><br><span class="line">	    {</span><br><span class="line">	      <span class="comment">/* 如果找到匹配的字符串，记录其位置并跳转到 `found` 标签进行处理。 */</span></span><br><span class="line">	      act = nstr;</span><br><span class="line">	      <span class="keyword">goto</span> found;</span><br><span class="line">	    }</span><br><span class="line"></span><br><span class="line">	  <span class="comment">/* 如果没有找到匹配的字符串，按照哈希增量继续查找下一个可能的条目。 */</span></span><br><span class="line">	  <span class="keyword">if</span> (idx &gt;= domain-&gt;hash_size - incr)</span><br><span class="line">	    idx -= domain-&gt;hash_size - incr;</span><br><span class="line">	  <span class="keyword">else</span></span><br><span class="line">	    idx += incr;</span><br><span class="line">	}</span><br><span class="line">      <span class="comment">/* NOTREACHED */</span></span><br><span class="line">    }</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>触发过程</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_18-20-36.png" alt="nipaste_2024-08-15_18-20-3"></p>
+<p>首先 hash_tab 不为 NULL，进入到 if 语句内，</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_18-24-43.png" alt="nipaste_2024-08-15_18-24-4"></p>
+<p>然后执行第一条语句</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_18-54-41.png" alt="nipaste_2024-08-15_18-54-4"></p>
+<p>如下图所示由于 nstr &gt; nstrings，就会进入到第二个语句，即<code>domain-&gt;orig_sysdep_tab[nstr - nstrings].length &gt; len&amp;&amp; (strcmp (msgid,domain-&gt;orig_sysdep_tab[nstr - nstrings].pointer) == 0)</code> </p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_18-57-54.png" alt="nipaste_2024-08-15_18-57-5"></p>
+<p>后面就会紧接着进入到下面的漏洞点</p>
+<p><strong>漏洞点</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_17-47-22.png" alt="nipaste_2024-08-15_17-47-2"></p>
+<p>由于 domain-&gt;orig_sysdep_tab 对应的结构体处的数据为 0，从而使得 <code>add    rax, qword ptr [r14 + 0x48]</code> (0x48对应orig_sysdep_tab的偏移)，计算出来的是一个无效地址，从而在执行 <code>cmp    qword ptr [rax], rdi</code> 的时候出现<strong>非法地址引用错误</strong>。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_17-48-10.png" alt="nipaste_2024-08-15_17-48-1"></p>
+<p><strong>ns_find_msg</strong></p>
+<p>让我们再来梳理下 <code>ns_find_msg</code> 的逻辑，正常只要 <code>domain-&gt;hash_tab != NULL</code> 就可以进入到下面这个 while 循环。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_21-29-53.png" alt="nipaste_2024-08-15_21-29-5"></p>
+<p>部分变量内容数据如下</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_21-34-07.png" alt="nipaste_2024-08-15_21-34-0"></p>
+<p><code>domain-&gt;data = 0x00007ffff7ffa000</code>，而 <code>domain-&gt;data</code> 指向的正是前面 ns_load_domain 映射 gtk30.mo 文件内容，<strong>需要注意的是 <code>domain-&gt;hash_tab[idx]</code> 指针指向的是 gtk30.mo 起始偏移处 0x3cc 处的位置</strong>。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_21-46-55.png" alt="nipaste_2024-08-15_21-46-5"></p>
+<p>然后为了触发漏洞函数，我们需要使 nstr &gt; nstrings 即可，然后 nstr 的值为 <code>nls_uint32 nstr =	W (domain-&gt;must_swap_hash_tab, domain-&gt;hash_tab[idx]);</code>  ，其实在这里就是 <code>nstr =domain-&gt;hash_tab[idx] </code>，而如果我们对源文件 gtk30.mo 这里进行恶意修改，就可以轻松实现 nstr &gt; nstrings 这一条件，从而触发漏洞。</p>
+<p><strong>溯源</strong></p>
+<p>下面再来看看这个非法值是怎么一步一步来的，根据调用栈，我们逆向调试</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_19-08-03.png" alt="nipaste_2024-08-15_19-08-0"></p>
+<p>通过调试，在从 ns_load_domain 进入 ns_find_msg 的时候，domain已被破坏。</p>
+<p><strong>call   _nl_load_domain</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_19-29-32.png" alt="nipaste_2024-08-15_19-29-3"></p>
+<p>下图为对应此时 <code>_nl_load_domain</code> 的domain_file参数信息</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_19-33-33.png" alt="nipaste_2024-08-15_19-33-3"></p>
+<p>可以看到此时 domain_file 已经初始化完成，但是 <code>domain_file-&gt;data</code> 仍为空，这一步在 <code>_ns_load_domain</code> 函数中完成。</p>
+<p><strong>以下是 <code>_nl_load_domain</code> 函数的简化伪代码和注释</strong>：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> _nl_load_domain(<span class="keyword">struct</span> loaded_l10nfile *domain_file, <span class="keyword">struct</span> binding *domainbinding) {</span><br><span class="line">    <span class="comment">// 1. 检查本地化域是否已经加载过</span></span><br><span class="line">    <span class="keyword">if</span> (domain_file-&gt;decided &gt; <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">return</span>;  <span class="comment">// 如果已经加载，则直接返回</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 尝试打开对应的 .mo 文件</span></span><br><span class="line">    FILE *file = open_mo_file(domain_file-&gt;filename);</span><br><span class="line">    <span class="keyword">if</span> (file == <span class="literal">NULL</span>) {</span><br><span class="line">        domain_file-&gt;data = <span class="literal">NULL</span>;  <span class="comment">// 如果文件不存在或打开失败，将数据指针设置为 NULL</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 读取并解析 .mo 文件</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">loaded_domain</span> *<span class="title">domain</span> =</span> parse_mo_file(file);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 如果解析成功，将数据存储在 domain_file 结构体中</span></span><br><span class="line">    domain_file-&gt;data = domain;</span><br><span class="line">    domain_file-&gt;decided = <span class="number">1</span>;  <span class="comment">// 更新加载状态为已加载</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 关闭文件</span></span><br><span class="line">    close(file);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p><code>_nl_load_domain</code> 函数是 GNU C 库本地化系统中的一个关键函数。它负责从磁盘加载和解析本地化消息文件，将翻译数据存储在内存中，供程序运行时使用。通过这种方式，程序可以根据用户的语言环境显示对应的本地化消息。</p>
+<p><strong>需要关注的是第四步</strong>，正是这一步使得<code>domain_file-&gt;data = domain;</code> 从而建立联系，对应源码中的这里。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_19-37-18.png" alt="nipaste_2024-08-15_19-37-1"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_20-50-35.png" alt="nipaste_2024-08-15_20-50-3"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_20-56-46.png" alt="nipaste_2024-08-15_20-56-4"></p>
+<blockquote>
+<p>revision = W (domain-&gt;must_swap, data-&gt;revision);</p>
+<p>这一句命令的作用是从结构体 <code>data</code> 中获取成员 <code>revision</code> 的值，并根据 <code>domain-&gt;must_swap</code> 的情况决定是否需要进行字节序转换。</p>
+</blockquote>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_21-01-33.png" alt="nipaste_2024-08-15_21-01-3"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_21-02-12.png" alt="nipaste_2024-08-15_21-02-1"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_21-11-23.png" alt="nipaste_2024-08-15_21-11-2"></p>
+<p><strong>call _nl_find_domain</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_19-18-18.png" alt="nipaste_2024-08-15_19-18-1"></p>
+<p>下面是 <code>_nl_find_domain</code> 函数的简化伪代码和注释：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">loaded_domain</span> *</span></span><br><span class="line"><span class="class">_<span class="title">nl_find_domain</span> (<span class="title">const</span> <span class="title">char</span> *<span class="title">dirname</span>, <span class="title">const</span> <span class="title">char</span> *<span class="title">locale</span>,</span></span><br><span class="line"><span class="class">                 <span class="title">const</span> <span class="title">char</span> *<span class="title">domainname</span>,</span></span><br><span class="line"><span class="class">                 <span class="keyword">struct</span> <span class="title">binding</span> *<span class="title">domainbinding</span>)</span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">  <span class="comment">// 1. 通过域绑定结构体和目录路径查找缓存中是否已经存在该本地化域。</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">loaded_domain</span> *<span class="title">domain</span> =</span> lookup_cache(dirname, locale, domainname);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2. 如果找到缓存中的域，则返回它。</span></span><br><span class="line">  <span class="keyword">if</span> (domain != <span class="literal">NULL</span>) {</span><br><span class="line">    <span class="keyword">return</span> domain;</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 3. 如果没有找到，则尝试从文件系统中加载本地化文件。</span></span><br><span class="line">  domain = load_localization_file(dirname, locale, domainname);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 4. 将加载的域缓存起来，以便将来可以重复使用。</span></span><br><span class="line">  cache_domain(domainbinding, domain);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 5. 返回加载的域。</span></span><br><span class="line">  <span class="keyword">return</span> domain;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p><code>_nl_find_domain</code> 函数是GNU C库中的一个重要函数，用于查找和加载本地化域。它涉及缓存管理和本地化文件的加载，确保在程序运行时能够高效地进行翻译和国际化支持。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_19-20-47.png" alt="nipaste_2024-08-15_19-20-4"></p>
+<p>此时 domain 还未被初始化完成。</p>
+<p><strong>call __dcigettext</strong></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-08-15_19-15-40.png" alt="nipaste_2024-08-15_19-15-4"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在询问开发者之后（很耐心很细心也给了很多建议），遗憾的被告诉这个配置文件需要 root 权限才能改，所以严格意义上它并不算一个漏洞（但原论文中有一个类似的因配置文件而导致的空指针，却被给了 CVE，且这个配置文件也需要 root 才能改），但为什么要在这里分享，有一个原因就是 envfuzz 其所采用的思想还是非常不错的。但是我自己在使用的过程中，也发现了一些问题，其中包括没有很好的对crash进行识别，只是简单的将所有通过变异 read ，recv 类的系统调用造成的crash全部记录，导致了一些crash并不是能够很好的复现，或者换句话说不能通过用户直接对这些数据进行修改，而是需要提权或者其他的一些额外的操作来进行复现。</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> EnvFuzz 实战 evince</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-08-30 14:02:03</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-08-30 14:06:03
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/08/30/ns_find_msg/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/fuzz/">#fuzz</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/envfuzz/">#envfuzz</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/evince/">#evince</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/08/30/12.0_Pointer%20Analysis_Context_Sensitivity_II/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">南大《软件分析》12.0 Pointer Analysis Context Sensitivity II</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">EnvFuzz 实战 evince</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EnvFuzz-%E5%AE%9E%E6%88%98-evince"><span class="nav-text">EnvFuzz 实战 evince</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SIGSEGV-fdbe-m00854-patch"><span class="nav-text">SIGSEGV_fdbe_m00854.patch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nl-find-msg"><span class="nav-text">_nl_find_msg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E7%8E%B0"><span class="nav-text">复现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
