@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/09/14/15.0_cfl_reachability_and_ifds/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》15.0 CFL-Reachability and IFDS这节课的内容比较难，理解起来比较困难，包括我自己，所以尽可能给出容易理解的解释。 在实际分析的过程中，一个控制流图会非常复杂，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="南大《软件分析》15.0 CFL-Reachability and IFDS">
+<meta property="og:url" content="http://example.com/2024/09/14/15.0_CFL_Reachability_and_IFDS/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》15.0 CFL-Reachability and IFDS这节课的内容比较难，理解起来比较困难，包括我自己，所以尽可能给出容易理解的解释。 在实际分析的过程中，一个控制流图会非常复杂，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-05-38.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-09-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-13-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-14-40.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-20-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-23-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-27-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-30-26.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-32-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-42-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-44-10.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-47-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-50-42.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-57-46.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_15-59-51.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_16-10-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_16-20-34.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_16-25-15.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_16-26-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-13_16-27-42.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-34-24.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-36-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-38-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-41-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-43-19.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-44-04.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-46-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-47-44.png">
+<meta property="article:published_time" content="2024-09-14T07:54:15.089Z">
+<meta property="article:modified_time" content="2024-09-14T07:55:55.478Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CFL-Reachability">
+<meta property="article:tag" content="IFDS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-09-13_15-05-38.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            南大《软件分析》15.0 CFL-Reachability and IFDS -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2024-09-14_15-49-24.png" alt="南大《软件分析》15.0 CFL-Reachability and IFDS" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">南大《软件分析》15.0 CFL-Reachability and IFDS</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-09-14 15:54:15</span>
+        <span class="mobile">2024-09-14 15:54:15</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-09-14 15:55:55</span>
+            <span class="mobile">2024-09-14 15:55:55</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/software/">software</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/software/static-analysis/">static analysis</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/CFL-Reachability/">CFL-Reachability</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/IFDS/">IFDS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <p>课程环境：<a class="link" target="_blank" rel="noopener" href="https://tai-e.pascal-lab.net/lectures.html">https://tai-e.pascal-lab.net/lectures.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>课程视频：<a class="link" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1b7411K7P4">https://www.bilibili.com/video/BV1b7411K7P4 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h1 id="南大《软件分析》15-0-CFL-Reachability-and-IFDS"><a href="#南大《软件分析》15-0-CFL-Reachability-and-IFDS" class="headerlink" title="南大《软件分析》15.0 CFL-Reachability and IFDS"></a>南大《软件分析》15.0 CFL-Reachability and IFDS</h1><p>这节课的内容比较难，理解起来比较困难，包括我自己，所以尽可能给出容易理解的解释。</p>
+<p>在实际分析的过程中，一个控制流图会非常复杂，比如下图</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-05-38.png" alt="nipaste_2024-09-13_15-05-3"></p>
+<p>但这并不意味这张图里面所有的路径都会被执行（实际不会被执行的边称为 infeasible path），因此就产生了一个需求，尽可能通过一个may analysis 来判断一个边是不是 infeasible，从而来减少在程序分析过程中的误报，简单来说就是想让分析的结果更加精确。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-09-57.png" alt="nipaste_2024-09-13_15-09-5"></p>
+<p>比如以上面这个程序为例，不考虑上下文敏感的过程间分析，最后常量传播的结果为绿色部分所示，其实我们知道结果完全可以更精确一点，即 <code>x=18,-1</code> 和 <code>y = 30,-1</code>，之所以造成上面的原因是因为静态分析将两次 call site 分析的结果没有区分直接进行了整合。而这一点是可以避免的，让结果更精确，这就是 IFDS 所要完成的目的</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-13-51.png" alt="nipaste_2024-09-13_15-13-5"> </p>
+<h2 id="Realizable-Paths"><a href="#Realizable-Paths" class="headerlink" title="Realizable Paths"></a>Realizable Paths</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-14-40.png" alt="nipaste_2024-09-13_15-14-4"></p>
+<p>这里给出了 realizable path 的概念，其实就是我们前面提到的例子，剔除掉程序中的 infeasible path，那么剩余的 path 就是 realizable path。</p>
+<p><strong>注意事项：</strong>需要辨析的是 realizable path 可能会被执行也可能会不执行，但是 unrealizable path（infeasible path）一定不会被执行。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-20-49.png" alt="nipaste_2024-09-13_15-20-4"></p>
+<p>以前面的例子为例，我们要做的就是如上图所示，就像在上下文敏感技术中那样，尽可能让这些调用之间”隔离”，而做到这一点就需要引入 CFL-Reachability。</p>
+<h2 id="CFL-Reachability"><a href="#CFL-Reachability" class="headerlink" title="CFL-Reachability"></a>CFL-Reachability</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-23-23.png" alt="nipaste_2024-09-13_15-23-2"></p>
+<p>与我们之前理解的可达性（reachability）不一样，不是说两个 node 之间有条路径就能满足了，还要满足<strong>上下文无关语法</strong>。怎么理解呢，将每一条边用一个”字母”来表示，最后通过 CFG 来检查这条路径上的所有边构成的”单词”是否满足特定语法，才能最终决定 A 是否与 B 之间是可达的。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-27-57.png" alt="nipaste_2024-09-13_15-27-5"></p>
+<p>CFG 的简单介绍如上，暂且先理解为其可以进行替换，即只要出现了 S，那么其就可以替换为 aSb 或者 ε。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-30-26.png" alt="nipaste_2024-09-13_15-30-2"></p>
+<p>这一部分通过举例来说明部分括号匹配问题在 CFL 中的应用。</p>
+<h2 id="IFDS"><a href="#IFDS" class="headerlink" title="IFDS"></a>IFDS</h2><p>其实这一部分，包括前面的部分，如果直接看理论会比较难理解，但这些其实都在为应用做准备，如果将例子理解的话（相对理论会容易理解些），就会同时理解前面的这些概念，所以说不要放弃。首先给出其概念</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-32-41.png" alt="nipaste_2024-09-13_15-32-4"></p>
+<p><strong>定义：</strong>IFDS 是基于有限域的（<strong>数据域是有限的，可以使用有限状态的表示和算法来处理数据流分析的问题</strong>），且数据流函数具有<strong>分配性质</strong>的<strong>过程间数据流分析</strong>。</p>
+<p>指明 IFDS 研究范围是<strong>过程间的</strong>，<strong>有限的</strong>，<strong>满足分配的</strong>，<strong>子问题</strong>。</p>
+<p>在前面的数据流分析中，我们有学过 MOP（“meet-over-all-paths），简单来说就是将每条路径上的结果到最后在一起汇总，那这里现在引入了 MRP（Meet-Over-All-Realizable-Paths），MRP 加入了 Realizable 这一性质，其实本质是一样的，不过我们这里只关注 Realizable path，因此与之相对应的方法就有了 MRP。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-42-13.png" alt="nipaste_2024-09-13_15-42-1"></p>
+<p>这里需要理解 flow function，在 IFDS 这一节中，我们在图上每条边上定义函数（后面举例会看到），这其实与之前的node差不多，只不过是以不同形式定义的，注意做好区分就行。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-44-10.png" alt="nipaste_2024-09-13_15-44-1"></p>
+<p>这张图给出了 IFDS 的过程，<strong>首先</strong>建立 supergraph <strong>G</strong>*，<strong>其次</strong>建立 exploded supergraph <strong>G#<strong>，</strong>最后</strong>对前面建立的G# 使用 <strong>Tabulation algorithm</strong> 求解可达性问题。</p>
+<h3 id="Supergraph-G"><a href="#Supergraph-G" class="headerlink" title="Supergraph G*"></a>Supergraph G*</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-47-39.png" alt="nipaste_2024-09-13_15-47-3"></p>
+<p>先来看看如何建立一个 Supergraph，前面两点都比较容易理解，需要注意的是第三点，在 IFDS 中，我们会将一个过程调用 call 用两个节点表示，一个叫做 call node，另外一个叫做 return-site node。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-50-42.png" alt="nipaste_2024-09-13_15-50-4"></p>
+<p>还有就是在 G* 中，要为过程调用引入三条新的边，分别为 <code>call-to-return-site edge</code>，<code>call-to-start edge</code>，<code>exit-to-return-site edge</code>。</p>
+<p>还记得前面提到的 flow function 嘛，这里还要定义 flow function，在这一部分内容中定义如下：</p>
+<blockquote>
+<p>“Possibly-uninitialized variables”: for each node n ∈ N*, determine the set of<br>variables that may be uninitialized before execution reaches n.</p>
+</blockquote>
+<p>简单来说就是在到达 n 之前，没有被初始化的变量都有哪些。</p>
+<p>还需要注意的就是，这种 λ <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.65ex;" xmlns="http://www.w3.org/2000/svg" width="5.865ex" height="1.65ex" role="img" focusable="false" viewBox="0 -442 2592.5 729.2"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="TeXAtom" transform="translate(499,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mi"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mi" transform="translate(503,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(1032,0)"><path data-c="1D45F" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(1483,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mi" transform="translate(2012,0)"><path data-c="1D45A" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g></g></g></g></g></svg></mjx-container>.<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.667ex;" xmlns="http://www.w3.org/2000/svg" width="4.32ex" height="1.667ex" role="img" focusable="false" viewBox="0 -442 1909.5 737"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D452" d="M39 168Q39 225 58 272T107 350T174 402T244 433T307 442H310Q355 442 388 420T421 355Q421 265 310 237Q261 224 176 223Q139 223 138 221Q138 219 132 186T125 128Q125 81 146 54T209 26T302 45T394 111Q403 121 406 121Q410 121 419 112T429 98T420 82T390 55T344 24T281 -1T205 -11Q126 -11 83 42T39 168ZM373 353Q367 405 305 405Q272 405 244 391T199 357T170 316T154 280T149 261Q149 260 169 260Q282 260 327 284T373 353Z"></path></g><g data-mml-node="TeXAtom" transform="translate(499,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="mi"><path data-c="1D44F" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path></g><g data-mml-node="mi" transform="translate(429,0)"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mi" transform="translate(914,0)"><path data-c="1D451" d="M366 683Q367 683 438 688T511 694Q523 694 523 686Q523 679 450 384T375 83T374 68Q374 26 402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487H491Q506 153 506 145Q506 140 503 129Q490 79 473 48T445 8T417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157Q33 205 53 255T101 341Q148 398 195 420T280 442Q336 442 364 400Q369 394 369 396Q370 400 396 505T424 616Q424 629 417 632T378 637H357Q351 643 351 645T353 664Q358 683 366 683ZM352 326Q329 405 277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q233 26 290 98L298 109L352 326Z"></path></g><g data-mml-node="mi" transform="translate(1434,0)"><path data-c="1D466" d="M21 287Q21 301 36 335T84 406T158 442Q199 442 224 419T250 355Q248 336 247 334Q247 331 231 288T198 191T182 105Q182 62 196 45T238 27Q261 27 281 38T312 61T339 94Q339 95 344 114T358 173T377 247Q415 397 419 404Q432 431 462 431Q475 431 483 424T494 412T496 403Q496 390 447 193T391 -23Q363 -106 294 -155T156 -205Q111 -205 77 -183T43 -117Q43 -95 50 -80T69 -58T89 -48T106 -45Q150 -45 150 -87Q150 -107 138 -122T115 -142T102 -147L99 -148Q101 -153 118 -160T152 -167H160Q177 -167 186 -165Q219 -156 247 -127T290 -65T313 -9T321 21L315 17Q309 13 296 6T270 -6Q250 -11 231 -11Q185 -11 150 11T104 82Q103 89 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g></g></g></g></g></svg></mjx-container> 的表达形式，比如说 <code>λ x.x+1</code>，前面的 x 是它的参数，x+1 是函数体（用花括号表示时代表输出）</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-57-46.png" alt="nipaste_2024-09-13_15-57-4"></p>
+<p>这就是根据我们前面对 flow function 的定义，最终得到的基于每条边的 flow function，最好能理解，看不懂也大概能体会到这个意思，这个 flow function 可以帮助后面建立 G#。</p>
+<h3 id="Exploded-Supergraph-G"><a href="#Exploded-Supergraph-G" class="headerlink" title="Exploded Supergraph G##"></a>Exploded Supergraph G##</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_15-59-51.png" alt="nipaste_2024-09-13_15-59-5"></p>
+<p>如上图所示，其实这个概念也相对理解起来有点抽象，怎么理解呢，就是说它把前面 G* 中关注的变量全部用一个 node 表示，如右上黄色部分所示，同时还引入了一个新的 node 0（后面会解释为什么需要一个 node 0），另外同时下面又有一排与上面一模一样的node。实际上 G# 做的事就是根据规则（<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.667ex;" xmlns="http://www.w3.org/2000/svg" width="2.785ex" height="2.213ex" role="img" focusable="false" viewBox="0 -683 1230.9 978"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D445" d="M230 637Q203 637 198 638T193 649Q193 676 204 682Q206 683 378 683Q550 682 564 680Q620 672 658 652T712 606T733 563T739 529Q739 484 710 445T643 385T576 351T538 338L545 333Q612 295 612 223Q612 212 607 162T602 80V71Q602 53 603 43T614 25T640 16Q668 16 686 38T712 85Q717 99 720 102T735 105Q755 105 755 93Q755 75 731 36Q693 -21 641 -21H632Q571 -21 531 4T487 82Q487 109 502 166T517 239Q517 290 474 313Q459 320 449 321T378 323H309L277 193Q244 61 244 59Q244 55 245 54T252 50T269 48T302 46H333Q339 38 339 37T336 19Q332 6 326 0H311Q275 2 180 2Q146 2 117 2T71 2T50 1Q33 1 33 10Q33 12 36 24Q41 43 46 45Q50 46 61 46H67Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628Q287 635 230 637ZM630 554Q630 586 609 608T523 636Q521 636 500 636T462 637H440Q393 637 386 627Q385 624 352 494T319 361Q319 360 388 360Q466 361 492 367Q556 377 592 426Q608 449 619 486T630 554Z"></path></g><g data-mml-node="mi" transform="translate(792,-150) scale(0.707)"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"></path></g></g></g></g></svg></mjx-container>）来处理不同排 node 之间的连接，同时可以注意到 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.667ex;" xmlns="http://www.w3.org/2000/svg" width="2.785ex" height="2.213ex" role="img" focusable="false" viewBox="0 -683 1230.9 978"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D445" d="M230 637Q203 637 198 638T193 649Q193 676 204 682Q206 683 378 683Q550 682 564 680Q620 672 658 652T712 606T733 563T739 529Q739 484 710 445T643 385T576 351T538 338L545 333Q612 295 612 223Q612 212 607 162T602 80V71Q602 53 603 43T614 25T640 16Q668 16 686 38T712 85Q717 99 720 102T735 105Q755 105 755 93Q755 75 731 36Q693 -21 641 -21H632Q571 -21 531 4T487 82Q487 109 502 166T517 239Q517 290 474 313Q459 320 449 321T378 323H309L277 193Q244 61 244 59Q244 55 245 54T252 50T269 48T302 46H333Q339 38 339 37T336 19Q332 6 326 0H311Q275 2 180 2Q146 2 117 2T71 2T50 1Q33 1 33 10Q33 12 36 24Q41 43 46 45Q50 46 61 46H67Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628Q287 635 230 637ZM630 554Q630 586 609 608T523 636Q521 636 500 636T462 637H440Q393 637 386 627Q385 624 352 494T319 361Q319 360 388 360Q466 361 492 367Q556 377 592 426Q608 449 619 486T630 554Z"></path></g><g data-mml-node="mi" transform="translate(792,-150) scale(0.707)"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"></path></g></g></g></g></svg></mjx-container> 给了三条规则，每条规则可以根据 flow function 来判断使用。</p>
+<p>这里对每一条规则都进行解释（**理解了这个就理解了 G#**）：</p>
+<blockquote>
+<p> {(0,0)} ：代表上一排 node 0 和 下一排 node 0 之间必有一条边</p>
+<p> {(0,y) | y ∈ f(∅) }：代表当流函数没有输入时，如果总会输出 y，那么就建立一条从 0 到 y 的边</p>
+<p> { (x,y) | y ∉ f(∅) and y ∈ f({x}) }：代表当流函数有输入 x ，且 y 会被输出时，则建立一条从 x 到 y 的边</p>
+</blockquote>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_16-10-23.png" alt="nipaste_2024-09-13_16-10-2"></p>
+<p>上面的这是四个例子， </p>
+<ul>
+<li>λ S.S 可以理解为输入是什么输出就原封不动的输出（没有涉及到初始化相关的语句时，就用 λ S.S 表示），所以就是三条竖线。</li>
+<li>λ S.{a} 可以理解为不管输入是什么，输出只有 a（b不会被输出了），那么根据前面的规则，1,2 满足条件，连线即可。</li>
+<li>λ S.(S-{a})∪{b} 同理，a 不会被输出，且 b 会被输出</li>
+<li>第四个对应第三条规则，即 a∈S 时，b 会被输出，则相应的就会有 a 到 b 之间的一条边</li>
+</ul>
+<p>如果觉得这些理解起来有些抽象，那么一定要结合我们的目的来理解，就是哪些变量没有被初始化，哪些变量被初始化了，如果被初始化了，那么其就不会存在相应的边进行连接，从而也就不会被传递（用于后面的 reachability）。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_16-20-34.png" alt="nipaste_2024-09-13_16-20-3"></p>
+<p>这里给出了为什么需要设置 0 到 0 的边，解释的比较详细了，不在过多说明。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_16-25-15.png" alt="nipaste_2024-09-13_16-25-1"></p>
+<p>这张图就是根据流函数然后匹配 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.667ex;" xmlns="http://www.w3.org/2000/svg" width="2.785ex" height="2.213ex" role="img" focusable="false" viewBox="0 -683 1230.9 978"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D445" d="M230 637Q203 637 198 638T193 649Q193 676 204 682Q206 683 378 683Q550 682 564 680Q620 672 658 652T712 606T733 563T739 529Q739 484 710 445T643 385T576 351T538 338L545 333Q612 295 612 223Q612 212 607 162T602 80V71Q602 53 603 43T614 25T640 16Q668 16 686 38T712 85Q717 99 720 102T735 105Q755 105 755 93Q755 75 731 36Q693 -21 641 -21H632Q571 -21 531 4T487 82Q487 109 502 166T517 239Q517 290 474 313Q459 320 449 321T378 323H309L277 193Q244 61 244 59Q244 55 245 54T252 50T269 48T302 46H333Q339 38 339 37T336 19Q332 6 326 0H311Q275 2 180 2Q146 2 117 2T71 2T50 1Q33 1 33 10Q33 12 36 24Q41 43 46 45Q50 46 61 46H67Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628Q287 635 230 637ZM630 554Q630 586 609 608T523 636Q521 636 500 636T462 637H440Q393 637 386 627Q385 624 352 494T319 361Q319 360 388 360Q466 361 492 367Q556 377 592 426Q608 449 619 486T630 554Z"></path></g><g data-mml-node="mi" transform="translate(792,-150) scale(0.707)"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"></path></g></g></g></g></svg></mjx-container> 的规则，最后建立完成的 G#，乍一看比较唬人，其实分开一点一点剖析就会明白了。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_16-26-57.png" alt="nipaste_2024-09-13_16-26-5"></p>
+<p>这条红色的边就是我们需要找的，即存在一条 g 不会被初始化的边。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-13_16-27-42.png" alt="nipaste_2024-09-13_16-27-4"></p>
+<p>当然也可能会存在这样的边，如红色连过去之后接着绿色，那实际上这种边是不满足前面提到的 CFL 的匹配规则的，因而也就会丢掉这些没有用的边。</p>
+<h3 id="Tabulation-Algorithm"><a href="#Tabulation-Algorithm" class="headerlink" title="Tabulation Algorithm"></a>Tabulation Algorithm</h3><p>tabulation 的完整算法如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-34-24.png" alt="nipaste_2024-09-14_15-34-2"></p>
+<p>由于 tabulation 算法所涉及的内容较多，所以老师这里也是只简单的讲了 tabulation 的一些核心</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-36-06.png" alt="nipaste_2024-09-14_15-36-0"></p>
+<p>对于这样一个已经建立完成的 G#，tabulation 需要将这些 node 进行识别，需要判断这些 node 是否可到达（判断可达性是根据前面 CFL-Reachability 的知识）。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-38-41.png" alt="nipaste_2024-09-14_15-38-4"></p>
+<p>上图中蓝色的点，即代表可达的点。</p>
+<h2 id="Distributivity-of-IFDS"><a href="#Distributivity-of-IFDS" class="headerlink" title="Distributivity of IFDS"></a>Distributivity of IFDS</h2><p>分配性是 IFDS 最终要的一个性质，这关乎一个问题是否可以使用 IFDS 解决。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-41-39.png" alt="nipaste_2024-09-14_15-41-3"></p>
+<p>这里直接给出结果，就是常量传播和指针分析都不能够使用 IFDS，原因是它们都不能够满足 Distributivity。</p>
+<p>首先来看常量传播</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-43-19.png" alt="nipaste_2024-09-14_15-43-1"></p>
+<p>结果如下</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-44-04.png" alt="nipaste_2024-09-14_15-44-0"></p>
+<p>上面这些内容其实就主要说了一件事，就是 IFDS 一次只能处理一个输入的情况，当有多个输入需要同时处理时，那么它就是不 Distributivity 的，即不满足 IFDS。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-46-23.png" alt="nipaste_2024-09-14_15-46-2"></p>
+<p>同时这里也给出了一个例子来说明，对于指针分析使用 IFDS 也会得到不正确的结果，原因在于没有考虑别名分析。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>CFL-Reachability 这一部分理解的还不算深入</p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-47-44.png" alt="nipaste_2024-09-14_15-47-4"></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 南大《软件分析》15.0 CFL-Reachability and IFDS</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-09-14 15:54:15</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-09-14 15:55:55
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/09/14/15.0_CFL_Reachability_and_IFDS/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/CFL-Reachability/">#CFL-Reachability</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/IFDS/">#IFDS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/09/12/14.0_Datalog/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">南大《软件分析》14.0 Datalog-Based Program Analysis</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">南大《软件分析》15.0 CFL-Reachability and IFDS</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%97%E5%A4%A7%E3%80%8A%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90%E3%80%8B15-0-CFL-Reachability-and-IFDS"><span class="nav-text">南大《软件分析》15.0 CFL-Reachability and IFDS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Realizable-Paths"><span class="nav-text">Realizable Paths</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CFL-Reachability"><span class="nav-text">CFL-Reachability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IFDS"><span class="nav-text">IFDS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Supergraph-G"><span class="nav-text">Supergraph G*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploded-Supergraph-G"><span class="nav-text">Exploded Supergraph G##</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tabulation-Algorithm"><span class="nav-text">Tabulation Algorithm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Distributivity-of-IFDS"><span class="nav-text">Distributivity of IFDS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
