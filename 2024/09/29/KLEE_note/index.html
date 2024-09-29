@@ -13,35 +13,29 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2024/09/14/16.0_soundiness/"/>
+    <link rel="canonical" href="http://example.com/2024/09/29/klee_note/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》16.0 Soundiness首先来看什么是 soundness，注意不是 soundiness。  soundness 是一种保守估计，这种分析会考虑到所有的程序行为或对程序中所有可能">
+        <meta name="description" content="KLEE 学习笔记KLEE 的介绍建议直接 GPT。 安装KLEE 由于是一款符号执行工具，需要 clang 和 llvm 的支持，这两者都可以直接通过 apt 安装，下面介绍 klee 的安装： 123456git clone https:&#x2F;&#x2F;github.com&#x2F;klee&#x2F;klee.gitcd kleemkdir buildcd buildcmake .. -DENABLE_UNIT_TEST">
 <meta property="og:type" content="article">
-<meta property="og:title" content="南大《软件分析》16.0 Soundiness">
-<meta property="og:url" content="http://example.com/2024/09/14/16.0_Soundiness/index.html">
+<meta property="og:title" content="KLEE 学习笔记">
+<meta property="og:url" content="http://example.com/2024/09/29/KLEE_note/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="课程环境：https:&#x2F;&#x2F;tai-e.pascal-lab.net&#x2F;lectures.html  课程视频：https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1b7411K7P4  南大《软件分析》16.0 Soundiness首先来看什么是 soundness，注意不是 soundiness。  soundness 是一种保守估计，这种分析会考虑到所有的程序行为或对程序中所有可能">
+<meta property="og:description" content="KLEE 学习笔记KLEE 的介绍建议直接 GPT。 安装KLEE 由于是一款符号执行工具，需要 clang 和 llvm 的支持，这两者都可以直接通过 apt 安装，下面介绍 klee 的安装： 123456git clone https:&#x2F;&#x2F;github.com&#x2F;klee&#x2F;klee.gitcd kleemkdir buildcd buildcmake .. -DENABLE_UNIT_TEST">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_15-58-50.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-02-26.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-04-26.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-07-26.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-09-35.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-13-49.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-16-46.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-18-19.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-19-38.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-21-35.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-14_16-22-27.png">
-<meta property="article:published_time" content="2024-09-14T08:23:22.340Z">
-<meta property="article:modified_time" content="2024-09-14T08:25:03.344Z">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-28_12-24-46.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-28_12-28-11.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-09-28_12-37-53.png">
+<meta property="article:published_time" content="2024-09-29T02:29:32.659Z">
+<meta property="article:modified_time" content="2024-09-29T02:34:19.520Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Soundiness">
+<meta property="article:tag" content="klee">
+<meta property="article:tag" content="static analysis">
+<meta property="article:tag" content="symbolic execution">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-09-14_15-58-50.png">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-09-28_12-24-46.png">
     
     
     <!--- Icon Part-->
@@ -53,7 +47,7 @@
     
     <title>
         
-            南大《软件分析》16.0 Soundiness -
+            KLEE 学习笔记 -
         
         Henry Martin
     </title>
@@ -491,10 +485,10 @@ mjx-container[display="true"] + br {
             
                 
                 
-                <img src="/images/Snipaste_2024-09-14_16-24-18.png" alt="南大《软件分析》16.0 Soundiness" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                <img src="/images/Snipaste_2024-09-29_10-33-12.png" alt="KLEE 学习笔记" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
                 
                 <div class="w-full flex items-center absolute bottom-0 justify-start">
-                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">南大《软件分析》16.0 Soundiness</h1>
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">KLEE 学习笔记</h1>
                 </div>
             
             </div>
@@ -515,15 +509,15 @@ mjx-container[display="true"] + br {
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2024-09-14 16:23:22</span>
-        <span class="mobile">2024-09-14 16:23:22</span>
+        <span class="desktop">2024-09-29 10:29:32</span>
+        <span class="mobile">2024-09-29 10:29:32</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-09-14 16:25:03</span>
-            <span class="mobile">2024-09-14 16:25:03</span>
+            <span class="desktop">2024-09-29 10:34:19</span>
+            <span class="mobile">2024-09-29 10:34:19</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -561,7 +555,15 @@ mjx-container[display="true"] + br {
             <ul>
                 
                     <li>
-                        <a href="/tags/Soundiness/">Soundiness</a>&nbsp;
+                        <a href="/tags/klee/">klee</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/static-analysis/">static analysis</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/symbolic-execution/">symbolic execution</a>&nbsp;
                     </li>
                 
             </ul>
@@ -587,36 +589,67 @@ mjx-container[display="true"] + br {
 
 
         <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-            <p>课程环境：<a class="link" target="_blank" rel="noopener" href="https://tai-e.pascal-lab.net/lectures.html">https://tai-e.pascal-lab.net/lectures.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>课程视频：<a class="link" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1b7411K7P4">https://www.bilibili.com/video/BV1b7411K7P4 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<h1 id="南大《软件分析》16-0-Soundiness"><a href="#南大《软件分析》16-0-Soundiness" class="headerlink" title="南大《软件分析》16.0 Soundiness"></a>南大《软件分析》16.0 Soundiness</h1><p>首先来看什么是 soundness，注意不是 soundiness。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_15-58-50.png" alt="nipaste_2024-09-14_15-58-5"></p>
-<p>soundness 是一种保守估计，这种分析会考虑到所有的程序行为或对程序中所有可能出现的行为进行建模。</p>
-<p>但是！无论是在学术界还是在工业界实际上最后的结果都是 unsound，就是说 soundness 的条件过于苛刻，在真正应用的过程中很难去考虑到所有的程序行为。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-02-26.png" alt="nipaste_2024-09-14_16-02-2"></p>
-<p>这里给出了为什么难分析的原因，对于一些 hard language，很难对它们的<strong>一些特性</strong>进行分析，如 java 的反射，native code 等，包括还有 c/c++ 的函数指针，算术指针之类的。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-04-26.png" alt="nipaste_2024-09-14_16-04-2"></p>
-<p>上图对于这些语言的sound分析做了一个总结，对于这些语言的大多数特征静态分析的结果都是sound的，但是对于其中的一些比较难分析的特征以往都会选择忽略，这实际上对静态分析的结果不利的，因为不知道它分析的结果是不是能够保证没有漏洞存在的。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-07-26.png" alt="nipaste_2024-09-14_16-07-2"></p>
-<p>所以在15年的时候，学术界就给了一个建议对于这些 hard language features 尽量给出一个合理处理。</p>
-<h2 id="Java-Reflection"><a href="#Java-Reflection" class="headerlink" title="Java Reflection"></a>Java Reflection</h2><p>这里就拎出来两个比较难分析的特征进行说明，如 java reflection。首先来看看 java reflection 是什么</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-09-35.png" alt="nipaste_2024-09-14_16-09-3"></p>
-<p>从上图可以发现，在利用反射时，不管是 class，方法名，还是成员都是以字符串的形式进行索引，那在实际程序中，这些字符串可能来自配置文件，终端，外部输入，可能并不会显示的出现在代码中，这从而加大了静态分析的难度，可以这么想如果我们连具体调用的方法名都不知道，何谈指针分析呢。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-13-49.png" alt="nipaste_2024-09-14_16-13-4"></p>
-<p>对于这项工作，也就是这门课程的两位主讲人老师，在15年的时候提出了一个比较好的方法进行解决，在调用的50个反射方法中成功推断出了48个方法，大概得思想就是倒着推，从调用的地方反过去再去分析。具体方法可以参考论文 </p>
-<blockquote>
-<p>Self-Inferencing Reflection Resolution for Java (ECOOP 2014)</p>
-<p>Yue Li, Tian Tan, Yulei Sui, Jingling Xue. UNSW Sydney</p>
-</blockquote>
-<h2 id="Native-Code"><a href="#Native-Code" class="headerlink" title="Native Code"></a>Native Code</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-16-46.png" alt="nipaste_2024-09-14_16-16-4"></p>
-<p>这张图显示了在实际调用一个 java 常见输出命令 <code>System.out.println</code> 时所有的函数调用栈，它最后底层的 JNI 会调用对应的 C 代码来实现一部分逻辑。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-18-19.png" alt="nipaste_2024-09-14_16-18-1"></p>
-<p>这里对 JNI 做出了解释，简单来说其实际上是发挥了平台包括本地c代码本身的一些特性来方便实现自己的功能。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-19-38.png" alt="nipaste_2024-09-14_16-19-3"></p>
-<p>而这就会产生一个问题，在实际写java的代码过程中，可能会调用一些 C 库的函数，而由于我们是静态分析，对应的C代码是看不懂，也就导致无从下手，从而加大了对于  native code 的分析难度。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-21-35.png" alt="nipaste_2024-09-14_16-21-3"></p>
-<p>这里列举了一个当前对于 native code 的处理比较新的文章，有兴趣的可以看一看。</p>
-<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-14_16-22-27.png" alt="nipaste_2024-09-14_16-22-2"></p>
+            <h1 id="KLEE-学习笔记"><a href="#KLEE-学习笔记" class="headerlink" title="KLEE 学习笔记"></a>KLEE 学习笔记</h1><p>KLEE 的介绍建议直接 GPT。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>KLEE 由于是一款符号执行工具，需要 clang 和 llvm 的支持，这两者都可以直接通过 apt 安装，下面介绍 klee 的安装：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/klee/klee.git</span><br><span class="line">cd klee</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DENABLE_UNIT_TESTS=OFF -DENABLE_SYSTEM_TESTS=OFF</span><br><span class="line">sudo make install -j4</span><br></pre></td></tr></table></figure></div>
+
+<p>这里介绍下，安装过程中出现的一些错误：</p>
+<p><strong>错误1:</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMake Error at CMakeLists.txt:419 (message):</span><br><span class="line">  Can't find "gperftools/malloc_extension.h"</span><br></pre></td></tr></table></figure></div>
+
+<p>解决方法：</p>
+<p>删除 klee 包文件，重新 git，然后执行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libtcmalloc-minimal4 libgoogle-perftools-dev</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>错误2：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- Could NOT find SQLITE3 (missing: SQLITE3_LIBRARY SQLITE3_INCLUDE_DIR)</span><br><span class="line">CMake Error at CMakeLists.txt:434 (message):</span><br><span class="line">  SQLite3 not found, please install</span><br></pre></td></tr></table></figure></div>
+
+<p>解决方法：</p>
+<p>删除 klee 包文件，重新 git，然后执行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install sqlite3 libsqlite3-dev</span><br></pre></td></tr></table></figure></div>
+
+<p>另外的一些可能存在的错误，可以参考<a class="link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5NTc2MDYxMw==&mid=2458428133&idx=2&sn=346a32f2ea7b591ccec10bf518608ebb&chksm=b18f926f86f81b79bd83d005ae5d6682319fdee5b15aa71309566499c4e284d3f3d690329a53&scene=27">这篇文章 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>由于 klee 使用 llvm IR 符号执行，那么就需要将源程序编译为 llvm IR 文件，测试文件如下</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">char</span>* <span class="title function_">get_message</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* message)</span> {</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">strlen</span>(message) &lt;= <span class="number">4</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!(<span class="string">'F'</span> == message[<span class="number">0</span>] &amp;&amp; <span class="string">'\x1'</span> == message[<span class="number">1</span>]))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> message_length = *(<span class="type">unsigned</span> <span class="type">int</span>*)&amp;message[<span class="number">2</span>];</span><br><span class="line">	<span class="type">char</span>* output_message = (<span class="type">char</span>*)<span class="built_in">malloc</span>(message_length);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">memcpy</span>(output_message,&amp;message[<span class="number">2</span>],message_length);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> output_message;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>** argv)</span> {</span><br><span class="line">	<span class="type">char</span> input_buffer[<span class="number">0x10</span>] = {<span class="number">0</span>};</span><br><span class="line"></span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%s"</span>,input_buffer);</span><br><span class="line"></span><br><span class="line">	<span class="type">char</span>* message_data = get_message(input_buffer);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="literal">NULL</span> == message_data)</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Error for resolve message\n"</span>);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"message data : %s\n"</span>,message_data);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>编译命令如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -emit-llvm -c test.c</span><br></pre></td></tr></table></figure></div>
+
+<p>这样会发现原目录就会生成一个 test.bc 文件，</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">klee -libc=klee test.bc </span><br></pre></td></tr></table></figure></div>
+
+<p>程序调用了scanf() 函数,需要手动填写一些参数进去,第一次使用klee 执行程序时在scanf() 传递字符 k 并没有触发崩溃,但是在第二次使用klee 执行时输入AAAAAAAAAAAAAAAAAAAAA 就会导致程序崩溃。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-28_12-24-46.png" alt="nipaste_2024-09-28_12-24-4"></p>
+<p><strong>查看报错信息</strong>，在 <code>test000001.ptr.err</code> 文件中。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-28_12-28-11.png" alt="nipaste_2024-09-28_12-28-1"></p>
+<p>使用 <code>ktest-tool</code> 查看test 样本的信息:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$  ktest-tool test000001.ktest </span><br><span class="line">ktest file : 'test000001.ktest'</span><br><span class="line">args       : ['test.bc']</span><br><span class="line">num objects: 0</span><br></pre></td></tr></table></figure></div>
+
+<p>使用 <code>klee-stats</code> 查看当前本次测试的状态:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ klee-stats .</span><br><span class="line">---------------------------------------------------------------------</span><br><span class="line">| Path |  Instrs|  Time(s)|  ICov(%)|  BCov(%)|  ICount|  TSolver(%)|</span><br><span class="line">---------------------------------------------------------------------</span><br><span class="line">|  .   |     372|     1.87|    42.21|    21.43|     154|        0.00|</span><br><span class="line">---------------------------------------------------------------------</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="klee-make-symbolic"><a href="#klee-make-symbolic" class="headerlink" title="klee_make_symbolic()"></a>klee_make_symbolic()</h2><p>klee 可以自动对输入进行追踪测试，在之前的程序中，scanf() 函数是输入点，在KLEE 里对于这种用户可控的输可以手工给打上标记，KLEE 提供一个函数，声明如下:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void klee_make_symbolic(void *array, size_t nbytes, const char *name);</span><br><span class="line">//  klee_make_symbolic(内存地址,内存大小,变量名字);</span><br></pre></td></tr></table></figure></div>
+
+<p>替换scanf为klee_make_symbolic</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"klee/klee.h"</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">char</span>* <span class="title function_">get_message</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* message)</span> {</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">strlen</span>(message) &lt;= <span class="number">4</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!(<span class="string">'F'</span> == message[<span class="number">0</span>] &amp;&amp; <span class="string">'\x1'</span> == message[<span class="number">1</span>]))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> message_length = *(<span class="type">unsigned</span> <span class="type">int</span>*)&amp;message[<span class="number">2</span>];</span><br><span class="line">	<span class="type">char</span>* output_message = (<span class="type">char</span>*)<span class="built_in">malloc</span>(message_length);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">memcpy</span>(output_message,&amp;message[<span class="number">2</span>],message_length);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> output_message;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>** argv)</span> {</span><br><span class="line">	<span class="type">char</span> input_buffer[<span class="number">0x10</span>] = {<span class="number">0</span>};</span><br><span class="line"></span><br><span class="line">	klee_make_symbolic(input_buffer,<span class="keyword">sizeof</span>(input_buffer),<span class="string">"input_buffer"</span>);</span><br><span class="line"></span><br><span class="line">	<span class="type">char</span>* message_data = get_message(input_buffer);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="literal">NULL</span> == message_data)</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Error for resolve message\n"</span>);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"message data : %s\n"</span>,message_data);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>编译命令如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clang -emit-llvm -c -I ../../../klee/include test.c</span><br></pre></td></tr></table></figure></div>
+
+<p>这里的 <code>../../../klee/include</code> 指向的是安装的 klee 的那个文件夹下 include 的目录路径。</p>
+<p>执行命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">klee -libc=klee test.bc </span><br></pre></td></tr></table></figure></div>
+
+<p>然后 klee 就可以自动帮我们找漏洞了。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-09-28_12-37-53.png" alt="nipaste_2024-09-28_12-37-5"></p>
+<p>输出的结果都保存到了 <code>klee-out-2</code> 文件夹当中。</p>
+<p>这里可以找到发现的所有的崩溃示例：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">henry@henry:~/Documents/test/test_klee/klee-out-2$ ls</span><br><span class="line">assembly.ll       test000005.ktest      test000012.ktest    test000019.kquery   test000025.ktest</span><br><span class="line">info              test000006.ktest      test000013.ktest    test000019.ktest    test000025.ptr.err</span><br><span class="line">messages.txt      test000007.kquery     test000014.kquery   test000019.ptr.err  test000026.ktest</span><br><span class="line">run.istats        test000007.ktest      test000014.ktest    test000020.ktest    test000027.ktest</span><br><span class="line">run.stats         test000007.model.err  test000014.ptr.err  test000021.ktest    test000028.ktest</span><br><span class="line">test000001.ktest  test000008.ktest      test000015.ktest    test000022.ktest    test000029.ktest</span><br><span class="line">test000002.ktest  test000009.ktest      test000016.ktest    test000023.ktest    test000030.ktest</span><br><span class="line">test000003.ktest  test000010.ktest      test000017.ktest    test000024.ktest    test000031.ktest</span><br><span class="line">test000004.ktest  test000011.ktest      test000018.ktest    test000025.kquery   warnings.txt</span><br><span class="line">henry@henry:~/Documents/test/test_klee/klee-out-2$ ktest-tool test000005.ktest</span><br><span class="line">ktest file : 'test000005.ktest'</span><br><span class="line">args       : ['test.bc']</span><br><span class="line">num objects: 1</span><br><span class="line">object 0: name: 'input_buffer'</span><br><span class="line">object 0: size: 16</span><br><span class="line">object 0: data: b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'</span><br><span class="line">object 0: hex : 0xffffffff00ffffffffffffffffffffff</span><br><span class="line">object 0: text: ................</span><br><span class="line">henry@henry:~/Documents/test/test_klee/klee-out-2$ ktest-tool test000006.ktest</span><br><span class="line">ktest file : 'test000006.ktest'</span><br><span class="line">args       : ['test.bc']</span><br><span class="line">num objects: 1</span><br><span class="line">object 0: name: 'input_buffer'</span><br><span class="line">object 0: size: 16</span><br><span class="line">object 0: data: b'\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'</span><br><span class="line">object 0: hex : 0xffffffffff00ffffffffffffffffffff</span><br><span class="line">object 0: text: ................</span><br><span class="line">henry@henry:~/Documents/test/test_klee/klee-out-2$ ktest-tool test000007.ktest</span><br><span class="line">ktest file : 'test000007.ktest'</span><br><span class="line">args       : ['test.bc']</span><br><span class="line">num objects: 1</span><br><span class="line">object 0: name: 'input_buffer'</span><br><span class="line">object 0: size: 16</span><br><span class="line">object 0: data: b'F\x01\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'</span><br><span class="line">object 0: hex : 0x4601ffffff00ffffffffffffffffffff</span><br><span class="line">object 0: text: F...............</span><br></pre></td></tr></table></figure></div>
+
+<p>随便使用其中一个崩溃示例用来做测试，部分代码修改如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// klee_make_symbolic(input_buffer, sizeof(input_buffer),"input_buffer");</span><br><span class="line">char* message_data = get_message('\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff');</span><br></pre></td></tr></table></figure></div>
+
 
         </div>
 
@@ -624,18 +657,18 @@ mjx-container[display="true"] + br {
             <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
                 <div class="article-copyright-info-container">
     <ul>
-        <li><strong>Title:</strong> 南大《软件分析》16.0 Soundiness</li>
+        <li><strong>Title:</strong> KLEE 学习笔记</li>
         <li><strong>Author:</strong> henry</li>
         <li><strong>Created at
-                :</strong> 2024-09-14 16:23:22</li>
+                :</strong> 2024-09-29 10:29:32</li>
         
             <li>
                 <strong>Updated at
-                    :</strong> 2024-09-14 16:25:03
+                    :</strong> 2024-09-29 10:34:19
             </li>
         
         <li>
-            <strong>Link:</strong> https://henrymartin262.github.io/2024/09/14/16.0_Soundiness/
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/09/29/KLEE_note/
         </li>
         <li>
             <strong>
@@ -657,7 +690,15 @@ mjx-container[display="true"] + br {
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/Soundiness/">#Soundiness</a>&nbsp;
+                        <a href="/tags/klee/">#klee</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/static-analysis/">#static analysis</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/symbolic-execution/">#symbolic execution</a>&nbsp;
                     </li>
                 
             </ul>
@@ -671,13 +712,13 @@ mjx-container[display="true"] + br {
                     <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="prev"
                         rel="prev"
-                        href="/2024/09/29/KLEE_note/"
+                        href="/2024/09/29/AFL%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93/"
                         >
                             <span class="left arrow-icon flex justify-center items-center">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </span>
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">KLEE 学习笔记</span>
+                                <span class="post-nav-title-item">AFL 使用技巧总结</span>
                                 <span class="post-nav-item">Prev posts</span>
                             </span>
                         </a>
@@ -687,10 +728,10 @@ mjx-container[display="true"] + br {
                     <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
                         <a class="next"
                         rel="next"
-                        href="/2024/09/14/15.0_CFL_Reachability_and_IFDS/"
+                        href="/2024/09/14/16.0_Soundiness/"
                         >
                             <span class="title flex justify-center items-center">
-                                <span class="post-nav-title-item">南大《软件分析》15.0 CFL-Reachability and IFDS</span>
+                                <span class="post-nav-title-item">南大《软件分析》16.0 Soundiness</span>
                                 <span class="post-nav-item">Next posts</span>
                             </span>
                             <span class="right arrow-icon flex justify-center items-center">
@@ -750,8 +791,8 @@ mjx-container[display="true"] + br {
             <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">南大《软件分析》16.0 Soundiness</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%97%E5%A4%A7%E3%80%8A%E8%BD%AF%E4%BB%B6%E5%88%86%E6%9E%90%E3%80%8B16-0-Soundiness"><span class="nav-text">南大《软件分析》16.0 Soundiness</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Reflection"><span class="nav-text">Java Reflection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Native-Code"><span class="nav-text">Native Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li></ol></li></ol>
+        <div class="page-title">KLEE 学习笔记</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#KLEE-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="nav-text">KLEE 学习笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#klee-make-symbolic"><span class="nav-text">klee_make_symbolic()</span></a></li></ol></li></ol>
 
     </div>
 </div>
