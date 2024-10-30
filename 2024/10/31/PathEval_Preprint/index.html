@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/10/31/patheval_preprint/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation主要研究的是大语言模型在生成定向输入测试集时的性能，还有和已有的约束求解器之间的比较。 1 Introduction首先文章提出自动化测试对于程序的可靠性和安全性有着极为重要的作用。这些自动化测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation">
+<meta property="og:url" content="http://example.com/2024/10/31/PathEval_Preprint/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation主要研究的是大语言模型在生成定向输入测试集时的性能，还有和已有的约束求解器之间的比较。 1 Introduction首先文章提出自动化测试对于程序的可靠性和安全性有着极为重要的作用。这些自动化测试">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-22_20-40-50.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-22_20-44-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-27_17-02-19.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-27_16-55-21.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-27_18-59-37.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-27_19-46-12.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-27_20-18-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-30_23-36-30.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-30_23-45-39.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-10-31_00-03-08.png">
+<meta property="article:published_time" content="2024-10-30T16:56:16.016Z">
+<meta property="article:modified_time" content="2024-10-30T16:58:36.490Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="fuzz">
+<meta property="article:tag" content="path-eval">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-10-22_20-40-50.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2024-10-31_00-57-30.png" alt="看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-10-31 00:56:16</span>
+        <span class="mobile">2024-10-31 00:56:16</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-10-31 00:58:36</span>
+            <span class="mobile">2024-10-31 00:58:36</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/fuzz/">fuzz</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/fuzz/paper/">paper</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/fuzz/">fuzz</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/path-eval/">path-eval</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h1 id="看论文-Towards-Understanding-the-Effectiveness-of-Large-Language-Models-on-Directed-Test-Input-Generation"><a href="#看论文-Towards-Understanding-the-Effectiveness-of-Large-Language-Models-on-Directed-Test-Input-Generation" class="headerlink" title="看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation"></a>看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation</h1><p>主要研究的是大语言模型在生成定向输入测试集时的<strong>性能</strong>，还有和已有的约束求解器之间的比较。</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h2><p>首先文章提出自动化测试对于程序的可靠性和安全性有着极为重要的作用。这些自动化测试技术包括 fuzzing，property-guided random testing，符号执行和 search-based evolutionary 技术，但这些都面临着一个相同的问题就是<strong>如何提高测试覆盖率</strong>（本文着重讨论的问题）。</p>
+<p>之后文章引出约束求解器在某些方面的不足，如存在<strong>路径爆炸问题</strong>，还有就是在<strong>处理系统调用和网络通信</strong>方面存在的不足。这里作者举了一个例子</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-22_20-40-50.png" alt="nipaste_2024-10-22_20-40-5"></p>
+<p>在上面这个例子中，为了执行到 target line，约束求解器<strong>很难有效完成这个工作</strong>，实际上只要输入一个完整有效的 linux 命令即可，但相反 LLM 却可以通过指定字符串 s 的内容，来轻松完成这个工作。但同时作者又通过另外一个例子来说明在有些情况下，LLM 不能完成的但是约束求解器可以完成。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-22_20-44-45.png" alt="nipaste_2024-10-22_20-44-4"></p>
+<p>在 Figure 2 中，需要设置一个 s[0] 使得最后能通过条件语句，进入到目标行，其实用过符号执行工具的小伙伴都知道，这一点约束求解器完全可以做到求解出具体的 s[0]。但同样的，LLM 却在完成这项任务时有些乏力。</p>
+<p>通过这两个例子其实不难总结出，LLM 和 约束求解器各自的优势和劣势，在需要一些外部知识加持的上下文时（比如第一个例子，要给出一个有效的命令），LLM 是有优势的，但是在面对一些需要精确计算的案例时，约束求解器却展现出了其优势。<strong>这时候也就自然引出了一个想法，那么就是如果将这两者结合起来</strong>，是否能够让生成的输入集更强大（能够满足更高的覆盖率），事实上经过作者团队的测试，这样确实可以大大提高有效测试输入的生成。</p>
+<p>同时，作者为了更明显的比较 LLM 和约束求解器各自的优势和劣势，使用了两个测试集，一个是 logic_bombs，另外一个是由 HumanEval-X 转化的测试集 <a class="link" target="_blank" rel="noopener" href="https://github.com/CGCL-codes/PathEval">PathEval <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>。</p>
+<p>文章主要贡献如下：</p>
+<ul>
+<li>Originality：系统研究 LLM 生成测试输入，并且与现有的约束求解器进行比较</li>
+<li>Findings：LLM 和约束求解器都有其各自的优点和缺点</li>
+<li>Perspective：基于上一步骤，将两者合并起来，并在生成测试输入上展现出不错的效果</li>
+<li>Open-Source：文章中的所有代码已开源，<a class="link" target="_blank" rel="noopener" href="https://github.com/CGCL-codes/PathEval">https://github.com/CGCL-codes/PathEval <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+</ul>
+<h2 id="2-Background-and-Motivation"><a href="#2-Background-and-Motivation" class="headerlink" title="2 Background and Motivation"></a>2 Background and Motivation</h2><p>定向测试输入（directed test input）生成的目标是生成基于给定目标的测试用例。在生成定向测试输入一般存在两种方法：</p>
+<p><strong>1. Constraint-based Approaches</strong></p>
+<p>基于约束生成测试输入是一种经典的方法，这种方法又可以划分为符号执行和动态符号执行，顾名思义这些工具是<strong>通过求解约束来探索程序中的执行路径</strong>。在灰盒模糊测试当中，一般会将那些难以覆盖的分支交给符号执行的这些工具以方便来达到更好的性能。</p>
+<p><strong>2. LLM-based Approaches</strong></p>
+<p>论文指出最近的研究表明LLM也可以用于测试输入的生成，从而让覆盖率提高，但是LLM存在的一个问题就是有时会存在错误的输出。同时LLM和约束求解器之间有效性也没有被深究过（本篇论文的重心）。</p>
+<h2 id="3-Experimental-Setup"><a href="#3-Experimental-Setup" class="headerlink" title="3 Experimental Setup"></a>3 Experimental Setup</h2><h3 id="3-1-Research-Questions"><a href="#3-1-Research-Questions" class="headerlink" title="3.1 Research Questions"></a>3.1 Research Questions</h3><p>三个问题</p>
+<ol>
+<li>LLMs 在生成定向测试输入方面的表现如何</li>
+<li>LLMs 相比如传统的约束求解器，其性能如何</li>
+<li>是否可以将 LLMs 融入到这些约束求解器中，以获得更好的性能</li>
+</ol>
+<h3 id="3-2-Benchmark-Construction"><a href="#3-2-Benchmark-Construction" class="headerlink" title="3.2 Benchmark Construction"></a>3.2 Benchmark Construction</h3><p><strong>这一部分论文主要指出已有的benchmark在测试文章中讨论的问题时存在的一些缺陷</strong>，目前的数据测试集有 <strong>logic_bomb</strong> 和 <strong>CGC</strong>，但这两个都有各自的缺点，logic_bomb 的样本数量太少（53个），不足以支持实验研究，而 CGC 的数据集是针对内存不安全语言（C\C++）生成的，因此其并不能反应真实的开发场景，以用来方便我们进行测试输入生成。<strong>CruxEval</strong> 是LLM代码推理、理解和执行的基准，CruxEval中的样本从函数的给定输出推断输入的形式构造，反之亦然，但是CruxEval 的数据集通常代码量都比较少，由于在真实环境中的情况都比较复杂，所以使用 CruxEval 中的数据作为测试集也是欠缺的。同时，从头构造一个测试数据集也是非常麻烦的。</p>
+<p>因此，基于以上问题，论文中所采用的方法就是通过扩展已有的数据集来达成目的，这里选择的是 HumanEval 作为原始数据集，OpenAI引入的HumanEval是目前最著名的用于评估LLM在代码任务上的性能的基准，为了满足多语言这一特性，使用 HumanEval-X 作为原始数据集，将 HumanEval-X进行扩展后的数据集为 PathEval。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-27_17-02-19.png" alt="nipaste_2024-10-27_17-02-1"></p>
+<p>上图即为最终扩展后的测试集用例，分别对应三种语言，C++，python，java，总共大约有2000个左右的测试用例。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-27_16-55-21.png" alt="nipaste_2024-10-27_16-55-2"></p>
+<p>这里所采用的测试思路也是非常简单的，先通过正向输入来得到最终结果（绿色图部分给出了具体过程），如 <code>T1:rounded_avg(1,5)=="11"</code>，这样就算是一个测试用例，在交由 LLM 进行求解时，则将对应 <code>rounded_avg</code> 中的参数进行替换，只给出结果，进行逆向求解，并且生成对应 prompt 交给 GPT 进行回答（紫色部分），同时上图也给出了使用 KLEE 进行测试时的方法（蓝色部分）。</p>
+<p>这里为了显示表示出 LLMs 生成测试输入的性能，引入通过率（pass rate），简单来说就是通过测试的数量比上总共的测试数。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-27_18-59-37.png" alt="nipaste_2024-10-27_18-59-3"></p>
+<p>为了方便里面，稍微解释一下这个公式，M具体代表的是前面那张图里面的 testcases 的数目为 4（T1-T4），N指的是使用的 Sample 的数目，具体表现为就是前面表格里面生成的所有的数据集。需要注意的是第一个公式，当 M 个testcases中有至少一个通过时，则有 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.439ex;" xmlns="http://www.w3.org/2000/svg" width="6.026ex" height="1.946ex" role="img" focusable="false" viewBox="0 -666 2663.5 860"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mi" transform="translate(536,-150) scale(0.707)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g></g><g data-mml-node="mo" transform="translate(1107.7,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(2163.5,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g></g></svg></mjx-container>。</p>
+<h3 id="3-3-Studied-LLMs-and-constraint-base-tools"><a href="#3-3-Studied-LLMs-and-constraint-base-tools" class="headerlink" title="3.3 Studied LLMs and constraint-base tools"></a>3.3 Studied LLMs and constraint-base tools</h3><p>在与代码相关工作有关的LLMs中，有如下比较优秀的开源和闭源大模型，<a class="link" target="_blank" rel="noopener" href="https://huggingface.co/spaces/bigcode/bigcode-models-leaderboard">参考链接 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>：</p>
+<ul>
+<li><strong>GPT3.5</strong>：已被用于一些前沿的工作，另外其花费也比 GPT4 少的多</li>
+<li><strong>StarCoder2</strong>：用于代码生成，选择使用 7B（模型所使用的参数） 模型，15B在性能上显示出了一定的缺陷</li>
+<li><strong>CodeLlama</strong>：有着比较好的性能，先进的填充能力</li>
+<li><strong>CodeQwen</strong>：在 code-related tasks 排行榜中表现最好</li>
+</ul>
+<p>同时，也有一些常用的符号执行工具：</p>
+<ul>
+<li><strong>KLEE</strong>：支持C\C++的符号执行工具</li>
+<li><strong>Angr</strong>：支持多架构，以及程序分析等，在逆向，CTF，二进制分析中使用广泛</li>
+<li><strong>CrossHair</strong>：支持 python 的符号执行工具</li>
+<li><strong>EvoSuite</strong>：支持 java 的符号执行工具</li>
+</ul>
+<h2 id="4-Evaluation-Result"><a href="#4-Evaluation-Result" class="headerlink" title="4 Evaluation Result"></a>4 Evaluation Result</h2><h3 id="4-1-RQ1-Effectiveness-of-LLM"><a href="#4-1-RQ1-Effectiveness-of-LLM" class="headerlink" title="4.1 RQ1: Effectiveness of LLM"></a>4.1 RQ1: Effectiveness of LLM</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-27_19-46-12.png" alt="nipaste_2024-10-27_19-46-1"></p>
+<p>这张图其实反映了各个大模型在生成测试输入方面的性能表现，其中 <strong>lang</strong> 表示的是对应的编程语言，<strong>Att.</strong> 代表的是同一个样本所测试的次数，根据上图可以发现，连续测试5次的情况下的结果是远远好于只测试1次的情况（所以这也给了我们一些使用大模型的思路，就是多测试几次，说不定结果会更好一点）。同时也可以通过表格中的数据发现 GPT-3.5 的效果是远远好于其他 LLMs 的，再次展现了 GPT 的强大。</p>
+<h3 id="4-2-RQ2-Comparison-with-Traditional-Tools"><a href="#4-2-RQ2-Comparison-with-Traditional-Tools" class="headerlink" title="4.2 RQ2: Comparison with Traditional Tools"></a>4.2 RQ2: Comparison with Traditional Tools</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-27_20-18-23.png" alt="nipaste_2024-10-27_20-18-2"></p>
+<p>执行性能如上，可以从图很明显看出区别，这里不做过多说明。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-30_23-36-30.png" alt="nipaste_2024-10-30_23-36-3"></p>
+<p>GPT-3.5 和其他约束求解器在特定测试集上的比较</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-30_23-45-39.png" alt="nipaste_2024-10-30_23-45-3"></p>
+<h3 id="4-3-RQ3-Integrating-LLMs-with-Traditional-Tools-for-Better-Performance"><a href="#4-3-RQ3-Integrating-LLMs-with-Traditional-Tools-for-Better-Performance" class="headerlink" title="4.3 RQ3: Integrating LLMs with Traditional Tools for Better Performance"></a>4.3 RQ3: Integrating LLMs with Traditional Tools for Better Performance</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-10-31_00-03-08.png" alt="nipaste_2024-10-31_00-03-0"></p>
+<p>这一部分简单介绍了一下LLM和传统约束求解器结合之后的架构图，从上图能够大致看明白整个原理如何，事实上，在我看这篇论文的时候一直是比较期待这一部分的内容，但文章作者的重心主要放在了 LLM 和传统约束求解器之间性能的比较，而对于这一部分内容也只用了半页内容，我觉得有些粗糙了，同时从上面的这个 LLMSym 的架构来看，实际上也是将步骤分开了，LLM 处理两次，然后在最后不能产生有效输入的情况下再交给约束求解器，这实际上并没有发挥 LLM 更大的优势，比如说让 LLM 指导约束求解器（比如在需要某些外部输入的情况下）生成结果，那这样效果肯定是要更好的，上图中实际上性能虽然会提升，但本质上就是让这两个东西合起来各跑一遍，我认为创新性还是比较低的。</p>
+<h2 id="others"><a href="#others" class="headerlink" title="others"></a>others</h2><ul>
+<li>符号执行 benchmark <a class="link" target="_blank" rel="noopener" href="https://github.com/hxuhack/logic_bombs">logic_bombs <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+<li>opensource LLMs（StarCoder2，CodeLlama，CodeQwen）</li>
+<li>constraint-based tools (Angr，KLEE，CrossHair，EvoSuite)</li>
+</ul>
+<p>tailored：定做的</p>
+<p>panacea：灵丹妙药</p>
+<p>stark：完全的，朴实的</p>
+<p>curate：筹办，展出</p>
+<p>nuanced：微妙的</p>
+<p>hallucination：幻觉</p>
+<p>heuristics：启发式</p>
+<p>cutting-edge：先进的</p>
+<p>CodeLlama, leveraging the advancements of Llama, showcases exceptional performance, offering cutting-edge capabilities such as superior infilling.</p>
+<p>on par：相当</p>
+<p>The results demonstrate that the performance of GPT-3.5 on our datasets is <strong>on par</strong> with the constraintbased tools.</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-10-31 00:56:16</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-10-31 00:58:36
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/10/31/PathEval_Preprint/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/fuzz/">#fuzz</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/path-eval/">#path-eval</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/09/30/UBFuzz/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">看论文 UBfuzz Finding Bugs in Sanitizer Implementations</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9C%8B%E8%AE%BA%E6%96%87-Towards-Understanding-the-Effectiveness-of-Large-Language-Models-on-Directed-Test-Input-Generation"><span class="nav-text">看论文 Towards Understanding the Effectiveness of Large Language Models on Directed Test Input Generation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Introduction"><span class="nav-text">1 Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Background-and-Motivation"><span class="nav-text">2 Background and Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Experimental-Setup"><span class="nav-text">3 Experimental Setup</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Research-Questions"><span class="nav-text">3.1 Research Questions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Benchmark-Construction"><span class="nav-text">3.2 Benchmark Construction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Studied-LLMs-and-constraint-base-tools"><span class="nav-text">3.3 Studied LLMs and constraint-base tools</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Evaluation-Result"><span class="nav-text">4 Evaluation Result</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-RQ1-Effectiveness-of-LLM"><span class="nav-text">4.1 RQ1: Effectiveness of LLM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-RQ2-Comparison-with-Traditional-Tools"><span class="nav-text">4.2 RQ2: Comparison with Traditional Tools</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-RQ3-Integrating-LLMs-with-Traditional-Tools-for-Better-Performance"><span class="nav-text">4.3 RQ3: Integrating LLMs with Traditional Tools for Better Performance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#others"><span class="nav-text">others</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
