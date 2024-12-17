@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/12/17/codeql_note_p3/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="考虑challenge2 中的 sql-injection-flask.py 代码： 123456789101112131415161718192021222324from django.db import connection, modelsfrom django.db.models.expressions import RawSQLfrom flask import Flask, reques">
+<meta property="og:type" content="article">
+<meta property="og:title" content="codeql_zero_to_hero part3学习">
+<meta property="og:url" content="http://example.com/2024/12/17/codeql_note_p3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="考虑challenge2 中的 sql-injection-flask.py 代码： 123456789101112131415161718192021222324from django.db import connection, modelsfrom django.db.models.expressions import RawSQLfrom flask import Flask, reques">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-16_21-03-42.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-16_21-43-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_11-25-40.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_15-14-21.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_15-22-50.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_15-39-15.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_15-52-03.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_15-51-50.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_15-56-53.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_16-00-58.png">
+<meta property="article:published_time" content="2024-12-17T13:12:04.115Z">
+<meta property="article:modified_time" content="2024-12-17T13:14:40.512Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="codeql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-12-16_21-03-42.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            codeql_zero_to_hero part3学习 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2024-12-17_15-14-21.png" alt="codeql_zero_to_hero part3学习" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">codeql_zero_to_hero part3学习</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-12-17 21:12:04</span>
+        <span class="mobile">2024-12-17 21:12:04</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-12-17 21:14:40</span>
+            <span class="mobile">2024-12-17 21:14:40</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/software/">software</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/software/static-analysis/">static analysis</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/codeql/">codeql</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <p>考虑<strong>challenge2</strong> 中的 <strong>sql-injection-flask.py 代码</strong>：</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> connection, models</span><br><span class="line"><span class="keyword">from</span> django.db.models.expressions <span class="keyword">import</span> RawSQL</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(models.Model):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">"/users/&lt;username&gt;"</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">show_user</span>():</span><br><span class="line">    username = request.args.get(<span class="string">"username"</span>)</span><br><span class="line">    <span class="keyword">with</span> connection.cursor() <span class="keyword">as</span> cursor:</span><br><span class="line">        <span class="comment"># GOOD -- Using parameters</span></span><br><span class="line">        cursor.execute(<span class="string">"SELECT * FROM users WHERE username = %s"</span>, username)</span><br><span class="line">        User.objects.raw(<span class="string">"SELECT * FROM users WHERE username = %s"</span>, (username,))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># BAD -- Using string formatting</span></span><br><span class="line">        cursor.execute(<span class="string">"SELECT * FROM users WHERE username = '%s'"</span> % username)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># BAD -- other ways of executing raw SQL code with string interpolation</span></span><br><span class="line">        User.objects.annotate(RawSQL(<span class="string">"insert into names_file ('name') values ('%s')"</span> % username))</span><br><span class="line">        User.objects.raw(<span class="string">"insert into names_file ('name') values ('%s')"</span> % username)</span><br><span class="line">        User.objects.extra(<span class="string">"insert into names_file ('name') values ('%s')"</span> % username)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>写如下ql脚本</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id codeql-zero-to-hero/3-1</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">import python</span><br><span class="line">import semmle.python.ApiGraphs</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> API::CallNode node</span><br><span class="line"><span class="keyword">where</span> node <span class="operator">=</span> API::moduleImport("django").getMember("db").getMember("connection").getMember("cursor").getReturn().getMember("execute").getACall()</span><br><span class="line">    <span class="keyword">and</span></span><br><span class="line">    node.getLocation().getFile().getRelativePath().regexpMatch("2/challenge-1/.*")</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> node, "Call to django.db execute"</span><br></pre></td></tr></table></figure></div>
+
+<p>首先注解里面的 <code>@kind problem</code> 会返回查询到的结果所在的路径信息。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-16_21-03-42.png" alt="Snipaste_2024-12-16_21-03-42"></p>
+<p>其次<code>from API::CallNode node</code> 限制了 node 只考虑 <a class="link" target="_blank" rel="noopener" href="https://codeql.github.com/codeql-standard-libraries/python/semmle/python/ApiGraphs.qll/module.ApiGraphs%24API.html">API graph <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 里面的节点，比如说上图中的程序调用了<code>django</code> 这个库，这时候这个库里面的一些方法调用就会被纳入到 <code>API:CallNode </code> 的考虑范围。</p>
+<p>在where子句中，使用<code>API::moduleImport("django")</code>筛选出来自<code>django</code>库的节点。然后，我们通过<code>.getMember("db").getMember("connection").getMember("cursor")</code>找到对<code>cursor</code>的引用。</p>
+<p>这将匹配<code>django.db.connection.cursor</code>。由于在cursor对象上调用execute方法，因此首先需要使用<code>getReturn()</code>谓词来获取表示创建cursor对象结果的节点，这将返回<code>django.db.connection.cursor()</code>（注意末尾的括号）。最后，通过<code>getMember("execute")</code>获取表示<code>execute</code>方法的节点，并通过<code>getACall()</code>获取对由<code>execute</code>节点表示的方法的实际方法调用。</p>
+<h2 id="Challenge-1"><a href="#Challenge-1" class="headerlink" title="Challenge 1"></a>Challenge 1</h2><p><strong>Find all method calls that are called ‘execute’ and come from the <code>django.db</code> library</strong></p>
+<p>上面 ql 脚本就是 c1 的答案。</p>
+<h2 id="Challenge-2"><a href="#Challenge-2" class="headerlink" title="Challenge 2"></a>Challenge 2</h2><p><strong>Write a query to find all <code>os.system</code> method call</strong></p>
+<p>找到所有的 <code>os.system</code> 调用，照猫画虎即可</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id codeql-zero-to-hero/3-1</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> </span><br><span class="line"> from API::CallNode node</span><br><span class="line"> where node =</span><br><span class="line">     API::moduleImport(<span class="string">"os"</span>).getMember(<span class="string">"system"</span>).getACall()</span><br><span class="line">     and</span><br><span class="line">     node.getLocation().getFile().getRelativePath().regexpMatch(<span class="string">"2/challenge-1/.*"</span>)</span><br><span class="line"> </span><br><span class="line"> select node, <span class="string">"Call to django.db execute"</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Challenge-3"><a href="#Challenge-3" class="headerlink" title="Challenge 3"></a>Challenge 3</h2><p><strong>Write a query to find all Flask requests</strong></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id codeql-zero-to-hero/3-1</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> </span><br><span class="line"><span class="keyword">select</span> API::moduleImport("flask").getMember("request").getMember("args").asSource(), "find request"</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="Challenge-4"><a href="#Challenge-4" class="headerlink" title="Challenge 4"></a>Challenge 4</h2><p> <strong>Run the query with <code>getAQlClass</code> predicate</strong></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id codeql-zero-to-hero/3-4</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">import python</span><br><span class="line">import semmle.python.ApiGraphs</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> API::CallNode node</span><br><span class="line"><span class="keyword">where</span> node <span class="operator">=</span> API::moduleImport("django").getMember("db").getMember("connection").getMember("cursor").getReturn().getMember("execute").getACall()</span><br><span class="line"><span class="keyword">select</span> node, "The node has type " <span class="operator">+</span> node.getAQlClass()</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-16_21-43-05.png" alt="Snipaste_2024-12-16_21-43-05"></p>
+<h2 id="Taint-analysis-in-Codeql"><a href="#Taint-analysis-in-Codeql" class="headerlink" title="Taint analysis in Codeql"></a>Taint analysis in Codeql</h2><p><strong>local data flow</strong></p>
+<p>顾名思义，只跟踪局部数据流，比如说只考虑一个函数内的 local data flow。</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id codeql-zero-to-hero/3-4</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">import python</span><br><span class="line">import semmle.python.ApiGraphs</span><br><span class="line"></span><br><span class="line">class ExecuteNode extends DataFlow::CallCfgNode{</span><br><span class="line">    ExecuteNode(){</span><br><span class="line">        this <span class="operator">=</span> API::moduleImport("django").getMember("db").getMember("connection").getMember("cursor").getReturn().getMember("execute").getACall()</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">predicate isEvalExcute(DataFlow::CallCfgNode <span class="keyword">call</span>) {</span><br><span class="line">    <span class="keyword">exists</span>(DataFlow::ExprNode expr <span class="operator">|</span> <span class="operator">/</span><span class="operator">/</span>声明一个表达式变量作为source，在这个例子中就是username</span><br><span class="line">            <span class="keyword">call</span> instanceof ExecuteNode <span class="operator">/</span><span class="operator">/</span>将<span class="keyword">call</span>限制在写的规则范围之内</span><br><span class="line">            <span class="keyword">and</span> expr instanceof DataFlow::LocalSourceNode<span class="operator">/</span><span class="operator">/</span>将expr定义为一个source点，这里限制为<span class="keyword">local</span> sources</span><br><span class="line">            <span class="keyword">and</span> DataFlow::localFlow(expr, call.getArg(<span class="number">0</span>))<span class="operator">/</span><span class="operator">/</span>localFlow(source, sink)，这里定义数据流考虑source到sink点</span><br><span class="line">            <span class="keyword">and</span> <span class="keyword">not</span> expr.getNode().isLiteral()<span class="operator">/</span><span class="operator">/</span>这里限制source点不能是一个常量，比如username不能是一个固定的字符串</span><br><span class="line">            <span class="operator">/</span><span class="operator">/</span><span class="keyword">and</span> <span class="keyword">not</span> call.getArg(<span class="number">0</span>).asCfgNode().isLiteral() </span><br><span class="line">            )</span><br><span class="line">}</span><br><span class="line"><span class="keyword">from</span> DataFlow::CallCfgNode <span class="keyword">call</span></span><br><span class="line"><span class="keyword">where</span> <span class="keyword">call</span> instanceof ExecuteNode</span><br><span class="line">    <span class="keyword">and</span> isEvalExcute(<span class="keyword">call</span>)</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">call</span>, "The execute point is vuln! "</span><br></pre></td></tr></table></figure></div>
+
+<p>这里的指令用来找到所有不以固定字符串为参数的<code>execute</code>节点（sink点）</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_11-25-40.png" alt="Snipaste_2024-12-17_11-25-40"></p>
+<p>最终结果显示也是如愿找到满足条件的节点。</p>
+<p><strong>Global data flow</strong></p>
+<p>这种方法会跟踪整个代码库的数据流，这也是大部分情况中所采用的方法，</p>
+<h2 id="Challenge-5"><a href="#Challenge-5" class="headerlink" title="Challenge 5"></a>Challenge 5</h2><p><strong>Run the local data flow query to find <code>execute</code> calls that do not take a string literal</strong></p>
+<p>就是上面 local data flow 的内容</p>
+<h2 id="New-taint-tracking-API"><a href="#New-taint-tracking-API" class="headerlink" title="New taint tracking API"></a>New taint tracking API</h2><p>下面为污点分析最新的API配置代码</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind path-problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">import python</span><br><span class="line">import semmle.python.dataflow.new.DataFlow</span><br><span class="line">import semmle.python.dataflow.new.TaintTracking</span><br><span class="line">import semmle.python.ApiGraphs</span><br><span class="line">import MyFlow::PathGraph</span><br><span class="line"></span><br><span class="line">private <span class="keyword">module</span> MyConfig implements DataFlow::ConfigSig {</span><br><span class="line">  predicate isSource(DataFlow::Node source) {</span><br><span class="line">    <span class="operator">/</span><span class="operator">/</span> <span class="keyword">Define</span> your source nodes here. </span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  predicate isSink(DataFlow::Node sink) {</span><br><span class="line">    <span class="operator">/</span><span class="operator">/</span> <span class="keyword">Define</span> your sink nodes here.</span><br><span class="line">  }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> MyFlow <span class="operator">=</span> TaintTracking::<span class="keyword">Global</span><span class="operator">&lt;</span>MyConfig<span class="operator">&gt;</span>; <span class="operator">/</span><span class="operator">/</span> <span class="keyword">or</span> DataFlow::<span class="keyword">Global</span><span class="operator">&lt;</span>..<span class="operator">&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> MyFlow::PathNode source, MyFlow::PathNode sink</span><br><span class="line"><span class="keyword">where</span> MyFlow::flowPath(source, sink)</span><br><span class="line"><span class="keyword">select</span> sink.getNode(), source, sink, "Sample TaintTracking query"</span><br></pre></td></tr></table></figure></div>
+
+<p>需要注意的是通过设定<code>@kind path-problem</code>，就可以实现看见<code>source</code>和<code>sink</code>点之间的路径，接下来我们尝试使用新的污点分析API来实现Challenge 3中的数据流跟踪。</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind path-problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.dataflow.new.DataFlow</span><br><span class="line"> import semmle.python.dataflow.new.TaintTracking</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> import MyFlow::PathGraph</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">class ExecuteCall extends DataFlow::CallCfgNode {</span><br><span class="line">    ExecuteCall() {</span><br><span class="line">    this <span class="operator">=</span> API::moduleImport("django").getMember("db").getMember("connection").getMember("cursor").getReturn().getMember("execute").getACall()</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"> private <span class="keyword">module</span> MyConfig implements DataFlow::ConfigSig {</span><br><span class="line">   predicate isSource(DataFlow::Node source) {</span><br><span class="line">     <span class="operator">/</span><span class="operator">/</span> <span class="keyword">Define</span> your source nodes here. </span><br><span class="line">     source <span class="operator">=</span> API::moduleImport("flask").getMember("request").getMember("args").asSource()</span><br><span class="line">   }</span><br><span class="line"> </span><br><span class="line">   predicate isSink(DataFlow::Node sink) {</span><br><span class="line">     <span class="operator">/</span><span class="operator">/</span> <span class="keyword">Define</span> your sink nodes here.</span><br><span class="line">     <span class="keyword">exists</span>(ExecuteCall <span class="keyword">call</span> <span class="operator">|</span>  </span><br><span class="line">            sink <span class="operator">=</span> call.getArg(<span class="number">0</span>))</span><br><span class="line">   }</span><br><span class="line"> }</span><br><span class="line"> </span><br><span class="line"> <span class="keyword">module</span> MyFlow <span class="operator">=</span> TaintTracking::<span class="keyword">Global</span><span class="operator">&lt;</span>MyConfig<span class="operator">&gt;</span>; <span class="operator">/</span><span class="operator">/</span> <span class="keyword">or</span> DataFlow::<span class="keyword">Global</span><span class="operator">&lt;</span>..<span class="operator">&gt;</span></span><br><span class="line"> </span><br><span class="line"> <span class="keyword">from</span> MyFlow::PathNode source, MyFlow::PathNode sink</span><br><span class="line"> <span class="keyword">where</span> MyFlow::flowPath(source, sink)</span><br><span class="line"> <span class="keyword">select</span> sink.getNode(), source, sink, "Sample TaintTracking query"</span><br></pre></td></tr></table></figure></div>
+
+<p><code>API::moduleImport("flask").getMember("request").getMember("args").asSource()</code> 简单解释一下这段代码，首先还是通过 API graph 提取目标节点，然后通过 <code>asSource()</code>将该节点设置为我们要分析的 data flow graph 中的一个source点。</p>
+<p><code>exists(ExecuteCall call | sink = call.getArg(0))}</code> sink 点的定义就更简单了，直接为<code>cursor.execute</code> 就可以了。</p>
+<h2 id="Challenge-6"><a href="#Challenge-6" class="headerlink" title="Challenge 6"></a>Challenge 6</h2><p><strong>Run the taint tracking query to find flows from a Flask request to a django.db’s <code>execute</code> sink</strong></p>
+<p>上面即为 Challenge 6 的结果</p>
+<h2 id="Variant-analysis"><a href="#Variant-analysis" class="headerlink" title="Variant analysis"></a>Variant analysis</h2><p>简单来说通过一种基本漏洞，尝试去发现类似的其他漏洞，比如说你现在自己审计出来一个漏洞，然后可以尝试通过codeql去建立这个漏洞的规则，然后说不定就可以发现其他相似类型的漏洞在代码库当中。</p>
+<h2 id="Source-and-sink-models-in-CodeQL"><a href="#Source-and-sink-models-in-CodeQL" class="headerlink" title="Source and sink models in CodeQL"></a>Source and sink models in CodeQL</h2><p><strong>sources</strong></p>
+<p>codeql 需要有能力去区分一个节点是不是 source，因此这需要提前进行建模，比如说我们前面的<code>flask</code>模块，这些都已在codeql中集成好了，</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">API::Node request() { <span class="keyword">result</span> <span class="operator">=</span> </span><br><span class="line">API::moduleImport("flask").getMember("request") }</span><br></pre></td></tr></table></figure></div>
+
+<p><a class="link" target="_blank" rel="noopener" href="https://github.com/github/codeql/blob/e8423f858f7bca6f9ac0b1eec8a3a2d5780e99d9/python/ql/lib/semmle/python/frameworks/Flask.qll#L356-L360">这里 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>有预定义好的一些 source，这些source的类型被设置为<code>RemoteFlowSource</code>，比如说下面的<code>flask.request</code></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private class FlaskRequestSource extends RemoteFlowSource::<span class="keyword">Range</span> {</span><br><span class="line">  FlaskRequestSource() { this <span class="operator">=</span> request().asSource() }</span><br><span class="line"></span><br><span class="line">  override string getSourceType() { <span class="keyword">result</span> <span class="operator">=</span> "flask.request" }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>sinks</strong></p>
+<p>Codeql 也为每种漏洞类型建立了对应的sink点，比如说 <a class="link" target="_blank" rel="noopener" href="https://github.com/github/codeql/blob/9e9be4fc5e7f4b4778594a4443c8528af0ea080d/python/ql/lib/semmle/python/frameworks/PEP249.qll#L70-L82">cursor.execute <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">private class ExecuteMethodCall extends SqlExecution::<span class="keyword">Range</span>, API::CallNode {</span><br><span class="line">  ExecuteMethodCall() {</span><br><span class="line">    <span class="keyword">exists</span>(API::Node <span class="keyword">start</span> <span class="operator">|</span></span><br><span class="line">      <span class="keyword">start</span> instanceof DatabaseCursor <span class="keyword">or</span> <span class="keyword">start</span> instanceof DatabaseConnection</span><br><span class="line">    <span class="operator">|</span></span><br><span class="line">      this <span class="operator">=</span> start.getMember(getExecuteMethodName()).getACall()</span><br><span class="line">    )</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  override DataFlow::Node getSql() {</span><br><span class="line">    <span class="keyword">result</span> <span class="keyword">in</span> [this.getArg(<span class="number">0</span>), this.getArgByName(getSqlKwargName()),]</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="Security-research-methodology-with-CodeQL—approaching-a-new-target"><a href="#Security-research-methodology-with-CodeQL—approaching-a-new-target" class="headerlink" title="Security research methodology with CodeQL—approaching a new target"></a>Security research methodology with CodeQL—approaching a new target</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_15-14-21.png" alt="Snipaste_2024-12-17_15-14-21"></p>
+<p><strong>第一步：Quick look with code scanning</strong></p>
+<p>先直接开扫就完事了，<a class="link" target="_blank" rel="noopener" href="https://github.com/GitHubSecurityLab/CodeQL-Community-Packs/">GitHubSecurityLab/CodeQL-Community-Packs <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>这里有codeql团队使用的一些queries可供参考</p>
+<p><strong>第二步：Run specific queries or parts of queries</strong></p>
+<p> <code>&lt;language&gt;/ql/src/Security/</code> 这个文件夹里面有各种漏洞类型的queries，可以针对某种特定漏洞类型先测测</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_15-22-50.png" alt="Snipaste_2024-12-17_15-22-50"></p>
+<p>由于这里限制了最大运行数为20，所以需要<strong>修改 codeQL.runningQueries.maxQueries 设置</strong>，从而提升这个限制：</p>
+<blockquote>
+<p>​	1.	打开 CodeQL 的设置文件：</p>
+<p>​	•	在 <strong>VS Code</strong> 中按下 Ctrl + ,（打开设置）。</p>
+<p>​	•	搜索 CodeQL Running Queries MaxQueries。</p>
+<p>​	2.	提高并行查询数限制，比如将其改为 50：</p>
+</blockquote>
+<h2 id="Challenge-7"><a href="#Challenge-7" class="headerlink" title="Challenge 7"></a>Challenge 7</h2><p>完成上面的操作就好了</p>
+<p><strong>第三步：Find all sources with the RemoteFlowSource type</strong></p>
+<p>尽可能的找到所有的 <code>sources</code>，方法如下：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> * @problem.severity error</span></span><br><span class="line"><span class="comment"> * @id githubsecuritylab/3-8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">import python</span><br><span class="line">import semmle.python.dataflow.new.RemoteFlowSources</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> RemoteFlowSource rfs</span><br><span class="line"><span class="keyword">select</span> rfs, "A remote flow source"</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_15-39-15.png" alt="Snipaste_2024-12-17_15-39-15"></p>
+<p>成功找到了一些source点，如果想要限制我们扫描source点的范围，可以像Challenge 1中那样，通过<code>getLocation</code>来限制查询的范围。</p>
+<h2 id="Challenge-8"><a href="#Challenge-8" class="headerlink" title="Challenge 8"></a>Challenge 8</h2><p>上述内容即为Challenge 8</p>
+<p><strong>第四步：Find all sinks for a specific vulnerability type</strong></p>
+<p>可以考虑使用<code>Quick evaluation</code> 功能，比如说想查询sql注入的sink点，先进入到<code>python/ql/src/Security/CWE-089/SqlInjection.ql</code> 文件，进入到<code>SqlInjectionQuery</code>定义的地方</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_15-52-03.png" alt="Snipaste_2024-12-17_15-52-03"></p>
+<p>点击下图中<code>isSink</code>上方的<code>Quick Evaluation</code>即可开始自动扫描可能的sink点</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_15-51-50.png" alt="Snipaste_2024-12-17_15-51-50"></p>
+<p>这里也是成功扫描出来了</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_15-56-53.png" alt="Snipaste_2024-12-17_15-56-53"></p>
+<p>还有一种类似获取source点的方法，比如说查询所有<code>SqlExecution</code>类型的sink点</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> * @problem.severity error</span></span><br><span class="line"><span class="comment"> * @id githubsecuritylab/3-9</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">import python</span><br><span class="line">import semmle.python.Concepts</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> SqlExecution sink</span><br><span class="line"><span class="keyword">select</span> sink, "Potential SQL injection sink"</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_16-00-58.png" alt="Snipaste_2024-12-17_16-00-58"></p>
+<p><strong>第五步：Find calls to all external APIs (untrusted functionality)</strong></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://github.com/github/codeql/blob/main/python/ql/src/Security/CWE-020-ExternalAPIs/UntrustedDataToExternalAPI.ql">CWE-20 Untrusted APIs <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>可以用来检测外部API是否使用不受信任的数据来源，具体位置如下，运行即可</p>
+<p><code>vscode-codeql-starter/ql/python/ql/src/Security/CWE-020-ExternalAPIs/UntrustedDataToExternalAPI.ql</code></p>
+<h2 id="Challenge-10"><a href="#Challenge-10" class="headerlink" title="Challenge 10"></a>Challenge 10</h2><p><strong>Run CWE-20 Untrusted APIs query</strong></p>
+<p>如上</p>
+<h2 id="Challenge-11"><a href="#Challenge-11" class="headerlink" title="Challenge 11"></a>Challenge 11</h2><p><strong>Run MRVA using one of the security queries</strong></p>
+<p>MRVA 支持 query 同时运行在多个项目上，可以大幅提高分析效率</p>
+<p><a class="link" target="_blank" rel="noopener" href="https://github.com/GitHubSecurityLab/codeql-zero-to-hero/blob/main/3/11/instructions.md">https://github.com/GitHubSecurityLab/codeql-zero-to-hero/blob/main/3/11/instructions.md <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://docs.github.com/en/code-security/codeql-for-vs-code/getting-started-with-codeql-for-vs-code/running-codeql-queries-at-scale-with-multi-repository-variant-analysis#using-github-code-search-to-add-repositories-to-a-custom-list">这里 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>可以设置扫描的项目</p>
+<p>暂时没有大规模需求，先放着吧</p>
+<h2 id="Community-research"><a href="#Community-research" class="headerlink" title="Community research"></a>Community research</h2><p><a class="link" target="_blank" rel="noopener" href="https://github.blog/security/vulnerability-research/codeql-zero-to-hero-part-3-security-research-with-codeql/#community-research-with-codeql">https://github.blog/security/vulnerability-research/codeql-zero-to-hero-part-3-security-research-with-codeql/#community-research-with-codeql <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>以下是一些C/C++相关的参考资料</p>
+<blockquote>
+<ul>
+<li><a class="link" target="_blank" rel="noopener" href="https://securitylab.github.com/research/bug-hunting-codeql-rsyslog/">Bug Hunting with CodeQL in Rsyslog <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a><br>Beginner-friendly step by step process of finding vulnerabilities using CodeQL in Rsyslog by <a class="link" target="_blank" rel="noopener" href="https://twitter.com/agustingianni">@agustingianni <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.</li>
+<li><a class="link" target="_blank" rel="noopener" href="https://medium.com/csg-govtech/hunting-bugs-in-accel-ppp-with-codeql-8370e297e18f">Hunting bugs in Accel-PPP with CodeQL <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> by Chloe Ong and <a class="link" target="_blank" rel="noopener" href="https://medium.com/csg-govtech/removing-false-positives-in-codeql-2b9f9f02cd99">Removing False Positives in CodeQL <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> by Kar Wei Loh.<br>The two researchers worked together to find memory corruption bugs in Accel-PPP. The first article is an in-depth writeup about looking for the bugs and the thought process, writing CodeQL and the challenges they’ve encountered. The second article shows how they refined the CodeQL query to provide more precise results.</li>
+<li><a class="link" target="_blank" rel="noopener" href="https://github.com/google/security-research/blob/master/pocs/cpus/spectre-gadgets/README.md">Finding Gadgets for CPU Side-Channels with Static Analysis Tools <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a><br>Research by <a class="link" target="_blank" rel="noopener" href="https://twitter.com/pwningsystems">@pwningsystems <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> and <a class="link" target="_blank" rel="noopener" href="https://twitter.com/fkaasan">@fkaasan <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> into finding useful gadgets in CPU side-channel exploitation.</li>
+</ul>
+</blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a class="link" target="_blank" rel="noopener" href="https://github.blog/security/vulnerability-research/codeql-zero-to-hero-part-3-security-research-with-codeql/">https://github.blog/security/vulnerability-research/codeql-zero-to-hero-part-3-security-research-with-codeql/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> codeql_zero_to_hero part3学习</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-12-17 21:12:04</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-12-17 21:14:40
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/12/17/codeql_note_p3/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/codeql/">#codeql</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                    <div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2024/12/17/codeql_note_p4/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">codeql_zero_to_hero part4学习</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/12/11/CVE-2022-38181/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">Mali GPU CVE-2022-38181 漏洞复现</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                if (hexo-config('comment.enable') == true && hexo-config('comment.system') != "") {
+  if (hexo-config('comment.system') == "waline") {
+    @require "./waline.styl"
+
+  } else if (hexo-config('comment.system') == "gitalk") {
+    @require "./gitalk.styl"
+
+  } else if (hexo-config('comment.system') == "twikoo") {
+    @require "./twikoo.styl"
+  }
+}
+
+.comments-container
+  display inline-block
+  margin-top $spacing-unit
+  width 100%
+
+  #comment-anchor
+    width 100%
+    height 10px
+
+  .comment-area-title
+    width 100%
+    margin 10px 0
+    font-size 1.38rem
+    color var(--default-text-color)
+    font-family 'Noto Sans', 'Noto Sans SC', sans-serif
+    font-weight bold
+
+    i
+      color var(--default-text-color)
+
+    +redefine-tablet()
+      margin 5px 0
+      font-size 1.2rem
+
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">codeql_zero_to_hero part3学习</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-1"><span class="nav-text">Challenge 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-2"><span class="nav-text">Challenge 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-3"><span class="nav-text">Challenge 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-4"><span class="nav-text">Challenge 4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Taint-analysis-in-Codeql"><span class="nav-text">Taint analysis in Codeql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-5"><span class="nav-text">Challenge 5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#New-taint-tracking-API"><span class="nav-text">New taint tracking API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-6"><span class="nav-text">Challenge 6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Variant-analysis"><span class="nav-text">Variant analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Source-and-sink-models-in-CodeQL"><span class="nav-text">Source and sink models in CodeQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Security-research-methodology-with-CodeQL%E2%80%94approaching-a-new-target"><span class="nav-text">Security research methodology with CodeQL—approaching a new target</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-7"><span class="nav-text">Challenge 7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-8"><span class="nav-text">Challenge 8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-10"><span class="nav-text">Challenge 10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Challenge-11"><span class="nav-text">Challenge 11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Community-research"><span class="nav-text">Community research</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-text">Reference</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>

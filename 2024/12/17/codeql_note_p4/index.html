@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/12/17/codeql_note_p4/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Reference: https:&#x2F;&#x2F;github.blog&#x2F;security&#x2F;vulnerability-research&#x2F;codeql-zero-to-hero-part-4-gradio-framework-case-study&#x2F;  老样子阅读能力好的，建议直接看原文享受顶级讲解 Gradio framework case studyGradioGradio 是一个用于构建交互式机器学习模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="codeql_zero_to_hero part4学习">
+<meta property="og:url" content="http://example.com/2024/12/17/codeql_note_p4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Reference: https:&#x2F;&#x2F;github.blog&#x2F;security&#x2F;vulnerability-research&#x2F;codeql-zero-to-hero-part-4-gradio-framework-case-study&#x2F;  老样子阅读能力好的，建议直接看原文享受顶级讲解 Gradio framework case studyGradioGradio 是一个用于构建交互式机器学习模型">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_17-25-06.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_17-39-14.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_20-21-27.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_20-30-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_20-48-05.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_20-52-11.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_20-58-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-12-17_21-04-39.png">
+<meta property="article:published_time" content="2024-12-17T13:12:04.116Z">
+<meta property="article:modified_time" content="2024-12-17T13:14:19.153Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="codeql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-12-17_17-25-06.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            codeql_zero_to_hero part4学习 -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2024-12-17_17-13-52.png" alt="codeql_zero_to_hero part4学习" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">codeql_zero_to_hero part4学习</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-12-17 21:12:04</span>
+        <span class="mobile">2024-12-17 21:12:04</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-12-17 21:14:19</span>
+            <span class="mobile">2024-12-17 21:14:19</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/software/">software</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/software/static-analysis/">static analysis</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/codeql/">codeql</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <p><strong>Reference:</strong></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://github.blog/security/vulnerability-research/codeql-zero-to-hero-part-4-gradio-framework-case-study/">https://github.blog/security/vulnerability-research/codeql-zero-to-hero-part-4-gradio-framework-case-study/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>老样子阅读能力好的，建议直接看原文享受顶级讲解</p>
+<h1 id="Gradio-framework-case-study"><a href="#Gradio-framework-case-study" class="headerlink" title="Gradio framework case study"></a>Gradio framework case study</h1><h2 id="Gradio"><a href="#Gradio" class="headerlink" title="Gradio"></a>Gradio</h2><p><strong>Gradio</strong> 是一个用于构建交互式机器学习模型演示和用户界面的 Python 库。它可以让开发者快速地创建基于网页的界面，方便其他人通过浏览器与机器学习模型或其他函数进行交互。</p>
+<p><strong>Gradio interface</strong></p>
+<p>通过调用 gradio 的<code>interface</code>类可以很快创建一个界面</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gradio <span class="keyword">as</span> gr</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">greet</span>(<span class="params">name, intensity</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello, "</span> + name + <span class="string">"!"</span> * <span class="built_in">int</span>(intensity)</span><br><span class="line"></span><br><span class="line">demo = gr.Interface(</span><br><span class="line">    fn=greet,</span><br><span class="line">    inputs=[gr.Textbox(), gr.Slider()],</span><br><span class="line">    outputs=[gr.Textbox()])</span><br><span class="line"></span><br><span class="line">demo.launch()</span><br></pre></td></tr></table></figure></div>
+
+<p>很快就创建出了如下界面：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_17-25-06.png" alt="Snipaste_2024-12-17_17-25-06"></p>
+<p><strong>Gradio Blocks</strong></p>
+<p>Gradio 文档中是这样描述<code>Blocks</code>类的</p>
+<blockquote>
+<p>Blocks offers more flexibility and control over: </p>
+<p>​	(1) the layout of components </p>
+<p>​	(2) the events that trigger the execution of functions </p>
+<p>​	(3) data flows (for example, inputs can trigger outputs, which can trigger the next level of outputs).</p>
+</blockquote>
+<p>可见 <code>Blocks</code> 类的功能相比于<code>interface</code>会更加强大</p>
+<p>下面是一个使用的例子，创建了滑块，下拉选项，复选框，单选按钮，单选框</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gradio <span class="keyword">as</span> gr</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sentence_builder</span>(<span class="params">quantity, animal, countries, place, morning</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f"""The <span class="subst">{quantity}</span> <span class="subst">{animal}</span>s from <span class="subst">{<span class="string">" and "</span>.join(countries)}</span> went to the <span class="subst">{place}</span> in the <span class="subst">{<span class="string">"morning"</span> <span class="keyword">if</span> morning <span class="keyword">else</span> <span class="string">"night"</span>}</span>"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> gr.Blocks() <span class="keyword">as</span> demo:</span><br><span class="line"></span><br><span class="line">    gr.Markdown(<span class="string">"Choose the options and then click **Run** to see the output."</span>)</span><br><span class="line">    <span class="keyword">with</span> gr.Row():</span><br><span class="line">        quantity = gr.Slider(<span class="number">2</span>, <span class="number">20</span>, value=<span class="number">4</span>, label=<span class="string">"Count"</span>, info=<span class="string">"Choose between 2 and 20"</span>)</span><br><span class="line">        animal = gr.Dropdown([<span class="string">"cat"</span>, <span class="string">"dog"</span>, <span class="string">"bird"</span>], label=<span class="string">"Animal"</span>, info=<span class="string">"Will add more animals later!"</span>)</span><br><span class="line">        countries = gr.CheckboxGroup([<span class="string">"USA"</span>, <span class="string">"Japan"</span>, <span class="string">"Pakistan"</span>], label=<span class="string">"Countries"</span>, info=<span class="string">"Where are they from?"</span>)</span><br><span class="line">        place = gr.Radio([<span class="string">"park"</span>, <span class="string">"zoo"</span>, <span class="string">"road"</span>], label=<span class="string">"Location"</span>, info=<span class="string">"Where did they go?"</span>)</span><br><span class="line">        morning = gr.Checkbox(label=<span class="string">"Morning"</span>, info=<span class="string">"Did they do it in the morning?"</span>)</span><br><span class="line"></span><br><span class="line">    btn = gr.Button(<span class="string">"Run"</span>)</span><br><span class="line">    btn.click(</span><br><span class="line">        fn=sentence_builder,</span><br><span class="line">        inputs=[quantity, animal, countries, place, morning],</span><br><span class="line">        outputs=gr.Textbox(label=<span class="string">"Output"</span>)</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    demo.launch(debug=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>输入组件种类及功能</strong>：</p>
+<p>​	•	<strong>Slider</strong>：滑块输入，用于选择数量范围（2 到 20），默认值为 4。</p>
+<p>​	•	<strong>Dropdown</strong>：下拉选择框，用户从预设列表中选择动物。</p>
+<p>​	•	<strong>CheckboxGroup</strong>：多选框组，允许用户选择多个国家。</p>
+<p>​	•	<strong>Radio</strong>：单选按钮，用于选择位置（如公园、动物园或道路）。</p>
+<p>​	•	<strong>Checkbox</strong>：单选框，用于选择布尔值（是否在早晨发生）。</p>
+<p><strong>共有特性</strong>：</p>
+<p>​	•	label：显示在组件上的标题。</p>
+<p>​	•	info：帮助文本，为用户提供额外的说明。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_17-39-14.png" alt="Snipaste_2024-12-17_17-39-14"></p>
+<p><strong>需要注意</strong>的是 <code>gr.Button</code> 创建了一个名为 “Run” 的按钮，并为这个按钮绑定了一个事件，其中<code>btn.click</code> 关联了以下内容：</p>
+<p>​	•	<strong>fn</strong>：点击按钮后调用的函数，这里是 <code>sentence_builder</code>。</p>
+<p>​	•	<strong>inputs：</strong>传递给函数的输入组件，按顺序是 quantity, animal, countries, place, morning。</p>
+<p>​	•	<strong>outputs：</strong>函数输出的显示位置，这里是一个 Textbox，用来显示结果。</p>
+<h2 id="Identifying-attack-surface-in-Gradio"><a href="#Identifying-attack-surface-in-Gradio" class="headerlink" title="Identifying attack surface in Gradio"></a>Identifying attack surface in Gradio</h2><p>找到一些sources点，从输入下手，首先的一些简单思路就是设置一些不符合原本规范的值，</p>
+<h2 id="Modeling-Gradio-with-CodeQL"><a href="#Modeling-Gradio-with-CodeQL" class="headerlink" title="Modeling Gradio with CodeQL"></a>Modeling Gradio with CodeQL</h2><p>这里原作者给出了两个使用 gradio 存在命令执行的例子，其中 folder 和 logs 作为execute_cmd的参数，然后这两个参数被当作命令的一部分进行执行。</p>
+<p>使用<code>interface</code> 类</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gradio <span class="keyword">as</span> gr</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_cmd</span>(<span class="params">folder, logs</span>):</span><br><span class="line">    cmd = <span class="string">f"python caption.py --dir=<span class="subst">{folder}</span> --logs=<span class="subst">{logs}</span>"</span></span><br><span class="line">    os.system(cmd)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f"Command: <span class="subst">{cmd}</span>"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">folder = gr.Textbox(placeholder=<span class="string">"Directory to caption"</span>)</span><br><span class="line">logs = gr.Checkbox(label=<span class="string">"Save verbose logs"</span>)</span><br><span class="line">output = gr.Textbox()</span><br><span class="line"></span><br><span class="line">demo = gr.Interface(</span><br><span class="line">    fn=execute_cmd,</span><br><span class="line">    inputs=[folder, logs],</span><br><span class="line">    outputs=output)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    demo.launch(debug=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></div>
+
+<p>使用<code>Blocks</code>类</p>
+<div class="highlight-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gradio <span class="keyword">as</span> gr</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_cmd</span>(<span class="params">folder, logs</span>):</span><br><span class="line">    cmd = <span class="string">f"python caption.py --dir=<span class="subst">{folder}</span> --logs=<span class="subst">{logs}</span>"</span></span><br><span class="line">    os.system(cmd)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> gr.Blocks() <span class="keyword">as</span> demo:</span><br><span class="line">    gr.Markdown(<span class="string">"Create caption files for images in a directory"</span>)</span><br><span class="line">    <span class="keyword">with</span> gr.Row():</span><br><span class="line">        folder = gr.Textbox(placeholder=<span class="string">"Directory to caption"</span>)</span><br><span class="line">        logs = gr.Checkbox(label=<span class="string">"Add verbose logs"</span>)</span><br><span class="line"></span><br><span class="line">    btn = gr.Button(<span class="string">"Run"</span>)</span><br><span class="line">    btn.click(fn=execute_cmd, inputs=[folder, logs])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    demo.launch(debug=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></div>
+
+<p>尝试使用 CodeQL CLI 对<a class="link" target="_blank" rel="noopener" href="https://github.com/GitHubSecurityLab/codeql-zero-to-hero/tree/main">codeql-zero-to-hero <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>路径<code>4/vulnerable-code-snippets</code> 建立<code>CodeQL database</code>，在<a class="link" target="_blank" rel="noopener" href="https://henrymartin262.github.io/2024/12/11/codeql_note/">https://henrymartin262.github.io/2024/12/11/codeql_note/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 已有介绍</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gh codeql database create gradio-codeql-db --language=python</span><br></pre></td></tr></table></figure></div>
+
+<p>在上面这两个例子当中，folder 和 logs 就是 sources</p>
+<p><strong>Modeling <code>gr.interface</code></strong></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @id githubsecuritylab/4-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> API::CallNode node</span><br><span class="line"><span class="keyword">where</span> node <span class="operator">=</span> </span><br><span class="line">    API::moduleImport("gradio").getMember("Interface").getACall()</span><br><span class="line"><span class="keyword">select</span> node, "call to interface"</span><br></pre></td></tr></table></figure></div>
+
+<p>通过上面的方法可以找到所有调用 gr.interface 的调用点</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_20-21-27.png" alt="Snipaste_2024-12-17_20-21-27"></p>
+<p>下面这段代码用于继续找到<code>folder</code>和<code>logs</code>两个参数</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @id githubsecuritylab/4-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> API::CallNode node</span><br><span class="line"><span class="keyword">where</span> node <span class="operator">=</span> </span><br><span class="line">    API::moduleImport("gradio").getMember("Interface").getACall()</span><br><span class="line"><span class="keyword">select</span> node.getParameter(<span class="number">0</span>, "fn").getParameter(_), "Gradio sources"</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_20-30-44.png" alt="Snipaste_2024-12-17_20-30-44"></p>
+<p>可以使用下面的class来进行封装</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @id githubsecuritylab/4-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> import semmle.python.dataflow.new.RemoteFlowSources</span><br><span class="line"></span><br><span class="line">class GradioInterface extends RemoteFlowSource::<span class="keyword">Range</span>{</span><br><span class="line">    GradioInterface(){</span><br><span class="line">        <span class="keyword">exists</span>(API::CallNode n <span class="operator">|</span> </span><br><span class="line">        n <span class="operator">=</span> API::moduleImport("gradio").getMember("Interface").getACall()</span><br><span class="line">        <span class="keyword">and</span> this <span class="operator">=</span> n.getParameter(<span class="number">0</span>, "fn").getParameter(_).asSource())</span><br><span class="line">    }</span><br><span class="line">    override string getSourceType(){<span class="keyword">result</span> <span class="operator">=</span> "Gradio vuln input"}</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> GradioInterface src</span><br><span class="line"><span class="keyword">select</span> src, "Gradio sources"</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_20-48-05.png" alt="Snipaste_2024-12-17_20-48-05"></p>
+<p><strong>注意</strong>这里使用了<code>RemoteFlowSource::Range</code>这个抽象类，简单来说这个类定义了很多source，其中就包括我们上面找到的这三个source，可以简单验证一下</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @id githubsecuritylab/4-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> import semmle.python.dataflow.new.RemoteFlowSources</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> RemoteFlowSource rfs</span><br><span class="line"><span class="keyword">select</span> rfs, "Gradio sources"</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_20-52-11.png" alt="Snipaste_2024-12-17_20-52-11"></p>
+<p>事实也确实如此</p>
+<p><strong>Modeling <code>gr.Button</code></strong></p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @kind problem</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @id githubsecuritylab/4-1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> import semmle.python.dataflow.new.RemoteFlowSources</span><br><span class="line"></span><br><span class="line">class GradioInterface extends RemoteFlowSource::<span class="keyword">Range</span>{</span><br><span class="line">    GradioInterface(){</span><br><span class="line">        <span class="keyword">exists</span>(API::CallNode n <span class="operator">|</span> </span><br><span class="line">        n <span class="operator">=</span> API::moduleImport("gradio").getMember("Button").getReturn().getMember("click").getACall()</span><br><span class="line">        <span class="keyword">and</span> this <span class="operator">=</span> n.getParameter(<span class="number">0</span>, "fn").getParameter(_).asSource())</span><br><span class="line">    }</span><br><span class="line">    override string getSourceType(){<span class="keyword">result</span> <span class="operator">=</span> "Gradio Blocks vuln input"}</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> GradioInterface src</span><br><span class="line"><span class="keyword">select</span> src, "Gradio sources"</span><br></pre></td></tr></table></figure></div>
+
+<p>对<code>interface</code>中的代码简单修改就可以得到对应<code>Blocks</code>类对应的source。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_20-58-43.png" alt="Snipaste_2024-12-17_20-58-43"></p>
+<p>使用前面写的两个例子作为source，然后只需要定义一个sink，我们就可以实现数据流分析了，具体如下：</p>
+<div class="highlight-container" data-rel="Sql"><figure class="iseeu highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @id codeql-zero-to-hero/4-7</span></span><br><span class="line"><span class="comment"> * @severity error</span></span><br><span class="line"><span class="comment"> * @kind path-problem</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> import python</span><br><span class="line"> import semmle.python.dataflow.new.DataFlow</span><br><span class="line"> import semmle.python.dataflow.new.TaintTracking</span><br><span class="line"> import semmle.python.ApiGraphs</span><br><span class="line"> import semmle.python.dataflow.new.RemoteFlowSources</span><br><span class="line"> import MyFlow::PathGraph</span><br><span class="line"></span><br><span class="line">class GradioButton extends RemoteFlowSource::<span class="keyword">Range</span> {</span><br><span class="line">    GradioButton() {</span><br><span class="line">        <span class="keyword">exists</span>(API::CallNode n <span class="operator">|</span></span><br><span class="line">        n <span class="operator">=</span> API::moduleImport("gradio").getMember("Button").getReturn()</span><br><span class="line">        .getMember("click").getACall() <span class="operator">|</span></span><br><span class="line">        this <span class="operator">=</span> n.getParameter(<span class="number">0</span>, "fn").getParameter(_).asSource())</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    override string getSourceType() { <span class="keyword">result</span> <span class="operator">=</span> "Gradio untrusted input" }</span><br><span class="line"></span><br><span class="line"> }</span><br><span class="line"></span><br><span class="line"> class GradioInterface extends RemoteFlowSource::<span class="keyword">Range</span> {</span><br><span class="line">    GradioInterface() {</span><br><span class="line">        <span class="keyword">exists</span>(API::CallNode n <span class="operator">|</span></span><br><span class="line">        n <span class="operator">=</span> API::moduleImport("gradio").getMember("Interface").getACall() <span class="operator">|</span></span><br><span class="line">        this <span class="operator">=</span> n.getParameter(<span class="number">0</span>, "fn").getParameter(_).asSource())</span><br><span class="line">    }</span><br><span class="line">    override string getSourceType() { <span class="keyword">result</span> <span class="operator">=</span> "Gradio untrusted input" }</span><br><span class="line"></span><br><span class="line"> }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OsSystemSink extends API::CallNode {</span><br><span class="line">    OsSystemSink() {</span><br><span class="line">        this <span class="operator">=</span> API::moduleImport("os").getMember("system").getACall()</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> private <span class="keyword">module</span> MyConfig implements DataFlow::ConfigSig {</span><br><span class="line">   predicate isSource(DataFlow::Node source) {</span><br><span class="line">     source instanceof GradioButton</span><br><span class="line">     <span class="keyword">or</span></span><br><span class="line">     source instanceof GradioInterface</span><br><span class="line">   }</span><br><span class="line"></span><br><span class="line">   predicate isSink(DataFlow::Node sink) {</span><br><span class="line">    <span class="keyword">exists</span>(OsSystemSink <span class="keyword">call</span> <span class="operator">|</span></span><br><span class="line">        sink <span class="operator">=</span> call.getArg(<span class="number">0</span>)</span><br><span class="line">        )</span><br><span class="line">   }</span><br><span class="line"> }</span><br><span class="line"></span><br><span class="line"> <span class="keyword">module</span> MyFlow <span class="operator">=</span> TaintTracking::<span class="keyword">Global</span><span class="operator">&lt;</span>MyConfig<span class="operator">&gt;</span>;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">from</span> MyFlow::PathNode source, MyFlow::PathNode sink</span><br><span class="line"> <span class="keyword">where</span> MyFlow::flowPath(source, sink)</span><br><span class="line"> <span class="keyword">select</span> sink.getNode(), source, sink, "Data Flow from a Gradio source to `os.system`"</span><br></pre></td></tr></table></figure></div>
+
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-12-17_21-04-39.png" alt="Snipaste_2024-12-17_21-04-39"></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> codeql_zero_to_hero part4学习</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2024-12-17 21:12:04</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-12-17 21:14:19
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2024/12/17/codeql_note_p4/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/codeql/">#codeql</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/12/17/codeql_note_p3/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">codeql_zero_to_hero part3学习</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                if (hexo-config('comment.enable') == true && hexo-config('comment.system') != "") {
+  if (hexo-config('comment.system') == "waline") {
+    @require "./waline.styl"
+
+  } else if (hexo-config('comment.system') == "gitalk") {
+    @require "./gitalk.styl"
+
+  } else if (hexo-config('comment.system') == "twikoo") {
+    @require "./twikoo.styl"
+  }
+}
+
+.comments-container
+  display inline-block
+  margin-top $spacing-unit
+  width 100%
+
+  #comment-anchor
+    width 100%
+    height 10px
+
+  .comment-area-title
+    width 100%
+    margin 10px 0
+    font-size 1.38rem
+    color var(--default-text-color)
+    font-family 'Noto Sans', 'Noto Sans SC', sans-serif
+    font-weight bold
+
+    i
+      color var(--default-text-color)
+
+    +redefine-tablet()
+      margin 5px 0
+      font-size 1.2rem
+
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">codeql_zero_to_hero part4学习</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Gradio-framework-case-study"><span class="nav-text">Gradio framework case study</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradio"><span class="nav-text">Gradio</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Identifying-attack-surface-in-Gradio"><span class="nav-text">Identifying attack surface in Gradio</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Modeling-Gradio-with-CodeQL"><span class="nav-text">Modeling Gradio with CodeQL</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
