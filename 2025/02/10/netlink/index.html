@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2025/02/10/netlink/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="一、基础知识1. recv 相关在 Linux 网络编程中，recv() 及其相关函数用于接收数据。除了 recv()，还有多个变体和类似函数，适用于不同的场景，如 阻塞&#x2F;非阻塞模式、消息边界保留、带外数据等。 1️⃣ recv()（标准接收函数） 1ssize_t recv(int sockfd, void *buf, size_t len, int flags);   适用于： 从 TCP&#x2F;U">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netlink Basic Knowledge">
+<meta property="og:url" content="http://example.com/2025/02/10/netlink/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、基础知识1. recv 相关在 Linux 网络编程中，recv() 及其相关函数用于接收数据。除了 recv()，还有多个变体和类似函数，适用于不同的场景，如 阻塞&#x2F;非阻塞模式、消息边界保留、带外数据等。 1️⃣ recv()（标准接收函数） 1ssize_t recv(int sockfd, void *buf, size_t len, int flags);   适用于： 从 TCP&#x2F;U">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-49-45.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-50-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-51-47.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-52-17.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-52-33.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-53-48.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-54-31.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-54-49.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-55-23.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_20-55-41.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_14-50-57.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_14-50-57.png">
+<meta property="article:published_time" content="2025-02-10T13:14:23.886Z">
+<meta property="article:modified_time" content="2025-02-10T13:24:10.036Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="netlink">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2025-02-10_20-49-45.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Netlink Basic Knowledge -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2025-02-10_21-17-04.png" alt="Netlink Basic Knowledge" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">Netlink Basic Knowledge</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-02-10 21:14:23</span>
+        <span class="mobile">2025-02-10 21:14:23</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-02-10 21:24:10</span>
+            <span class="mobile">2025-02-10 21:24:10</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Android/">Android</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/Android/kernel/">kernel</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/Android/kernel/netlink/">netlink</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/netlink/">netlink</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <h2 id="一、基础知识"><a href="#一、基础知识" class="headerlink" title="一、基础知识"></a>一、基础知识</h2><h3 id="1-recv-相关"><a href="#1-recv-相关" class="headerlink" title="1. recv 相关"></a>1. recv 相关</h3><p>在 Linux 网络编程中，<code>recv()</code> 及其相关函数用于接收数据。除了 <code>recv()</code>，还有多个变体和类似函数，适用于不同的场景，如 <strong>阻塞/非阻塞模式、消息边界保留、带外数据等</strong>。</p>
+<p>1️⃣ recv()（标准接收函数）</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">recv</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">void</span> *buf, <span class="type">size_t</span> len, <span class="type">int</span> flags)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><strong>适用于：</strong> 从 <strong>TCP/UDP 套接字</strong> 接收数据。</li>
+<li>主要参数：<ul>
+<li><code>sockfd</code>：套接字描述符。</li>
+<li><code>buf</code>：用于存储接收数据的缓冲区。</li>
+<li><code>len</code>：<code>buf</code> 的大小。</li>
+<li><code>flags</code>：<ul>
+<li><code>0</code>（默认）普通接收。</li>
+<li><code>MSG_DONTWAIT</code>（非阻塞）。</li>
+<li><code>MSG_PEEK</code>（窥探数据，但不移除）。</li>
+<li><code>MSG_WAITALL</code>（等到缓冲区填满）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>返回值：</strong> 接收到的字节数，返回 <code>0</code> 表示 <strong>连接关闭</strong>，<code>-1</code> 表示 <strong>错误</strong>（可用 <code>errno</code> 诊断）。</li>
+</ul>
+<p>2️⃣ recvfrom()（用于 UDP/无连接套接字）</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">recvfrom</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">void</span> *buf, <span class="type">size_t</span> len, <span class="type">int</span> flags,</span></span><br><span class="line"><span class="params">                 <span class="keyword">struct</span> sockaddr *src_addr, <span class="type">socklen_t</span> *addrlen)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><strong>适用于：</strong> <strong>UDP 套接字</strong>（无连接）。</li>
+<li>额外参数：<ul>
+<li><code>src_addr</code>：存储发送方地址（适用于 UDP）。</li>
+<li><code>addrlen</code>：<code>src_addr</code> 结构体的大小。</li>
+</ul>
+</li>
+<li>区别：<ul>
+<li><code>recv()</code> 只用于 <strong>面向连接（TCP）</strong> 的 socket。</li>
+<li><code>recvfrom()</code> 适用于 <strong>无连接（UDP）</strong>，可以获取 <strong>数据来源地址</strong>。</li>
+</ul>
+</li>
+</ul>
+<p>✅ <strong>示例（UDP 服务器）：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">cli_addr</span>;</span></span><br><span class="line"><span class="type">socklen_t</span> addr_len = <span class="keyword">sizeof</span>(cli_addr);</span><br><span class="line"></span><br><span class="line"><span class="type">ssize_t</span> recv_len = recvfrom(sockfd, buffer, <span class="keyword">sizeof</span>(buffer), <span class="number">0</span>, </span><br><span class="line">                            (<span class="keyword">struct</span> sockaddr *)&amp;cli_addr, &amp;addr_len);</span><br></pre></td></tr></table></figure></div>
+
+<p>3️⃣ recvmsg()（高级接收，多缓冲区支持）</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">recvmsg</span><span class="params">(<span class="type">int</span> sockfd, <span class="keyword">struct</span> msghdr *msg, <span class="type">int</span> flags)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><strong>适用于：</strong> <strong>接收带外数据（控制消息）、多缓冲区（scatter-gather I/O）</strong>。</li>
+<li>参数 <code>msghdr</code> 结构体包含：<ul>
+<li><code>msg_name</code>：可选，存储发送方地址。</li>
+<li><code>msg_iov</code>：<strong>I/O 向量数组</strong>，可接收多个缓冲区的数据。</li>
+<li><code>msg_control</code>：用于接收 <strong>辅助数据</strong>（如文件描述符传递）。</li>
+</ul>
+</li>
+<li>适用场景：<ul>
+<li><strong>接收带外数据（OOB）。</strong></li>
+<li><strong>接收多个缓冲区数据（scatter-gather I/O）。</strong></li>
+<li><strong>用于 SO_PASSCRED 选项（传递进程凭证）。</strong></li>
+</ul>
+</li>
+</ul>
+<p>✅ <strong>示例（接收多个缓冲区的数据）：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> <span class="title">iov</span>[2];</span></span><br><span class="line"><span class="type">char</span> buf1[<span class="number">256</span>], buf2[<span class="number">256</span>];</span><br><span class="line">iov[<span class="number">0</span>].iov_base = buf1;</span><br><span class="line">iov[<span class="number">0</span>].iov_len = <span class="keyword">sizeof</span>(buf1);</span><br><span class="line">iov[<span class="number">1</span>].iov_base = buf2;</span><br><span class="line">iov[<span class="number">1</span>].iov_len = <span class="keyword">sizeof</span>(buf2);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">msghdr</span> <span class="title">msg</span> =</span> {<span class="number">0</span>};</span><br><span class="line">msg.msg_iov = iov;</span><br><span class="line">msg.msg_iovlen = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">ssize_t</span> recv_len = recvmsg(sockfd, &amp;msg, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></div>
+
+<p>4️⃣ read()（通用读取，与 recv() 类似）</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">read</span><span class="params">(<span class="type">int</span> fd, <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><strong>适用于：</strong> 任何 <strong>文件描述符</strong>（包括 sockets）。</li>
+<li>区别：<ul>
+<li><code>read()</code> 没有 <code>flags</code> 参数，适用于 <strong>默认阻塞模式</strong>。</li>
+<li><code>recv()</code> <strong>适用于 socket</strong>，可以使用 <code>MSG_*</code> 选项。</li>
+</ul>
+</li>
+</ul>
+<p>✅ <strong>示例：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line"><span class="type">ssize_t</span> len = read(sockfd, buffer, <span class="keyword">sizeof</span>(buffer));</span><br></pre></td></tr></table></figure></div>
+
+<p>5️⃣ recv_flags 选项</p>
+<table>
+<thead>
+<tr>
+<th><strong>标志</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MSG_DONTWAIT</code></td>
+<td>非阻塞接收</td>
+</tr>
+<tr>
+<td><code>MSG_PEEK</code></td>
+<td>窥探数据，不删除缓冲区数据</td>
+</tr>
+<tr>
+<td><code>MSG_WAITALL</code></td>
+<td>直到缓冲区填满</td>
+</tr>
+<tr>
+<td><code>MSG_TRUNC</code></td>
+<td>允许接收大于 <code>buf</code> 的数据</td>
+</tr>
+<tr>
+<td><code>MSG_OOB</code></td>
+<td>接收带外数据</td>
+</tr>
+</tbody></table>
+<p>✅ <strong>示例（窥探数据但不移除）：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">recv(sockfd, buffer, <span class="keyword">sizeof</span>(buffer), MSG_PEEK);</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="2-send-相关"><a href="#2-send-相关" class="headerlink" title="2. send 相关"></a>2. send 相关</h3><p>1️⃣ send()</p>
+<p><code>send()</code> 是用于通过 <strong>TCP</strong> 或 <strong>UDP</strong> 套接字发送数据的基本函数。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">send</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">const</span> <span class="type">void</span> *buf, <span class="type">size_t</span> len, <span class="type">int</span> flags)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>sockfd</code>：要发送数据的套接字文件描述符。</li>
+<li><code>buf</code>：指向要发送的数据的缓冲区。</li>
+<li><code>len</code>：要发送的数据的长度。</li>
+<li><code>flags</code>：控制发送操作的标志（通常设置为 0）。</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时，返回实际发送的字节数。</li>
+<li>失败时，返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+<p><strong>适用场景：</strong></p>
+<ul>
+<li>用于 <strong>TCP</strong> 或 <strong>UDP</strong> 套接字发送数据。</li>
+<li>对于 <strong>UDP</strong>，它不会保证数据的可靠传输。</li>
+<li>对于 <strong>TCP</strong>，它会在传输层处理数据的分段、重传等。</li>
+</ul>
+<p>2️⃣ sendto()</p>
+<p><code>sendto()</code> 用于发送数据包，它不仅适用于 <strong>TCP</strong> 和 <strong>UDP</strong> 套接字，还能用在 <strong>原始套接字</strong> 和 <strong>UNIX 域套接字</strong> 等场景中。<code>sendto()</code> 允许指定目的地地址。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">sendto</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">const</span> <span class="type">void</span> *buf, <span class="type">size_t</span> len, <span class="type">int</span> flags,</span></span><br><span class="line"><span class="params">               <span class="type">const</span> <span class="keyword">struct</span> sockaddr *dest_addr, <span class="type">socklen_t</span> addrlen)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>sockfd</code>：套接字文件描述符。</li>
+<li><code>buf</code>：要发送的数据缓冲区。</li>
+<li><code>len</code>：要发送的数据长度。</li>
+<li><code>flags</code>：标志。</li>
+<li><code>dest_addr</code>：指向目标地址的指针。对于 <strong>UDP</strong>，这是目标 IP 地址和端口；对于 <strong>原始套接字</strong>，这可能是目标的物理地址等。</li>
+<li><code>addrlen</code>：目标地址的长度。</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时，返回发送的字节数。</li>
+<li>失败时，返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+<p><strong>适用场景：</strong></p>
+<ul>
+<li><strong>UDP</strong> 套接字或 <strong>原始套接字</strong>，因为它允许你指定目的地址。</li>
+<li>适用于 <strong>单播</strong>、<strong>广播</strong> 或 <strong>多播</strong> 等情况。</li>
+</ul>
+<p>3️⃣ sendmsg()</p>
+<p><code>sendmsg()</code> 是一个比 <code>sendto()</code> 更灵活的函数，允许发送更加复杂的消息，尤其是当你需要控制消息头、IOV（向量）等时。它常用于 <strong>Netlink</strong> 或其他高级套接字编程。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">sendmsg</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">const</span> <span class="keyword">struct</span> msghdr *msg, <span class="type">int</span> flags)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>sockfd</code>：套接字文件描述符。</li>
+<li><code>msg</code>：指向 <code>msghdr</code> 结构的指针。<code>msghdr</code> 结构包含消息数据、目标地址、消息的 iov 等信息。</li>
+<li><code>flags</code>：控制发送操作的标志。</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时，返回实际发送的字节数。</li>
+<li>失败时，返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+<p><strong>适用场景：</strong></p>
+<ul>
+<li>用于需要发送复杂消息的情况，如 <strong>Netlink</strong>、<strong>UNIX 域套接字</strong>，或者需要 <strong>控制信息</strong>（如 <code>sendmsg()</code> 用于发送带有多个 IOV 的消息）。</li>
+</ul>
+<p>4️⃣ sendmmsg()</p>
+<p><code>sendmmsg()</code> 是 <code>sendmsg()</code> 的扩展，允许一次发送多个消息。这个函数通常用于提高网络传输效率，尤其在发送大量消息时。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sendmmsg</span><span class="params">(<span class="type">int</span> sockfd, <span class="keyword">struct</span> mmsghdr *msgvec, <span class="type">unsigned</span> <span class="type">int</span> vlen, <span class="type">int</span> flags)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>sockfd</code>：套接字文件描述符。</li>
+<li><code>msgvec</code>：指向 <code>mmsghdr</code> 结构数组的指针。每个 <code>mmsghdr</code> 结构包含一个消息的发送信息。</li>
+<li><code>vlen</code>：<code>msgvec</code> 数组的长度。</li>
+<li><code>flags</code>：标志。</li>
+</ul>
+<p> <strong>mmsghdr 结构：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mmsghdr</span> {</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">msghdr</span> <span class="title">msg_hdr</span>;</span>  <span class="comment">// 每个消息的描述</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span>  msg_len;  <span class="comment">// 该消息发送的字节数</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时，返回发送的消息数。</li>
+<li>失败时，返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+<p><strong>适用场景：</strong></p>
+<ul>
+<li>用于高效地批量发送多个消息，通常在高性能网络应用中使用。</li>
+</ul>
+<p>5️⃣ sendfile()</p>
+<p><code>sendfile()</code> 是一个高效的文件传输函数，它直接在内核空间中进行文件到套接字的数据传输，不需要将数据从内核复制到用户空间。它用于 <strong>TCP</strong> 套接字，可以有效地提高文件发送效率。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ssize_t</span> <span class="title function_">sendfile</span><span class="params">(<span class="type">int</span> out_fd, <span class="type">int</span> in_fd, <span class="type">off_t</span> *offset, <span class="type">size_t</span> count)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><code>out_fd</code>：输出文件描述符（通常是套接字）。</li>
+<li><code>in_fd</code>：输入文件描述符（通常是打开的文件）。</li>
+<li><code>offset</code>：从输入文件的哪个位置开始发送数据。</li>
+<li><code>count</code>：要发送的字节数。</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时，返回实际发送的字节数。</li>
+<li>失败时，返回 -1，并设置 <code>errno</code>。</li>
+</ul>
+<p><strong>适用场景：</strong></p>
+<ul>
+<li>高效地将文件内容传输到套接字，通常用于通过网络传输大文件。</li>
+</ul>
+<h2 id="二、Netlink-架构"><a href="#二、Netlink-架构" class="headerlink" title="二、Netlink 架构"></a>二、Netlink 架构</h2><p>这一部分内容主要来自</p>
+<p><a class="link" target="_blank" rel="noopener" href="https://i.blackhat.com/Asia-24/Presentations/Asia-24-Ma-LinkDoor-A-Hidden-Attack.pdf">https://i.blackhat.com/Asia-24/Presentations/Asia-24-Ma-LinkDoor-A-Hidden-Attack.pdf <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>Netlink 中存在的漏洞，导致其作为 Android 的子系统可能会使 Android 变得不安全，所以这篇文章算是很好的介绍了 netlink 在安卓下的攻击利用。</p>
+<h3 id="Kernel-mechanism-of-Classic-Netlink"><a href="#Kernel-mechanism-of-Classic-Netlink" class="headerlink" title="Kernel mechanism of Classic Netlink"></a>Kernel mechanism of Classic Netlink</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-49-45.png" alt="nipaste_2025-02-10_20-49-4"></p>
+<p>Netlink 架构图如上，其中需要注意的是<code>Generic Netlink</code> 和 <code>Classic Netlink</code> 是 Linux 内核中两种不同的 Netlink 实现方式，它们都用于内核与用户空间之间的通信，但在设计和使用上有显著的区别。</p>
+<p><strong>主要区别</strong></p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Classic Netlink</th>
+<th>Generic Netlink</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>协议类型</strong></td>
+<td>固定（如 <code>NETLINK_ROUTE</code>）</td>
+<td>动态（使用 <code>NETLINK_GENERIC</code>）</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>较差</td>
+<td>较好（支持动态注册家族）</td>
+</tr>
+<tr>
+<td><strong>消息结构</strong></td>
+<td>简单</td>
+<td>复杂（支持属性机制）</td>
+</tr>
+<tr>
+<td><strong>多路复用</strong></td>
+<td>不支持</td>
+<td>支持（通过家族和命令）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>固定功能模块</td>
+<td>动态扩展功能模块</td>
+</tr>
+</tbody></table>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-50-44.png" alt="nipaste_2025-02-10_20-50-4"></p>
+<p>上图为 <code>Classic Netlink</code> 下常见的数据包传输格式。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-51-47.png" alt="nipaste_2025-02-10_20-51-4"></p>
+<p>Classic Netlink 实现中，存在一个比较严重的问题就是，对从用户空间传递的数据缺乏足够有效的检查，从而导致存在各种问题。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-52-17.png" alt="nipaste_2025-02-10_20-52-1"></p>
+<p>上图给出了 Netlink 从上至下在三个角度下可能存在攻击面，这可以帮助我们在审计代码的过程中注意这些提到的方面。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-52-33.png" alt="nipaste_2025-02-10_20-52-3"></p>
+<p>同理，这张图里面介绍了一些自下而上可能存在的一些问题。</p>
+<h3 id="Kernel-mechanism-of-Generic-Netlink"><a href="#Kernel-mechanism-of-Generic-Netlink" class="headerlink" title="Kernel mechanism of Generic Netlink"></a>Kernel mechanism of Generic Netlink</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-53-48.png" alt="nipaste_2025-02-10_20-53-4"></p>
+<p>上图为 <code>Generic Netlink</code> 下常见的数据包传输格式，下图给出了 <code>genlmsghdr</code> 和 <code>nlattr</code> 结构体的相关说明。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-54-31.png" alt="nipaste_2025-02-10_20-54-3"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-54-49.png" alt="nipaste_2025-02-10_20-54-4"></p>
+<p>攻击利用面如下，分别自上而下和自下而上两个角度阐述了在 <code>Generic Netlink</code> 下可能存在的攻击面。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-55-23.png" alt="nipaste_2025-02-10_20-55-2"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_20-55-41.png" alt="nipaste_2025-02-10_20-55-4"></p>
+<h2 id="三、Netlink基础概念"><a href="#三、Netlink基础概念" class="headerlink" title="三、Netlink基础概念"></a>三、Netlink基础概念</h2><p>Netlink 是一种IPC（Inter Process Commumicate）机制，它是<strong>一种用于内核与用户空间通信的机制</strong>，同时它也以用于进程间通信（Netlink 更多用于内核通信，进程之间通信更多使用Unix域套接字）。</p>
+<p>在一般情况下，用户态和内核态通信会使用：</p>
+<p><strong>传统的Ioctl、sysfs属性文件或者procfs属性文件</strong>，这3种通信方式都是<strong>同步通信方式，由用户态主动发起向内核态的通信，内核无法主动发起通信</strong>。</p>
+<p><strong>而Netlink是一种异步全双工的通信方式</strong>，它支持由内核态主动发起通信，内核为Netlink通信提供了一组特殊的API接口，用户态则基于socket API，内核发送的数据会保存在接收进程socket 的接收缓存中，由接收进程处理。</p>
+<p><strong>Netlink 相对于系统调用，ioctl 以及 /proc 文件系统而言具有以下优点：</strong></p>
+<ol>
+<li>为了使用 netlink，用户仅需要在 include/linux/netlink.h 中增加一个新类型的 netlink 协议定义即可， 如 #define NETLINK_MYTEST 17 然后，内核和用户态应用就可以立即通过 socket API 使用该 netlink 协议类型进行数据交换。但系统调用需要增加新的系统调用，ioctl 则需要增加设备或文件， 那需要不少代码，proc 文件系统则需要在 /proc 下添加新的文件或目录，那将使本来就混乱的 /proc 更加混乱。</li>
+<li>netlink是一种异步通信机制，在内核与用户态应用之间传递的消息保存在socket缓存队列中，发送消息只是把消息保存在接收者的socket的接收队列，而不需要等待接收者收到消息，但系统调用与 ioctl 则是同步通信机制，如果传递的数据太长，将影响调度粒度。</li>
+<li>使用 netlink 的内核部分可以采用模块的方式实现，使用 netlink 的应用部分和内核部分没有编译时依赖，但系统调用就有依赖，而且新的系统调用的实现必须静态地连接到内核中，它无法在模块中实现，使用新系统调用的应用在编译时需要依赖内核。</li>
+<li>netlink 支持多播，内核模块或应用可以把消息多播给一个netlink组，属于该neilink 组的任何内核模块或应用都能接收到该消息，内核事件向用户态的通知机制就使用了这一特性，任何对内核事件感兴趣的应用都能收到该子系统发送的内核事件，在 后面的文章中将介绍这一机制的使用。</li>
+<li>内核可以使用 netlink 首先发起会话，但系统调用和 ioctl 只能由用户应用发起调用。</li>
+<li>netlink 使用标准的 socket API，因此很容易使用，但系统调用和 ioctl则需要专门的培训才能使用。</li>
+</ol>
+<h3 id="Netlink-协议类型"><a href="#Netlink-协议类型" class="headerlink" title="Netlink 协议类型"></a>Netlink 协议类型</h3><p>目前 netlink 协议族支持32种协议类型，它们定义在 <code>include/uapi/linux/netlink.h</code> 中：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_14-50-57.png" alt="nipaste_2025-02-10_14-50-5"></p>
+<h3 id="Netlink-用户态"><a href="#Netlink-用户态" class="headerlink" title="Netlink 用户态"></a>Netlink 用户态</h3><p>用户态应用使用标准的socket APIs， socket(), bind(), sendmsg(), recvmsg() 和 close()。</p>
+<p>使用 netlink 的应用必须包含头文件 <code>linux/netlink.h</code>。 socket 需要的头文件也必不可少 <code>sys/socket.h</code>。Netlink通信跟常用UDP Socket通信类似，<code>struct sockaddr_nl</code>是netlink通信地址，跟普通<code>socket struct sockaddr_in</code>类似。</p>
+<h4 id="struct-sockaddr-nl"><a href="#struct-sockaddr-nl" class="headerlink" title="**struct sockaddr_nl **"></a>**struct sockaddr_nl **</h4><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> {</span></span><br><span class="line">	<span class="type">__kernel_sa_family_t</span>	nl_family;	<span class="comment">/* AF_NETLINK	*/</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">short</span>	nl_pad;		<span class="comment">/* zero		*/</span></span><br><span class="line">	__u32		nl_pid;		<span class="comment">/* port ID	*/</span></span><br><span class="line">    __u32		nl_groups;	<span class="comment">/* multicast groups mask */</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="struct-nlmsghdr"><a href="#struct-nlmsghdr" class="headerlink" title="struct nlmsghdr"></a><strong>struct nlmsghdr</strong></h4><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * struct nlmsghdr - fixed format metadata header of Netlink messages</span></span><br><span class="line"><span class="comment"> * @nlmsg_len:   Length of message including header</span></span><br><span class="line"><span class="comment"> * @nlmsg_type:  Message content type</span></span><br><span class="line"><span class="comment"> * @nlmsg_flags: Additional flags</span></span><br><span class="line"><span class="comment"> * @nlmsg_seq:   Sequence number</span></span><br><span class="line"><span class="comment"> * @nlmsg_pid:   Sending process port ID</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> {</span></span><br><span class="line">	__u32		nlmsg_len;</span><br><span class="line">	__u16		nlmsg_type;</span><br><span class="line">	__u16		nlmsg_flags;</span><br><span class="line">	__u32		nlmsg_seq;</span><br><span class="line">	__u32		nlmsg_pid;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p><code>nlmsg_type</code>：消息状态，内核在<code>include/uapi/linux/netlink.h</code>中定义了以下4种通用的消息类型，它们分别是：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_NOOP		0x1	<span class="comment">/* Nothing.		*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_ERROR		0x2	<span class="comment">/* Error		*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_DONE		0x3	<span class="comment">/* End of a dump	*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_OVERRUN		0x4	<span class="comment">/* Data lost		*/</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_MIN_TYPE		0x10	<span class="comment">/* &lt; 0x10: reserved control messages */</span></span></span><br></pre></td></tr></table></figure></div>
+
+<p><code>nlmsg_flags</code>：消息标记，它们用以表示消息的类型，如下:</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Flags values */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_REQUEST		0x01	<span class="comment">/* It is request message. 	*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_MULTI		0x02	<span class="comment">/* Multipart message, terminated by NLMSG_DONE */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ACK		0x04	<span class="comment">/* Reply with ack, with zero or error code */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ECHO		0x08	<span class="comment">/* Receive resulting notifications */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_DUMP_INTR		0x10	<span class="comment">/* Dump was inconsistent due to sequence change */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_DUMP_FILTERED	0x20	<span class="comment">/* Dump was filtered as requested */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Modifiers to GET request */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ROOT	0x100	<span class="comment">/* specify tree	root	*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_MATCH	0x200	<span class="comment">/* return all matching	*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ATOMIC	0x400	<span class="comment">/* atomic GET		*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_DUMP	(NLM_F_ROOT|NLM_F_MATCH)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Modifiers to NEW request */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_REPLACE	0x100	<span class="comment">/* Override existing		*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_EXCL	0x200	<span class="comment">/* Do not touch, if it exists	*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_CREATE	0x400	<span class="comment">/* Create, if it does not exist	*/</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_APPEND	0x800	<span class="comment">/* Add to end of list		*/</span></span></span><br></pre></td></tr></table></figure></div>
+
+<h4 id="struct-msghdr"><a href="#struct-msghdr" class="headerlink" title="struct msghdr"></a>struct msghdr</h4><p><a class="link" target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v6.12.6/C/ident/user_msghdr">user_msghdr <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> <code>msghdr</code> 是 Linux 中用于描述消息传递的结构体（<strong>用户空间的 <code>msghdr</code> 结构体</strong>），主要用于实现系统调用 <code>sendmsg</code> 和 <code>recvmsg</code>，支持更复杂的消息传递功能。通过 <code>msghdr</code>，可以指定消息内容、目标地址、附加数据（如文件描述符）、标志等</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">msghdr</span> {</span></span><br><span class="line">    <span class="type">void</span>         *msg_name;       <span class="comment">// 指向目标地址的指针</span></span><br><span class="line">    <span class="type">socklen_t</span>     msg_namelen;    <span class="comment">// 地址长度</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> *<span class="title">msg_iov</span>;</span>        <span class="comment">// 指向数据块的指针数组</span></span><br><span class="line">    <span class="type">size_t</span>        msg_iovlen;     <span class="comment">// 数据块数组的大小</span></span><br><span class="line">    <span class="type">void</span>         *msg_control;    <span class="comment">// 附加数据（辅助数据，如文件描述符传递）</span></span><br><span class="line">    <span class="type">size_t</span>        msg_controllen; <span class="comment">// 附加数据的大小</span></span><br><span class="line">    <span class="type">int</span>           msg_flags;      <span class="comment">// 接收时返回的标志</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>msg_name 和 msg_namelen</strong>：</p>
+<ul>
+<li>作用<ul>
+<li>指定消息的目标地址（对于发送）。</li>
+<li>接收消息的源地址（对于接收）。</li>
+</ul>
+</li>
+<li>详细<ul>
+<li>典型用例是套接字地址（如 <code>struct sockaddr_in</code>）。</li>
+<li>若设置为 <code>NULL</code> 或长度为 0，则表示不关心地址信息。</li>
+</ul>
+</li>
+</ul>
+<p><strong>msg_iov 和 msg_iovlen</strong>：</p>
+<ul>
+<li><p><strong>作用</strong>：</p>
+<ul>
+<li>描述消息的数据内容。</li>
+</ul>
+</li>
+<li><p><strong>详细</strong>：</p>
+<ul>
+<li><code>msg_iov</code> 是一个指向 <code>struct iovec</code> 数组的指针，每个 <code>iovec</code> 描述一段内存区域。</li>
+<li><code>msg_iovlen</code> 指定数组中元素的数量。</li>
+<li>通过这种方式，可以高效地发送或接收分散存储在多个内存区域的数据（称为 “scatter-gather I/O”）。</li>
+</ul>
+<p><strong>struct iovec 定义</strong>：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> {</span></span><br><span class="line">    <span class="type">void</span>  *iov_base; <span class="comment">// 数据的起始地址</span></span><br><span class="line">    <span class="type">size_t</span> iov_len;  <span class="comment">// 数据的长度</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<p><strong>msg_control 和 msg_controllen</strong>：</p>
+<ul>
+<li><p><strong>作用</strong>：</p>
+<ul>
+<li>用于传递或接收附加数据，称为控制消息（control message）。</li>
+</ul>
+</li>
+<li><p><strong>详细</strong>：</p>
+<ul>
+<li><code>msg_control</code> 是一个缓冲区，存储附加数据（如传递文件描述符、设置消息优先级）。</li>
+<li><code>msg_controllen</code> 指定缓冲区大小。</li>
+<li>附加数据的内容通常是一个 <code>cmsghdr</code> 结构体。</li>
+</ul>
+<p><strong>struct cmsghdr 定义</strong>：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cmsghdr</span> {</span></span><br><span class="line">    <span class="type">size_t</span> cmsg_len;    <span class="comment">// 控制消息的总长度</span></span><br><span class="line">    <span class="type">int</span>    cmsg_level;  <span class="comment">// 控制消息所属的协议级别（如 SOL_SOCKET）</span></span><br><span class="line">    <span class="type">int</span>    cmsg_type;   <span class="comment">// 控制消息的类型（如 SCM_RIGHTS）</span></span><br><span class="line">    <span class="comment">// 后面紧跟附加数据</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<p><strong>msg_flags</strong>：</p>
+<ul>
+<li>作用<ul>
+<li>接收消息时返回的标志，用于指示消息的状态或行为。</li>
+</ul>
+</li>
+<li>常见标志<ul>
+<li><code>MSG_EOR</code>：表示消息的结束。</li>
+<li><code>MSG_TRUNC</code>：消息被截断。</li>
+<li><code>MSG_CTRUNC</code>：控制数据被截断。</li>
+</ul>
+</li>
+</ul>
+<h4 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h4><p><strong>1. 创建套接字</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> skfd = socket(AF_NETLINK, SOCK_RAW, netlink_type)</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>第一个参数必须是 AF_NETLINK 或 PF_NETLINK，在 Linux 中，它们俩实际为一个东西，它表示要使用netlink，第二个参数必须是SOCK_RAW或SOCK_DGRAM， 第三个参数指定netlink协议类型，如前面讲的用户自定义协议类型NETLINK_MYTEST， NETLINK_GENERIC是一个通用的协议类型，它是专门为用户使用的，因此，用户可以直接使用它，而不必再添加新的协议类型。</p>
+</blockquote>
+<p>内核预定义的协议类型有：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_14-50-57.png" alt="nipaste_2025-02-10_14-50-5"></p>
+<p><strong>2. 绑定套接字</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> <span class="title">saddr</span>;</span></span><br><span class="line">saddr.nl_family = AF_NETLINK; <span class="comment">// AF_NETLINK    </span></span><br><span class="line">saddr.nl_pid = <span class="number">100</span>;  <span class="comment">//端口号(port ID)     </span></span><br><span class="line">saddr.nl_groups = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>(bind(skfd, (<span class="keyword">struct</span> sockaddr *)&amp;saddr, <span class="keyword">sizeof</span>(saddr)) != <span class="number">0</span>)    </span><br><span class="line">    {       </span><br><span class="line">        perror(<span class="string">"bind() error\n"</span>);</span><br><span class="line">        close(skfd);       </span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br></pre></td></tr></table></figure></div>
+
+<p>fd为前面的 socket 调用返回的文件描述符，参数 nladdr 为 struct sockaddr_nl 类型的地址。为了发送一个 netlink 消息给内核或其他用户态应用，需要填充目标 netlink socket 地址，此时，字段 nl_pid 和 nl_groups 分别表示接收消息者的进程 ID 与多播组。</p>
+<p>如果字段 <code>nl_pid</code> 设置为 0，表示<strong>消息接收者为内核或多播组</strong>，如果 <code>nl_groups</code> 为 0，表示该<strong>消息为单播消息，否则表示多播消息</strong>。</p>
+<p><strong>3. 构建发送消息</strong></p>
+<p>使用函数 <code>sendmsg</code> 发送 netlink 消息时还需要引用结构 <code>struct msghdr</code>、<code>struct nlmsghdr</code> 和 <code>struct iovec</code>，结构 <code>struct msghdr</code> 需如下设置：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">msghdr</span> <span class="title">msg</span>;</span></span><br><span class="line"><span class="built_in">memset</span>(&amp;msg, <span class="number">0</span>, <span class="keyword">sizeof</span>(msg));</span><br><span class="line">msg.msg_name = (<span class="type">void</span> *)&amp;(nladdr);</span><br><span class="line">msg.msg_namelen = <span class="keyword">sizeof</span>(nladdr);</span><br></pre></td></tr></table></figure></div>
+
+<p>其中 <code>nladdr</code> 为消息接收者的 <code>netlink</code> 地址，<code>struct nlmsghdr</code> 为 <code>netlink socket</code> 自己的消息头，这用于多路复用和多路分解 netlink 定义的所有协议类型以及其它一些控制，netlink 的内核实现将利用这个消息头来多路复用和多路分解已经其它的一些控制，因此它也被称为netlink 控制块。因此，应用在发送 netlink 消息时必须提供该消息头。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">  __u32 nlmsg_len;   <span class="comment">/* Length of message */</span></span><br><span class="line">  __u16 nlmsg_type;  <span class="comment">/* Message type*/</span></span><br><span class="line">  __u16 nlmsg_flags; <span class="comment">/* Additional flags */</span></span><br><span class="line">  __u32 nlmsg_seq;   <span class="comment">/* Sequence number */</span></span><br><span class="line">  __u32 nlmsg_pid;   <span class="comment">/* Sending process PID */</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p>字段 nlmsg_len 指定消息的总长度，包括紧跟该结构的数据部分长度以及该结构的大小，字段 nlmsg_type 用于应用内部定义消息的类型，它对 netlink 内核实现是透明的，因此大部分情况下设置为 0，字段 nlmsg_flags 用于设置消息标志，可用的标志包括：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Flags values */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_REQUEST           1       <span class="comment">/* It is request message.       */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_MULTI             2       <span class="comment">/* Multipart message, terminated by NLMSG_DONE */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ACK               4       <span class="comment">/* Reply with ack, with zero or error code */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ECHO              8       <span class="comment">/* Echo this request            */</span></span></span><br><span class="line"><span class="comment">/* Modifiers to GET request */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ROOT      0x100   <span class="comment">/* specify tree root    */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_MATCH     0x200   <span class="comment">/* return all matching  */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_ATOMIC    0x400   <span class="comment">/* atomic GET           */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_DUMP      (NLM_F_ROOT|NLM_F_MATCH)</span></span><br><span class="line"><span class="comment">/* Modifiers to NEW request */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_REPLACE   0x100   <span class="comment">/* Override existing            */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_EXCL      0x200   <span class="comment">/* Do not touch, if it exists   */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_CREATE    0x400   <span class="comment">/* Create, if it does not exist */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLM_F_APPEND    0x800   <span class="comment">/* Add to end of list           */</span></span></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>标志NLM_F_REQUEST用于表示消息是一个请求，所有应用首先发起的消息都应设置该标志。</li>
+<li>标志NLM_F_MULTI 用于指示该消息是一个多部分消息的一部分，后续的消息可以通过宏NLMSG_NEXT来获得。</li>
+<li>宏NLM_F_ACK表示该消息是前一个请求消息的响应，顺序号与进程ID可以把请求与响应关联起来。</li>
+<li>标志NLM_F_ECHO表示该消息是相关的一个包的回传。</li>
+<li>标志NLM_F_ROOT 被许多 netlink 协议的各种数据获取操作使用，该标志指示被请求的数据表应当整体返回用户应用，而不是一个条目一个条目地返回。有该标志的请求通常导致响应消息设置 NLM_F_MULTI标志。注意，当设置了该标志时，请求是协议特定的，因此，需要在字段 nlmsg_type 中指定协议类型。</li>
+<li>标志 NLM_F_MATCH 表示该协议特定的请求只需要一个数据子集，数据子集由指定的协议特定的过滤器来匹配。</li>
+<li>标志 NLM_F_ATOMIC 指示请求返回的数据应当原子地收集，这预防数据在获取期间被修改。</li>
+<li>标志 NLM_F_DUMP 未实现。</li>
+<li>标志 NLM_F_REPLACE 用于取代在数据表中的现有条目。</li>
+<li>标志 NLM_F_EXCL_ 用于和 CREATE 和 APPEND 配合使用，如果条目已经存在，将失败。</li>
+<li>标志 NLM_F_CREATE 指示应当在指定的表中创建一个条目。</li>
+<li>标志 NLM_F_APPEND 指示在表末尾添加新的条目。</li>
+</ul>
+<p>内核需要读取和修改这些标志，对于一般的使用，用户把它设置为 0 就可以，只是一些高级应用（如 netfilter 和路由 daemon 需要它进行一些复杂的操作），字段 nlmsg_seq 和 nlmsg_pid 用于应用追踪消息，前者表示顺序号，后者为消息来源进程 ID。下面是一个示例：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_MSGSIZE 1024</span></span><br><span class="line"><span class="type">char</span> buffer[] = <span class="string">"An example message"</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> <span class="title">nlhdr</span>;</span></span><br><span class="line">nlhdr = (<span class="keyword">struct</span> nlmsghdr *)<span class="built_in">malloc</span>(NLMSG_SPACE(MAX_MSGSIZE));</span><br><span class="line"><span class="built_in">strcpy</span>(NLMSG_DATA(nlhdr),buffer);</span><br><span class="line">nlhdr-&gt;nlmsg_len = NLMSG_LENGTH(<span class="built_in">strlen</span>(buffer));</span><br><span class="line">nlhdr-&gt;nlmsg_pid = getpid();  <span class="comment">/* self pid */</span></span><br><span class="line">nlhdr-&gt;nlmsg_flags = <span class="number">0</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>结构 struct iovec 用于把多个消息通过一次系统调用来发送，下面是该结构使用示例：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> <span class="title">iov</span>;</span></span><br><span class="line">iov.iov_base = (<span class="type">void</span> *)nlhdr;</span><br><span class="line">iov.iov_len = nlh-&gt;nlmsg_len;</span><br><span class="line">msg.msg_iov = &amp;iov;</span><br><span class="line">msg.msg_iovlen = <span class="number">1</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>在完成以上步骤后，消息就可以通过下面语句直接发送：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sendmsg(fd, &amp;msg, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></div>
+
+<p>应用接收消息时需要首先分配一个足够大的缓存来保存消息头以及消息的数据部分，然后填充消息头，添完后就可以直接调用函数 recvmsg() 来接收。</p>
+<p><strong>4. 接收回传信息</strong></p>
+<p>应用接收消息时需要<strong>首先分配一个足够大的缓存来保存消息头以及消息的数据部分</strong>，然后填充消息头，添完后就可以直接调用函数 recvmsg() 来接收。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_NL_MSG_LEN 1024</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> <span class="title">nladdr</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">msghdr</span> <span class="title">msg</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> <span class="title">iov</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> * <span class="title">nlhdr</span>;</span></span><br><span class="line">nlhdr = (<span class="keyword">struct</span> nlmsghdr *)<span class="built_in">malloc</span>(MAX_NL_MSG_LEN);</span><br><span class="line">iov.iov_base = (<span class="type">void</span> *)nlhdr;</span><br><span class="line">iov.iov_len = MAX_NL_MSG_LEN;</span><br><span class="line">msg.msg_name = (<span class="type">void</span> *)&amp;(nladdr);</span><br><span class="line">msg.msg_namelen = <span class="keyword">sizeof</span>(nladdr);</span><br><span class="line">msg.msg_iov = &amp;iov;</span><br><span class="line">msg.msg_iovlen = <span class="number">1</span>;</span><br><span class="line">recvmsg(fd, &amp;msg, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></div>
+
+<p>注意：fd为socket调用打开的netlink socket描述符，在消息接收后，nlhdr指向接收到的消息的消息头，nladdr保存了接收到的消息的目标地址，宏NLMSG_DATA(nlhdr)返回指向消息的数据部分的指针。</p>
+<h4 id="宏定义相关"><a href="#宏定义相关" class="headerlink" title="宏定义相关"></a>宏定义相关</h4><p>在<code>linux/netlink.h</code>中定义了一些方便对消息进行处理的宏，这些宏包括：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_ALIGNTO   4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_ALIGN(len) ( ((len)+NLMSG_ALIGNTO-1) &amp; ~(NLMSG_ALIGNTO-1) )</span></span><br></pre></td></tr></table></figure></div>
+
+<p>宏<code>NLMSG_ALIGN(len)</code>用于得到不小于len且字节对齐的最小数值。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NLMSG_LENGTH(len) ((len)+NLMSG_ALIGN(sizeof(struct nlmsghdr)))</span></span><br></pre></td></tr></table></figure></div>
+
+<p>宏<code>NLMSG_LENGTH(len)</code>用于计算数据部分长度为len时实际的消息长度。它一般用于分配消息缓存。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define NLMSG_SPACE(len) NLMSG_ALIGN(NLMSG_LENGTH(len))</span><br></pre></td></tr></table></figure></div>
+
+<p>宏<code>NLMSG_SPACE(len)</code>返回不小于<code>NLMSG_LENGTH(len)</code>且字节对齐的最小数值，它也用于分配消息缓存。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define NLMSG_DATA(nlh)  ((void*)(((char*)nlh) + NLMSG_LENGTH(0)))</span><br></pre></td></tr></table></figure></div>
+
+<p>宏<code>NLMSG_DATA(nlh)</code>用于取得消息的数据部分的首地址，设置和读取消息数据部分时需要使用该宏。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define NLMSG_NEXT(nlh,len)      ((len) -= NLMSG_ALIGN((nlh)-&gt;nlmsg_len), \</span><br><span class="line">                      (struct nlmsghdr*)(((char*)(nlh)) + NLMSG_ALIGN((nlh)-&gt;nlmsg_len)))</span><br></pre></td></tr></table></figure></div>
+
+<p>宏<code>NLMSG_NEXT(nlh,len)</code>用于得到下一个消息的首地址，同时len也减少为剩余消息的总长度，该宏一般在一个消息被分成几个部分发送或接收时使用。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define NLMSG_OK(nlh,len) ((len) &gt;= (int)sizeof(struct nlmsghdr) &amp;&amp; \</span><br><span class="line">                           (nlh)-&gt;nlmsg_len &gt;= sizeof(struct nlmsghdr) &amp;&amp; \</span><br><span class="line">                           (nlh)-&gt;nlmsg_len &lt;= (len))</span><br></pre></td></tr></table></figure></div>
+
+<p>宏<code>NLMSG_OK(nlh,len)</code>用于判断消息是否有len这么长。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define NLMSG_PAYLOAD(nlh,len) ((nlh)-&gt;nlmsg_len - NLMSG_SPACE((len)))</span><br></pre></td></tr></table></figure></div>
+
+<p>宏<code>NLMSG_PAYLOAD(nlh,len)</code>用于返回payload的长度，函数close用于关闭打开的netlink socket。</p>
+<h3 id="Netlink-内核态"><a href="#Netlink-内核态" class="headerlink" title="Netlink 内核态"></a>Netlink 内核态</h3><p><code>netlink_kernel_create</code>内核函数用于创建内核socket与用户态通信</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="keyword">struct</span> sock *</span><br><span class="line"><span class="title function_">netlink_kernel_create</span><span class="params">(<span class="keyword">struct</span> net *net, <span class="type">int</span> unit, <span class="keyword">struct</span> netlink_kernel_cfg *cfg)</span></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">	net: net指向所在的网络命名空间, 一般默认传入的是&amp;init_net(不需要定义);  定义在net_namespace.c(extern struct net init_net);   </span></span><br><span class="line"><span class="comment">	unit：netlink协议类型   </span></span><br><span class="line"><span class="comment">	cfg：cfg存放的是netlink内核配置参数（如下）</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">/* optional Netlink kernel configuration parameters */</span></span><br><span class="line"><span class="keyword">struct</span> netlink_kernel_cfg {</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span>	groups;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span>	flags;</span><br><span class="line">	<span class="type">void</span>		(*input)(<span class="keyword">struct</span> sk_buff *skb);</span><br><span class="line">	<span class="type">int</span>			(*bind)(<span class="keyword">struct</span> net *net, <span class="type">int</span> group);</span><br><span class="line">	<span class="type">void</span>		(*unbind)(<span class="keyword">struct</span> net *net, <span class="type">int</span> group);</span><br><span class="line">	<span class="type">void</span>         (*release) (<span class="keyword">struct</span> sock *sk, <span class="type">unsigned</span> <span class="type">long</span> *groups);</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p>单播<code>netlink_unicast()</code> 和 多播<code>netlink_broadcast()</code></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 发送单播消息 */</span></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> <span class="title function_">netlink_unicast</span><span class="params">(<span class="keyword">struct</span> sock *ssk, <span class="keyword">struct</span> sk_buff *skb, __u32 portid, <span class="type">int</span> nonblock)</span>;</span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">    ssk: netlink socket  </span></span><br><span class="line"><span class="comment">    skb: 内核skb buff   </span></span><br><span class="line"><span class="comment">    portid：通信的端口号 </span></span><br><span class="line"><span class="comment">    nonblock：表示该函数是否为非阻塞，如果为1，该函数将在没有接收缓存可利用时立即返回，而如果为0，该函数在没有接收缓存可利用定时睡眠</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 发送多播消息 */</span></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> <span class="title function_">netlink_broadcast</span><span class="params">(<span class="keyword">struct</span> sock *ssk, <span class="keyword">struct</span> sk_buff *skb, __u32 portid, __u32 group, <span class="type">gfp_t</span> allocation)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*    </span></span><br><span class="line"><span class="comment">    ssk: 同上（对应netlink_kernel_create 返回值）</span></span><br><span class="line"><span class="comment">    skb: 内核skb buff   </span></span><br><span class="line"><span class="comment">    portid：端口id   </span></span><br><span class="line"><span class="comment">    group: 是所有目标多播组对应掩码的"OR"操作的合值。   </span></span><br><span class="line"><span class="comment">    allocation: 指定内核内存分配方式，通常GFP_ATOMIC用于中断上下文，而GFP_KERNEL用于其他场合。这个参数的存在是因为该API可能需要分配一个或多个缓冲区来对多播消息进行clone</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>Netlink 内核API</strong></p>
+<h4 id="netlink-kernel-create"><a href="#netlink-kernel-create" class="headerlink" title="netlink_kernel_create"></a><code>netlink_kernel_create</code></h4><p>netlink的内核实现在.c文件<code>net/core/af_netlink.c</code>中，内核模块要想使用 netlink，也必须包含头文件 <code>linux /netlink.h</code>。内核使用netlink需要专门的API，这完全不同于用户态应用对 netlink 的使用。</p>
+<p>增加新的netlink协议类型，用户仅需增加如下定义到 <code>linux/netlink.h</code> 就可以：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NETLINK_MYTEST  17</span></span><br></pre></td></tr></table></figure></div>
+
+<p>只要增加这个定义之后，用户就可以在内核的任何地方引用该协议，在内核中，为了创建一个netlink socket用户需要调用如下函数：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> sock *</span><br><span class="line"><span class="title function_">netlink_kernel_create</span><span class="params">(<span class="keyword">struct</span> net *net, <span class="type">int</span> unit, <span class="keyword">struct</span> netlink_kernel_cfg *cfg)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>struct net *net</code>：指向网络命名空间的指针。通常传入 <code>&amp;init_net</code>（表示初始网络命名空间）。</li>
+<li><code>int unit</code>：指定 Netlink 协议类型（如 <code>NETLINK_USER</code>、<code>NETLINK_ROUTE</code> 等）。</li>
+<li><code>struct netlink_kernel_cfg *cfg</code>：配置结构体，用于指定 Netlink socket 的行为。</li>
+</ul>
+<p><code>netlink_kernel_create</code> 是 Linux 内核中的一个函数，用于在内核模块中创建一个 Netlink socket，以便与用户空间程序进行通信。它是内核空间实现 Netlink 通信的关键函数之一。作用如下：</p>
+<ul>
+<li>该函数用于<strong>在内核中创建一个 Netlink socket</strong>。</li>
+<li>它<strong>允许内核模块通过 Netlink 协议与用户空间程序通信</strong>。</li>
+<li>内核模块可以通过这个 socket 接收来自用户空间的消息，并向用户空间发送消息。</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时返回一个指向 <code>struct sock</code> 的指针（表示创建的 Netlink socket）。</li>
+<li>失败时返回 <code>NULL</code>。</li>
+</ul>
+<p><strong>struct netlink_kernel_cfg 结构体</strong></p>
+<p><code>netlink_kernel_cfg</code> 用于配置 Netlink socket 的行为，其定义如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">netlink_kernel_cfg</span> {</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> groups;          <span class="comment">// 多播组掩码</span></span><br><span class="line">    <span class="type">void</span> (*input)(<span class="keyword">struct</span> sk_buff *skb); <span class="comment">// 接收消息的回调函数</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mutex</span> *<span class="title">cb_mutex</span>;</span>       <span class="comment">// 回调函数的互斥锁</span></span><br><span class="line">    <span class="type">void</span> (*bind)(<span class="type">int</span> group);      <span class="comment">// 绑定多播组的回调函数</span></span><br><span class="line">    <span class="type">bool</span> (*compare)(<span class="keyword">struct</span> net *net, <span class="keyword">struct</span> sock *sk); <span class="comment">// 比较函数</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>input</code>：<strong>最重要的字段，指定接收消息的回调函数。当用户空间发送消息到内核时，内核会调用这个回调函数处理消息</strong>。</li>
+<li><code>groups</code>：指定多播组掩码，用于加入多播组。</li>
+<li><code>cb_mutex</code>：可选字段，用于保护回调函数的互斥锁。</li>
+<li><code>bind</code> 和 <code>compare</code>：可选字段，用于高级配置。</li>
+</ul>
+<p>当有消 息到达这个<code>netlink socket</code>时，该<code>input</code>函数指针就会被引用，一个 input 函数的使用案例大致如下：</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">input</span> <span class="params">(<span class="keyword">struct</span> sock *sk, <span class="type">int</span> len)</span></span><br><span class="line">{ </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span> *<span class="title">skb</span>;</span> </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    u8 *data = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="keyword">while</span> ((skb = skb_dequeue(&amp;sk-&gt;receive_queue)) != <span class="literal">NULL</span>) </span><br><span class="line">    { </span><br><span class="line">        <span class="comment">/* process netlink message pointed by skb-&gt;data */</span> </span><br><span class="line">        nlh = (<span class="keyword">struct</span> nlmsghdr *)skb-&gt;data; </span><br><span class="line">        data = NLMSG_DATA(nlh); </span><br><span class="line">        <span class="comment">/* process netlink message with header pointed by   </span></span><br><span class="line"><span class="comment">        * nlh and data pointed by data  </span></span><br><span class="line"><span class="comment">        */</span> </span><br><span class="line">    }   </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="netlink-unicast"><a href="#netlink-unicast" class="headerlink" title="netlink_unicast()"></a><code>netlink_unicast()</code></h4><p>用于将消息单播（一对一）发送到指定的用户空间进程。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">netlink_unicast</span><span class="params">(<span class="keyword">struct</span> sock *sk, <span class="keyword">struct</span> sk_buff *skb, u32 pid, <span class="type">int</span> nonblock)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>struct sock *sk</code>：Netlink socket（由 <code>netlink_kernel_create</code> 创建）。</li>
+<li><code>struct sk_buff *skb</code>：要发送的消息（封装在 <code>sk_buff</code> 中）。</li>
+<li><code>u32 pid</code>：目标用户空间进程的 PID。</li>
+<li><code>int nonblock</code>：是否非阻塞发送（通常为 0，表示阻塞）。</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时返回发送的字节数。</li>
+<li>失败时返回错误码。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span> *<span class="title">skb</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 分配 sk_buff</span></span><br><span class="line">skb = nlmsg_new(NLMSG_ALIGN(<span class="number">1024</span>), GFP_KERNEL);</span><br><span class="line"><span class="keyword">if</span> (!skb) {</span><br><span class="line">    printk(KERN_ERR <span class="string">"Failed to allocate skb\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> -ENOMEM;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 填充消息头</span></span><br><span class="line">nlh = nlmsg_put(skb, <span class="number">0</span>, <span class="number">0</span>, NLMSG_DONE, <span class="number">1024</span>, <span class="number">0</span>);</span><br><span class="line"><span class="built_in">strcpy</span>(nlmsg_data(nlh), <span class="string">"Hello, User!"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送消息</span></span><br><span class="line"><span class="type">int</span> ret = netlink_unicast(nl_sk, skb, user_pid, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (ret &lt; <span class="number">0</span>) {</span><br><span class="line">    printk(KERN_ERR <span class="string">"Failed to send message\n"</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="netlink-broadcast"><a href="#netlink-broadcast" class="headerlink" title="netlink_broadcast"></a><code>netlink_broadcast</code></h4><p>用于将消息广播（一对多）发送到所有监听指定 Netlink 协议的用户空间进程。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">netlink_broadcast</span><span class="params">(<span class="keyword">struct</span> sock *sk, <span class="keyword">struct</span> sk_buff *skb, u32 pid, u32 group, <span class="type">gfp_t</span> allocation)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>struct sock *sk</code>：Netlink socket（由 <code>netlink_kernel_create</code> 创建）。</li>
+<li><code>struct sk_buff *skb</code>：要发送的消息（封装在 <code>sk_buff</code> 中）。</li>
+<li><code>u32 pid</code>：发送方的 PID（通常为 0）。</li>
+<li><code>u32 group</code>：目标多播组。</li>
+<li><code>gfp_t allocation</code>：内存分配标志（如 <code>GFP_KERNEL</code>）。</li>
+</ul>
+<p><strong>返回值：</strong></p>
+<ul>
+<li>成功时返回 0。</li>
+<li>失败时返回错误码。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span> *<span class="title">skb</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 分配 sk_buff</span></span><br><span class="line">skb = nlmsg_new(NLMSG_ALIGN(<span class="number">1024</span>), GFP_KERNEL);</span><br><span class="line"><span class="keyword">if</span> (!skb) {</span><br><span class="line">    printk(KERN_ERR <span class="string">"Failed to allocate skb\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> -ENOMEM;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 填充消息头</span></span><br><span class="line">nlh = nlmsg_put(skb, <span class="number">0</span>, <span class="number">0</span>, NLMSG_DONE, <span class="number">1024</span>, <span class="number">0</span>);</span><br><span class="line"><span class="built_in">strcpy</span>(nlmsg_data(nlh), <span class="string">"Broadcast message!"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 广播消息</span></span><br><span class="line"><span class="type">int</span> ret = netlink_broadcast(nl_sk, skb, <span class="number">0</span>, <span class="number">1</span>, GFP_KERNEL);</span><br><span class="line"><span class="keyword">if</span> (ret &lt; <span class="number">0</span>) {</span><br><span class="line">    printk(KERN_ERR <span class="string">"Failed to broadcast message\n"</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="netlink-kernel-release"><a href="#netlink-kernel-release" class="headerlink" title="netlink_kernel_release"></a><code>netlink_kernel_release</code></h4><p>用于释放由 <code>netlink_kernel_create</code> 创建的 Netlink socket。</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">netlink_kernel_release</span><span class="params">(<span class="keyword">struct</span> sock *sk)</span>;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>struct sock *sk</code>：要释放的 Netlink socket。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (nl_sk) {</span><br><span class="line">    netlink_kernel_release(nl_sk);</span><br><span class="line">    printk(KERN_INFO <span class="string">"Netlink socket released\n"</span>);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="四、Netlink-使用示例"><a href="#四、Netlink-使用示例" class="headerlink" title="四、Netlink 使用示例"></a>四、Netlink 使用示例</h2><p><strong>(1) 用户态程序 test.c</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/netlink.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NETLINK_TEST 30 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MSG_LEN 125 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_PLOAD 125</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">user_msg_info</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> <span class="title">hdr</span>;</span></span><br><span class="line">    <span class="type">char</span> msg[MSG_LEN];</span><br><span class="line">} user_msg_info;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">int</span> skfd;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> <span class="title">iov</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">msghdr</span> <span class="title">msg</span>;</span></span><br><span class="line">    user_msg_info u_info;</span><br><span class="line">    <span class="type">socklen_t</span> len;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> <span class="title">saddr</span>, <span class="title">daddr</span>;</span></span><br><span class="line">    <span class="type">char</span> *umsg = <span class="string">"hello netlink!!"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 创建NETLINK socket */</span> </span><br><span class="line">    skfd = socket(AF_NETLINK, SOCK_RAW, NETLINK_TEST);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (skfd == <span class="number">-1</span>)</span><br><span class="line">    {</span><br><span class="line">        perror(<span class="string">"create socket error\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;saddr, <span class="number">0</span>, <span class="keyword">sizeof</span>(saddr));</span><br><span class="line">    saddr.nl_family = AF_NETLINK; <span class="comment">// AF_NETLINK    </span></span><br><span class="line">    saddr.nl_pid = <span class="number">100</span>;  <span class="comment">//端口号(port ID)     </span></span><br><span class="line">    saddr.nl_groups = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(bind(skfd, (<span class="keyword">struct</span> sockaddr *)&amp;saddr, <span class="keyword">sizeof</span>(saddr)) != <span class="number">0</span>)    </span><br><span class="line">    {       </span><br><span class="line">        perror(<span class="string">"bind() error\n"</span>);</span><br><span class="line">        close(skfd);       </span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;daddr, <span class="number">0</span>, <span class="keyword">sizeof</span>(daddr));</span><br><span class="line">    daddr.nl_family = AF_NETLINK;</span><br><span class="line">    daddr.nl_pid = <span class="number">0</span>; <span class="comment">// to kernel     </span></span><br><span class="line">    daddr.nl_groups = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    nlh = (<span class="keyword">struct</span> nlmsghdr *)<span class="built_in">malloc</span>(NLMSG_SPACE(MAX_PLOAD));</span><br><span class="line">    <span class="built_in">memset</span>(nlh, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> nlmsghdr));</span><br><span class="line">    nlh-&gt;nlmsg_len = NLMSG_SPACE(MAX_PLOAD);</span><br><span class="line">    nlh-&gt;nlmsg_flags = <span class="number">0</span>;</span><br><span class="line">    nlh-&gt;nlmsg_type = <span class="number">0</span>;</span><br><span class="line">    nlh-&gt;nlmsg_seq = <span class="number">0</span>;</span><br><span class="line">    nlh-&gt;nlmsg_pid = saddr.nl_pid; <span class="comment">// self port</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="built_in">memcpy</span>(NLMSG_DATA(nlh), umsg, <span class="built_in">strlen</span>(umsg));</span><br><span class="line">    <span class="comment">// ret = sendto(skfd, nlh, nlh-&gt;nlmsg_len, 0, (struct sockaddr *)&amp;daddr, sizeof(struct sockaddr_nl));</span></span><br><span class="line"></span><br><span class="line">    msg.msg_iov = &amp;iov;</span><br><span class="line">    msg.msg_iovlen = <span class="number">1</span>;</span><br><span class="line">    iov.iov_base = nlh;</span><br><span class="line">    iov.iov_len = NLMSG_SPACE(MAX_PLOAD);</span><br><span class="line">    ret = sendmsg(skfd, &amp;msg, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (!ret)</span><br><span class="line">    {</span><br><span class="line">        perror(<span class="string">"sendto error\n"</span>);</span><br><span class="line">        close(skfd);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// printf("send kernel:%s\n", umsg);</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"send kernel:%s\n"</span>, (<span class="type">char</span> *)NLMSG_DATA(nlh));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// method 1 --&gt; recvfrom</span></span><br><span class="line">    <span class="comment">// memset(&amp;u_info, 0, sizeof(u_info));</span></span><br><span class="line">    <span class="comment">// len = sizeof(struct sockaddr_nl);</span></span><br><span class="line">    <span class="comment">// ret = recvfrom(skfd, &amp;u_info, sizeof(user_msg_info), 0, (struct sockaddr *)&amp;daddr, &amp;len);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// method 2 --&gt; recvmsg</span></span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">1024</span>] = {<span class="number">0</span>};</span><br><span class="line">    nlh = (<span class="keyword">struct</span> nlmsghdr *)buffer;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;msg, <span class="number">0</span>, <span class="keyword">sizeof</span>(msg));</span><br><span class="line">    msg.msg_name = &amp;saddr; <span class="comment">//(optional)</span></span><br><span class="line">    msg.msg_namelen = <span class="keyword">sizeof</span>(saddr); <span class="comment">//(optional)</span></span><br><span class="line">    msg.msg_iov = &amp;iov;</span><br><span class="line">    msg.msg_iovlen = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    iov.iov_base = nlh;</span><br><span class="line">    iov.iov_len = <span class="keyword">sizeof</span>(buffer);</span><br><span class="line">    ret = recvmsg(skfd, &amp;msg, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!ret)</span><br><span class="line">    {</span><br><span class="line">        perror(<span class="string">"recv form kernel error\n"</span>);</span><br><span class="line">        close(skfd);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// printf("from kernel:%s\n", u_info.msg);</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"from kernel:%s\n"</span>, (<span class="type">char</span> *)NLMSG_DATA(nlh));</span><br><span class="line">    close(skfd);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>(2) Netlink 内核模块代码</strong></p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/init.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/module.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;net/sock.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/netlink.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NETLINK_TEST 30 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MSG_LEN 125 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> USER_PORT 100</span></span><br><span class="line"></span><br><span class="line">MODULE_LICENSE(<span class="string">"GPL"</span>);</span><br><span class="line">MODULE_AUTHOR(<span class="string">"henry"</span>);</span><br><span class="line">MODULE_DESCRIPTION(<span class="string">"netlink example"</span>);</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sock</span> *<span class="title">nlsk</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="class"><span class="keyword">struct</span> <span class="title">net</span> <span class="title">init_net</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">send_usrmsg</span><span class="params">(<span class="type">char</span> *pbuf, <span class="type">uint16_t</span> len)</span></span><br><span class="line">{</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span> *<span class="title">nl_skb</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span>;</span></span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 创建sk_buff 空间 */</span> </span><br><span class="line">    nl_skb = nlmsg_new(len, GFP_ATOMIC);</span><br><span class="line">    <span class="keyword">if</span> (!nl_skb)</span><br><span class="line">    {</span><br><span class="line">        printk(<span class="string">"netlink alloc failure\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 设置netlink消息头部 */</span> </span><br><span class="line">    nlh = nlmsg_put(nl_skb, <span class="number">0</span>, <span class="number">0</span>, NETLINK_TEST, len, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (nlh == <span class="literal">NULL</span>)</span><br><span class="line">    {</span><br><span class="line">        printk(<span class="string">"nlmsg_put failaure \n"</span>);</span><br><span class="line">        nlmsg_free(nl_skb);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 拷贝数据发送 */</span> </span><br><span class="line">    <span class="built_in">memcpy</span>(nlmsg_data(nlh), pbuf, len);</span><br><span class="line">    ret = netlink_unicast(nlsk, nl_skb, USER_PORT, MSG_DONTWAIT);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">netlink_rcv_msg</span><span class="params">(<span class="keyword">struct</span> sk_buff *skb)</span></span><br><span class="line">{</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">char</span> *umsg = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">char</span> *kmsg = <span class="string">"hello users!!!"</span>;</span><br><span class="line">    <span class="keyword">if</span> (skb-&gt;len &gt;= nlmsg_total_size(<span class="number">0</span>))</span><br><span class="line">    {</span><br><span class="line">        nlh = nlmsg_hdr(skb);</span><br><span class="line">        umsg = NLMSG_DATA(nlh);</span><br><span class="line">        <span class="keyword">if</span> (umsg)</span><br><span class="line">        {</span><br><span class="line">            printk(<span class="string">"kernel recv from user: %s\n"</span>, umsg);</span><br><span class="line">            send_usrmsg(kmsg, <span class="built_in">strlen</span>(kmsg));</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">netlink_kernel_cfg</span> <span class="title">cfg</span> =</span> {.input = netlink_rcv_msg, <span class="comment">/* set recv callback */</span>};</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">test_netlink_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{ </span><br><span class="line">    <span class="comment">/* create netlink socket */</span></span><br><span class="line">    nlsk = (<span class="keyword">struct</span> sock *)netlink_kernel_create(&amp;init_net, NETLINK_TEST, &amp;cfg);</span><br><span class="line">    <span class="keyword">if</span> (nlsk == <span class="literal">NULL</span>)</span><br><span class="line">    {</span><br><span class="line">        printk(<span class="string">"netlink_kernel_create error !\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    }</span><br><span class="line">    printk(<span class="string">"test_netlink_init\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">test_netlink_exit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{</span><br><span class="line">    <span class="keyword">if</span> (nlsk)</span><br><span class="line">    {</span><br><span class="line">        netlink_kernel_release(nlsk); <span class="comment">/* release ..*/</span></span><br><span class="line">        nlsk = <span class="literal">NULL</span>;</span><br><span class="line">    }</span><br><span class="line">    printk(<span class="string">"test_netlink_exit!\n"</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">module_init(test_netlink_init);</span><br><span class="line">module_exit(test_netlink_exit);</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>（3）Makefile</strong></p>
+<div class="highlight-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#Desgin of Netlink</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">MODULE_NAME := netlink_test</span><br><span class="line">obj-m :=<span class="variable">$(MODULE_NAME)</span>.o</span><br><span class="line"></span><br><span class="line">KERNELDIR ?= /lib/modules/<span class="variable">$(<span class="built_in">shell</span> uname -r)</span>/build</span><br><span class="line">PWD := <span class="variable">$(<span class="built_in">shell</span> pwd)</span></span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	<span class="variable">$(MAKE)</span> -C <span class="variable">$(KERNELDIR)</span> M=<span class="variable">$(PWD)</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	<span class="variable">$(MAKE)</span> -C <span class="variable">$(KERNELDIR)</span> M=<span class="variable">$(PWD)</span> clean</span><br></pre></td></tr></table></figure></div>
+
+<p>目录结构：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">test-&gt;</span><br><span class="line">	test.c</span><br><span class="line">	test_netlink-&gt;</span><br><span class="line">		netlink_test.c</span><br><span class="line">		Makefile</span><br></pre></td></tr></table></figure></div>
+
+<p>确保有以上三个文件之后执行如下命令：</p>
+<div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">test</span>/test_netlink$ make</span><br><span class="line"><span class="built_in">test</span>/test_netlink$ sudo insmod netlink_test.ko</span><br><span class="line"><span class="built_in">test</span>$ gcc -g test.c</span><br><span class="line"><span class="built_in">test</span>$ ./a.out</span><br><span class="line">send kernel:hello netlink!!</span><br><span class="line">from kernel:hello <span class="built_in">users</span>!!!</span><br><span class="line">/test$ sudo dmesg | grep netlink</span><br><span class="line">[   17.766945] Initializing XFRM netlink socket</span><br><span class="line">[41855.787147] netlink_test: loading out-of-tree module taints kernel.</span><br><span class="line">[41855.787473] netlink_test: module verification failed: signature and/or required key missing - tainting kernel</span><br><span class="line">[41855.802213] test_netlink_init</span><br><span class="line">[41971.242423] kernel recv from user: hello netlink!!</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="五、Poc-and-Exploitation"><a href="#五、Poc-and-Exploitation" class="headerlink" title="五、Poc and Exploitation"></a>五、Poc and Exploitation</h2><p>Reference：<a class="link" target="_blank" rel="noopener" href="https://i.blackhat.com/Asia-24/Presentations/Asia-24-Ma-LinkDoor-A-Hidden-Attack.pdf">https://i.blackhat.com/Asia-24/Presentations/Asia-24-Ma-LinkDoor-A-Hidden-Attack.pdf <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="PoC-of-Classic-Netlink"><a href="#PoC-of-Classic-Netlink" class="headerlink" title="PoC of Classic Netlink"></a>PoC of Classic Netlink</h3><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">int</span> skfd;</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    <span class="type">socklen_t</span> len;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span>=</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> <span class="title">saddr</span>, <span class="title">daddr</span>;</span></span><br><span class="line">    <span class="type">uint32_t</span> nlh_size = <span class="number">0</span>;</span><br><span class="line">    <span class="type">char</span> payload[PAYLOAD_SIZE] = {<span class="number">0</span>};</span><br><span class="line">    <span class="type">char</span> receive[RECEIVE_SIZE] = {<span class="number">0</span>};</span><br><span class="line"></span><br><span class="line">    skfd = Socket(AF_NETLINK, SOCK_RAW, NETLINK_ID);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;saddr, <span class="number">0</span>, <span class="keyword">sizeof</span>(saddr));</span><br><span class="line">    saddr.nl_family=AF_NETLINK;<span class="comment">//AF_NETLINK</span></span><br><span class="line">    saddr.nl_pid = NETLINK_PID; <span class="comment">// port ID</span></span><br><span class="line">    saddr.nl_groups =<span class="number">0</span>;</span><br><span class="line">    ret = bind(skfd, (<span class="keyword">struct</span> sockaddr *)&amp;saddr, <span class="keyword">sizeof</span>(saddr))</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;daddr, <span class="number">0</span>, <span class="keyword">sizeof</span>(daddr));</span><br><span class="line">    daddr.nl_family-AF_NETLINK;</span><br><span class="line">    daddr.nl_pid = <span class="number">0</span>; <span class="comment">//to kernel</span></span><br><span class="line">    daddr.nl_groups = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    nlh_size = NLMSG_SPACE(PAYLOAD_SIZE);</span><br><span class="line">    nlh = (<span class="keyword">struct</span> nlmsghdr *)<span class="built_in">malloc</span>(nlh_size);</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(nlh, <span class="number">0</span>, nlh_size);</span><br><span class="line">    <span class="comment">/* fill in struct nlmsghdr */</span></span><br><span class="line">    nlh-&gt;nlmsg_len = nlh_size;</span><br><span class="line">    nlh-&gt;nlmsg_type = <span class="number">0</span>;</span><br><span class="line">    nlh-&gt;nlmsg_flags=<span class="number">0</span>;</span><br><span class="line">    nlh-&gt;nlmsg_seq =<span class="number">0</span>;</span><br><span class="line">    nlh-&gt;nlmsg_pid = saddr.nl_pid; <span class="comment">// self port</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* fill in payload */</span></span><br><span class="line">    <span class="built_in">memcpy</span>(NLMSG_DATA(nlh), payload, PAYLOAD_SIZE);</span><br><span class="line">    ret = sendto(skfd, nlh, nlh-&gt;nlmsg_len, <span class="number">0</span>, (<span class="keyword">struct</span> sockaddr *)&amp;daddr, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_nl));</span><br><span class="line">    ...</span><br><span class="line">    ret = recvfrom(skfd, receive, RECEIVE_SIZE, <span class="number">0</span>, (<span class="keyword">struct</span> sockaddr *)&amp;daddr, &amp;len);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="PoC-of-Generic-Netlink"><a href="#PoC-of-Generic-Netlink" class="headerlink" title="PoC of Generic Netlink"></a>PoC of Generic Netlink</h3><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">genl_send_msg</span><span class="params">(<span class="type">int</span> sock_fd, <span class="type">u_int16_t</span> family_id, <span class="type">u_int32_t</span> nlmsg_pid, </span></span><br><span class="line"><span class="params">                  <span class="type">u_int8_t</span> genl_cmd, <span class="type">u_int8_t</span> genl_version, </span></span><br><span class="line"><span class="params">                  <span class="type">u_int16_t</span> nla_type, <span class="type">void</span> *nla_data, <span class="type">int</span> nla_len)</span></span><br><span class="line">{</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlattr</span> *<span class="title">na</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> <span class="title">dst_addr</span>;</span></span><br><span class="line">    <span class="type">int</span> r, buflen;</span><br><span class="line">    <span class="type">char</span> *buf;</span><br><span class="line">    <span class="type">msgtemplate_t</span> msg;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;dst_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(dst_addr));</span><br><span class="line">    dst_addr.nl_family = AF_NETLINK;</span><br><span class="line">    dst_addr.nl_groups = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    msg.nhl.nlmsg_len = NLMSG_LENGTH(GENL_HDRLEN);</span><br><span class="line">    msg.nhl.nlmsg_type = family_id;</span><br><span class="line">    msg.nhl.nlmsg_flags = NLM_F_REQUEST;</span><br><span class="line">    msg.nhl.nlmsg_seq = <span class="number">0</span>;</span><br><span class="line">    msg.nhl.nlmsg_pid = nlmsg_pid;</span><br><span class="line">    msg.gnhl.cmd = genl_cmd;</span><br><span class="line">    msg.gnhl.version = genl_version;</span><br><span class="line">    na = (<span class="keyword">struct</span> nlattr *) GENLMSG_DATA(&amp;msg);</span><br><span class="line">    na-&gt;nla_type = nla_type;</span><br><span class="line">    na-&gt;nla_len = nla_len + NLA_HDRLEN;</span><br><span class="line">    <span class="built_in">memcpy</span>(NLA_DATA(na), nla_data, nla_len);</span><br><span class="line"></span><br><span class="line">    msg.nhl.nlmsg_len = NLMSG_ALIGN(na-&gt;nla_len);</span><br><span class="line">    buf = (<span class="type">char</span> *) &amp;msg;</span><br><span class="line">    buflen = msg.nhl.nlmsg_len;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> ((r = sendto(sock_fd, buf, buflen, <span class="number">0</span>, (<span class="keyword">struct</span> sockaddr *) &amp;dst_addr, <span class="keyword">sizeof</span>(dst_addr))) &lt; buflen) {</span><br><span class="line">        <span class="keyword">if</span> (r &gt; <span class="number">0</span>) {</span><br><span class="line">            buf += r;</span><br><span class="line">            buflen -= r;</span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (errno != EAGAIN) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">genl_get_family_id</span><span class="params">(<span class="type">int</span> sock_fd, <span class="type">char</span> *family_name)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">msgtemplate_t</span> ans;</span><br><span class="line">    <span class="type">int</span> id, rc;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlattr</span> *<span class="title">na</span>;</span></span><br><span class="line">    <span class="type">int</span> rep_len;</span><br><span class="line"></span><br><span class="line">    rc = genl_send_msg(sock_fd, GENL_ID_CTRL, <span class="number">0</span>, CTRL_CMD_GETFAMILY, <span class="number">1</span>, CTRL_ATTR_FAMILY_NAME, (<span class="type">void</span> *)family_name, <span class="built_in">strlen</span>(family_name) + <span class="number">1</span>);</span><br><span class="line">    rep_len = recv(sock_fd, &amp;ans, <span class="keyword">sizeof</span>(ans), <span class="number">0</span>);</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    na = (<span class="keyword">struct</span> nlattr *) GENLMSG_DATA(&amp;ans);</span><br><span class="line">    na = (<span class="keyword">struct</span> nlattr *) ((<span class="type">char</span> *) na + NLA_ALIGN(na-&gt;nla_len));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (na-&gt;nla_type == CTRL_ATTR_FAMILY_ID) {</span><br><span class="line">        id = *(__u16 *) NLA_DATA(na);</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        id = <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> id;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">genl_rcv_msg</span><span class="params">(<span class="type">int</span> family_id, <span class="type">int</span> sock_fd, <span class="type">char</span> *buf)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">int</span> ret;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">msgtemplate</span> <span class="title">msg</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlattr</span> *<span class="title">na</span>;</span></span><br><span class="line"></span><br><span class="line">    ret = recv(sock_fd, &amp;msg, <span class="keyword">sizeof</span>(msg), <span class="number">0</span>);</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (msg.nhl.nlmsg_type == family_id &amp;&amp; family_id != <span class="number">0</span>) {</span><br><span class="line">        na = (<span class="keyword">struct</span> nlattr *) GENLMSG_DATA(&amp;msg);</span><br><span class="line">        <span class="built_in">strncpy</span>(buf, (<span class="type">char</span> *) NLA_DATA(na), MAX_MSG_SIZE);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> </span><br><span class="line">{</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> <span class="title">src_addr</span>, <span class="title">dest_addr</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> *<span class="title">nlh</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">int</span> sock_fd, retval;</span><br><span class="line">    <span class="type">int</span> family_id = <span class="number">0</span>;</span><br><span class="line">    <span class="type">char</span> *attr_payload = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    sock_fd = Socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;src_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(src_addr));</span><br><span class="line">    src_addr.nl_family = AF_NETLINK;</span><br><span class="line">    src_addr.nl_pid = NETLINK_PID;</span><br><span class="line">    src_addr.nl_groups = <span class="number">0</span>;</span><br><span class="line">    retval = bind(sock_fd, (<span class="keyword">struct</span> sockaddr *)&amp;src_addr, <span class="keyword">sizeof</span>(src_addr));</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    family_id = genl_get_family_id(sock_fd, GENL_FAMILY_NAME);</span><br><span class="line"></span><br><span class="line">    attr_payload = (<span class="type">char</span> *)<span class="built_in">malloc</span>(MAx_MSG_SIZE);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(attr_payload, O, MAX_MSG_SIZE);</span><br><span class="line">    *(<span class="type">int32_t</span> *)attr_payload = Oxff;</span><br><span class="line">    retval = genl_send_msg(sock_fd, family_id, NETLINK_PID, GENL_CMD, GENL_VERSION,</span><br><span class="line">                        ATTR_TYPE, (<span class="type">void</span> *)attr_payload, <span class="keyword">sizeof</span>(<span class="type">int32_t</span>));</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">memset</span>(attr_payload, O, MAX_MSG_SIZE);</span><br><span class="line">    genl_rcv_msg(family_id, sock_fd, attr_payload);</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> Netlink Basic Knowledge</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2025-02-10 21:14:23</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-02-10 21:24:10
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2025/02/10/netlink/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/netlink/">#netlink</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2024/12/17/codeql_note_p4/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">codeql_zero_to_hero part4学习</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Netlink Basic Knowledge</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-text">一、基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-recv-%E7%9B%B8%E5%85%B3"><span class="nav-text">1. recv 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-send-%E7%9B%B8%E5%85%B3"><span class="nav-text">2. send 相关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Netlink-%E6%9E%B6%E6%9E%84"><span class="nav-text">二、Netlink 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kernel-mechanism-of-Classic-Netlink"><span class="nav-text">Kernel mechanism of Classic Netlink</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kernel-mechanism-of-Generic-Netlink"><span class="nav-text">Kernel mechanism of Generic Netlink</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Netlink%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-text">三、Netlink基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Netlink-%E5%8D%8F%E8%AE%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">Netlink 协议类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netlink-%E7%94%A8%E6%88%B7%E6%80%81"><span class="nav-text">Netlink 用户态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netlink-%E5%86%85%E6%A0%B8%E6%80%81"><span class="nav-text">Netlink 内核态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Netlink-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-text">四、Netlink 使用示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Poc-and-Exploitation"><span class="nav-text">五、Poc and Exploitation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PoC-of-Classic-Netlink"><span class="nav-text">PoC of Classic Netlink</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PoC-of-Generic-Netlink"><span class="nav-text">PoC of Generic Netlink</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
