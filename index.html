@@ -1,1842 +1,297 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="Hexo Theme Redefine">
-    
-    <meta name="author" content="henry">
-    <!-- preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henry Martin</title>
+<script>
+  (function () {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  :root {
+    --bg: #ffffff; --bg-soft: #f8fafc; --text: #1f2937; --text-2: #4b5563; --text-3: #6b7280;
+    --border: #e5e7eb; --accent: #2563eb; --accent-bg: rgba(37,99,235,.08); --accent-bd: rgba(37,99,235,.2);
+    --card-hover: #f8fafc;
+  }
+  [data-theme="dark"] {
+    --bg: #0f172a; --bg-soft: #1e293b; --text: #e2e8f0; --text-2: #cbd5e1; --text-3: #94a3b8;
+    --border: #334155; --accent: #60a5fa; --accent-bg: rgba(59,130,246,.15); --accent-bd: rgba(59,130,246,.3);
+    --card-hover: #1e293b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.65; font-size: 16px;
+    transition: background .2s, color .2s;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-    
-    <!--- Seo Part-->
-    
-    <link rel="canonical" href="http://example.com/"/>
-    <meta name="robots" content="index,follow">
-    <meta name="googlebot" content="index,follow">
-    <meta name="revisit-after" content="1 days">
-    
-        <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-    
-    
-    <!--- Icon Part-->
-    <link rel="icon" type="image/png" href="/images/icon.png" sizes="192x192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
-    <meta name="theme-color" content="#A31F34">
-    <link rel="shortcut icon" href="/images/icon.png">
-    <!--- Page Info-->
-    
-    <title>
-        
-        Henry Martin
-    </title>
-    
-<link rel="stylesheet" href="/css/style.css">
+  /* 顶部导航 */
+  .nav { border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
+  .nav-inner { max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 28px; }
+  .nav .brand { white-space: nowrap; font-weight: 700; font-size: 18px; color: var(--text); margin-right: auto; }
+  .nav a.item { color: var(--text-2); font-size: 15px; }
+  .nav a.item:hover { color: var(--accent); text-decoration: none; }
+  .toggle { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; color: var(--text-2); font-size: 14px; }
 
+  /* 两栏布局 */
+  .layout { max-width: 1100px; margin: 0 auto; padding: 40px 24px 64px; display: grid; grid-template-columns: 220px 1fr; gap: 56px; }
+  .sidebar { position: sticky; top: 90px; align-self: start; }
+  .avatar { width: 160px; height: 160px; border-radius: 50%; background: url(/images/henry.png) center / cover; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+  .sidebar h3 { font-size: 22px; margin: 16px 0 2px; }
+  .sidebar .bio { color: var(--text-3); font-size: 15px; margin-bottom: 16px; }
+  .sidebar ul { list-style: none; font-size: 14.5px; }
+  .sidebar li { margin: 7px 0; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+  .sidebar li svg { width: 16px; height: 16px; flex-shrink: 0; fill: currentColor; opacity: .75; }
+  .sidebar li a { color: var(--text-2); }
+  .sidebar li a:hover { color: var(--accent); }
 
-    
-        
-<link rel="stylesheet" href="/assets/build/styles.css">
+  /* 正文 */
+  main h2 { font-size: 24px; font-weight: 700; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  main section + section { margin-top: 44px; }
+  main p { color: var(--text-2); margin-bottom: 12px; }
+  main strong { color: var(--text); }
+  .highlight { background: var(--accent-bg); border-left: 4px solid var(--accent); border-radius: 6px; padding: 14px 18px; margin: 16px 0; }
+  .highlight p { margin: 0; }
+  main h3 { font-size: 18px; margin: 22px 0 8px; }
 
-    
+  /* 文章卡片（仿论文卡片） */
+  .card { display: grid; grid-template-columns: 130px 1fr; gap: 20px; padding: 16px 12px; margin: 0 -12px; border-radius: 10px; border-left: 4px solid transparent; transition: all .2s; }
+  .card:hover { background: var(--card-hover); border-left-color: var(--accent); }
+  .badge { align-self: start; justify-self: start; color: var(--accent); background: var(--accent-bg); border: 1px solid var(--accent-bd); font-weight: 600; font-size: 13px; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+  .card .title { font-weight: 600; color: var(--text); font-size: 16.5px; line-height: 1.35; }
+  .card .desc { color: var(--text-3); font-size: 14.5px; margin: 4px 0 8px; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 12.5px; color: var(--text-2); border: 1px solid var(--border); border-radius: 6px; padding: 1px 8px; }
+  .more { margin-top: 14px; font-size: 15px; }
 
-    
-<link rel="stylesheet" href="/fonts/fonts.css">
+  /* 外链文字包在 <span> 里，避免 Redefine 的 linkHandle 过滤器改写纯文本外链；头像用背景图同理避开 lazyload 过滤器 */
+  /* CVE 墙 */
+  .cve-year { display: grid; grid-template-columns: 56px 1fr; gap: 14px; margin-bottom: 14px; }
+  .cve-y { font-weight: 700; color: var(--text-3); font-size: 15px; padding-top: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips a { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; color: var(--text-2); border: 1px solid var(--border); background: var(--bg-soft); border-radius: 6px; padding: 3px 10px; transition: all .15s; }
+  .chips a:hover { color: var(--accent); border-color: var(--accent-bd); background: var(--accent-bg); text-decoration: none; }
 
-    
-<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+  /* 获奖 */
+  .award { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--border); }
+  .award:last-child { border-bottom: none; }
+  .award .y { font-weight: 700; color: var(--text-3); font-size: 15px; }
+  .award .name { color: var(--text); font-weight: 600; }
+  .award .name em { font-style: normal; font-weight: 400; color: var(--text-2); }
+  .prize { color: #059669; background: rgba(5,150,105,.08); border: 1px solid rgba(5,150,105,.25); font-weight: 600; font-size: 13px; padding: 3px 12px; border-radius: 20px; white-space: nowrap; }
+  [data-theme="dark"] .prize { color: #34d399; background: rgba(52,211,153,.12); border-color: rgba(52,211,153,.3); }
 
-    
-<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+  .rank { color: #b45309; background: rgba(217,119,6,.08); border: 1px solid rgba(217,119,6,.28); font-weight: 600; font-size: 13px; padding: 3px 12px; border-radius: 20px; white-space: nowrap; }
+  [data-theme="dark"] .rank { color: #fbbf24; background: rgba(251,191,36,.12); border-color: rgba(251,191,36,.3); }
+  .sub { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); margin: 18px 0 2px; }
+  .sub:first-of-type { margin-top: 0; }
+  .exp { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; padding: 12px 0; }
+  .exp + .exp { border-top: 1px dashed var(--border); }
+  .logo { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: #fff; }
+  .exp .org { font-weight: 600; color: var(--text); }
+  .exp .org em { font-style: normal; font-weight: 400; color: var(--text-3); }
+  .exp .role { font-size: 14.5px; color: var(--text-2); }
 
-    <!--- Font Part-->
-    
-    
-    
-    
+  footer { max-width: 1100px; margin: 0 auto; padding: 20px 24px 40px; color: var(--text-3); font-size: 13px; border-top: 1px solid var(--border); }
 
-    <!--- Inject Part-->
-    
-    <script id="hexo-configurations">
-    window.config = {"hostname":"example.com","root":"/","language":"en"};
-    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
-    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
-    window.data = {"masonry":false};
-  </script>
-    
-    <!--- Fontawesome Part-->
-    
-<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
-
-    
-<link rel="stylesheet" href="/fontawesome/brands.min.css">
-
-    
-<link rel="stylesheet" href="/fontawesome/solid.min.css">
-
-    
-<link rel="stylesheet" href="/fontawesome/regular.min.css">
-
-    
-    
-    
-    
-<meta name="generator" content="Hexo 7.0.0"><style>mjx-container[jax="SVG"] {
-  direction: ltr;
-}
-
-mjx-container[jax="SVG"] > svg {
-  overflow: visible;
-}
-
-mjx-container[jax="SVG"][display="true"] {
-  display: block;
-  text-align: center;
-  margin: 1em 0;
-}
-
-mjx-container[jax="SVG"][justify="left"] {
-  text-align: left;
-}
-
-mjx-container[jax="SVG"][justify="right"] {
-  text-align: right;
-}
-
-g[data-mml-node="merror"] > g {
-  fill: red;
-  stroke: red;
-}
-
-g[data-mml-node="merror"] > rect[data-background] {
-  fill: yellow;
-  stroke: none;
-}
-
-g[data-mml-node="mtable"] > line[data-line] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > rect[data-frame] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > .mjx-dashed {
-  stroke-dasharray: 140;
-}
-
-g[data-mml-node="mtable"] > .mjx-dotted {
-  stroke-linecap: round;
-  stroke-dasharray: 0,140;
-}
-
-g[data-mml-node="mtable"] > svg {
-  overflow: visible;
-}
-
-[jax="SVG"] mjx-tool {
-  display: inline-block;
-  position: relative;
-  width: 0;
-  height: 0;
-}
-
-[jax="SVG"] mjx-tool > mjx-tip {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-mjx-tool > mjx-tip {
-  display: inline-block;
-  padding: .2em;
-  border: 1px solid #888;
-  font-size: 70%;
-  background-color: #F8F8F8;
-  color: black;
-  box-shadow: 2px 2px 5px #AAAAAA;
-}
-
-g[data-mml-node="maction"][data-toggle] {
-  cursor: pointer;
-}
-
-mjx-status {
-  display: block;
-  position: fixed;
-  left: 1em;
-  bottom: 1em;
-  min-width: 25%;
-  padding: .2em .4em;
-  border: 1px solid #888;
-  font-size: 90%;
-  background-color: #F8F8F8;
-  color: black;
-}
-
-foreignObject[data-mjx-xml] {
-  font-family: initial;
-  line-height: normal;
-  overflow: visible;
-}
-
-.MathJax path {
-  stroke-width: 3;
-}
-
-mjx-container[display="true"] {
-  overflow: auto hidden;
-}
-
-mjx-container[display="true"] + br {
-  display: none;
-}
-</style></head>
-
-
+  @media (max-width: 760px) {
+    .award { grid-template-columns: 44px 1fr; }
+    .award .prize { grid-column: 2; justify-self: start; }
+    .cve-year { grid-template-columns: 1fr; gap: 6px; }
+    .layout { grid-template-columns: 1fr; gap: 28px; padding-top: 28px; }
+    .sidebar { position: static; display: grid; grid-template-columns: 96px 1fr; gap: 0 18px; align-items: center; }
+    .avatar { width: 96px; height: 96px; grid-row: span 2; }
+    .sidebar h3 { margin-top: 0; }
+    .sidebar ul { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 12px; }
+    .card { grid-template-columns: 1fr; gap: 8px; }
+    .nav-inner { gap: 16px; }
+  }
+</style>
+</head>
 <body>
-<div class="progress-bar-container">
-    
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">Henry Martin</a>
+    <a class="item" href="/blog/">Blog</a>
+    <a class="item" href="/archives/">Archives</a>
+    <a class="item" href="/categories/">Categories</a>
+    <button class="toggle" id="toggle" aria-label="切换主题">◐</button>
+  </div>
+</nav>
 
-    
-        <span class="pjax-progress-bar"></span>
-        <span class="swup-progress-icon">
-            <i class="fa-solid fa-circle-notch fa-spin"></i>
-        </span>
-    
-</div>
-
-
-<main class="page-container" id="swup">
-
-    
-        
-    <style>
-        .home-banner-container {
-            background: transparent !important;
-        }
-
-        .home-article-item,
-        .sidebar-links,
-        .sidebar-content,
-        a.page-number,
-        a.extend,
-        .sidebar-links .links:hover,
-        .right-bottom-tools,
-        footer.footer {
-            background-color: var(--background-color-transparent-80) !important;
-        }
-
-        .right-bottom-tools:hover,
-        a.page-number:hover,
-        a.extend:hover {
-            background-color: var(--primary-color) !important;
-        }
-
-        .site-info,
-        .home-article-sticky-label {
-            background-color: var(--background-color-transparent-15) !important;
-        }
-
-        .home-article-sticky-label {
-            backdrop-filter: none !important;
-        }
-    </style>
-
-    <div class="home-banner-background transition-fade">
+<div class="layout">
+  <aside class="sidebar">
+    <div class="avatar" role="img" aria-label="Henry Martin"></div>
+    <div>
+      <h3>Henry Martin</h3>
+      <div class="bio">Kernel &amp; Blockchain Security</div>
     </div>
-
-
-<div class="home-banner-container flex justify-center items-center transition-fade">
-    <div class="content flex justify-center items-center">
-        <div class="description flex flex-col justify-center items-center"
-        
-        >
-            Welcome To Henry's Blog
-            
-            
-                <p><i id="subtitle"></i></p>
-            
-        </div>
-        
-            <div class="social-contacts">
-                
-                    
-                        
-                            <span class="social-contact-item github">
-                                <a target="_blank" href="https://github.com/henrymartin262">
-                                    <i class="fa-brands fa-github"></i>
-                                </a>
-                            </span>
-                        
-                    
-                
-                    
-                        
-                            <span class="social-contact-item instagram">
-                                <a target="_blank" href="https://instagram.com">
-                                    <i class="fa-brands fa-instagram"></i>
-                                </a>
-                            </span>
-                        
-                    
-                
-                    
-                        
-                            <span class="social-contact-item zhihu">
-                                <a target="_blank" href="https://www.zhihu.com/">
-                                    <i class="fa-brands fa-zhihu"></i>
-                                </a>
-                            </span>
-                        
-                    
-                
-                    
-                        
-                            <span class="social-contact-item twitter">
-                                <a target="_blank" href="https://twitter.com">
-                                    <i class="fa-brands fa-twitter"></i>
-                                </a>
-                            </span>
-                        
-                    
-                
-                    
-                        
-                            <span class="social-contact-item email">
-                                <a href="mailto:1551022913@qq.cmo">
-                                    <i class="fa-solid fa-envelope"></i>
-                                </a>
-                            </span>
-                        
-                    
-                
-                
-                    
-                        
-                    
-                
-            </div>
-        
-    </div>
-</div>
-
-
-
-    
-
-    <div class="main-content-container">
-
-
-        <div class="main-content-header">
-            <header class="navbar-container">
-    
-    <div class="navbar-content has-home-banner">
-        <div class="left">
-            
-            <a class="logo-title" href="/">
-                <h1>
-                Henry Martin
-                </h1>
-            </a>
-        </div>
-
-        <div class="right">
-            <!-- PC -->
-            <div class="desktop">
-                <ul class="navbar-list">
-                    
-                        
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class="active" 
-                                    href="/"  >
-                                    
-                                        
-                                            <i class="fa-regular fa-house"></i>
-                                        
-                                        HOME
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class="" 
-                                    href="/archives"  >
-                                    
-                                        
-                                            <i class="fa-regular fa-archive"></i>
-                                        
-                                        ARCHIVES
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class="" 
-                                    href="/categories/"  >
-                                    
-                                        
-                                            <i class="fa-regular fa-folder"></i>
-                                        
-                                        CATEGORIES
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class="" 
-                                    href="/tags"  >
-                                    
-                                        
-                                            <i class="fa-regular fa-tags"></i>
-                                        
-                                        TAGS
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                        
-                            <li class="navbar-item">
-                                <!-- Menu -->
-                                <a class="has-dropdown" 
-                                    href="#" onClick="return false;">
-                                    
-                                        
-                                            <i class="fa-regular fa-user"></i>
-                                        
-                                        ABOUT&nbsp;<i class="fa-solid fa-chevron-down"></i>
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                                    <ul class="sub-menu">
-                                    
-                                        <li>
-                                        <a href="/links/">LINKS
-                                        </a>
-                                        </li>
-                                    
-                                        <li>
-                                        <a target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB
-                                        </a>
-                                        </li>
-                                    
-                                        <li>
-                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
-                                        </a>
-                                        </li>
-                                    
-                                    </ul>
-                                
-                            </li>
-                    
-                    
-                </ul>
-            </div>
-            <!-- Mobile -->
-            <div class="mobile">
-                
-                <div class="icon-item navbar-bar">
-                    <div class="navbar-bar-middle"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile drawer -->
-    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
-        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
-            
-                
-                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group active" 
-                        href="/"  >
-                             
-                                
-                                    <i class="fa-regular fa-house"></i>
-                                
-                                HOME
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                    
-            
-                
-                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/archives"  >
-                             
-                                
-                                    <i class="fa-regular fa-archive"></i>
-                                
-                                ARCHIVES
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                    
-            
-                
-                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/categories/"  >
-                             
-                                
-                                    <i class="fa-regular fa-folder"></i>
-                                
-                                CATEGORIES
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                    
-            
-                
-                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
-                        href="/tags"  >
-                             
-                                
-                                    <i class="fa-regular fa-tags"></i>
-                                
-                                TAGS
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                    
-            
-                
-                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
-                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group has-dropdown" 
-                        href="#" onClick="return false;">
-                            
-                                
-                                    <i class="fa-regular fa-user"></i>
-                                
-                                ABOUT&nbsp;<i class="group-hover:rotate-180 transition-transform fa-solid fa-chevron-down"></i>
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                              
-                        
-                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
-                                <a class="py-0.5" href="/links/">LINKS</a>
-                            </li>
-                        
-                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
-                                <a class="py-0.5" target="_blank" rel="noopener" href="https://github.com/henrymartin262">GITHUB</a>
-                            </li>
-                        
-                            <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
-                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
-                            </li>
-                        
-                    
-            
-
-        </ul>
-    </div>
-
-    <div class="window-mask"></div>
-
-</header>
-
-
-        </div>
-
-        <div class="main-content-body">
-
-            
-                <div class="home-sidebar-container">
-    <div class="sticky-container sticky">
-        
-            
-                <div class="sidebar-links">
-                    <div class="site-info">
-                        <div class="site-name">Henry Martin</div>
-                        
-                    </div>
-                    
-                        
-                            
-                                <a class="links" href="/archives">
-                                    
-                                        <i class="fa-regular fa-archive icon-space"></i>
-                                    
-                                    <span class="link-name">Archives</span>
-                                </a>
-                            
-                        
-                            
-                                <a class="links" href="/tags">
-                                    
-                                        <i class="fa-regular fa-tags icon-space"></i>
-                                    
-                                    <span class="link-name">Tags</span>
-                                </a>
-                            
-                        
-                            
-                                <a class="links" href="/categories">
-                                    
-                                        <i class="fa-regular fa-folder icon-space"></i>
-                                    
-                                    <span class="link-name">Categories</span>
-                                </a>
-                            
-                        
-                    
-                </div>
-            
-            <div class="sidebar-content"  marginTop >
-                <div class="avatar flex justify-center">
-                    <img src="/images/henry.png">
-                </div>
-                <div class="author flex flex-col justify-center my-2.5 mx-0">
-                    <div class="name">henry</div>
-                    
-                        <div class="label">Lv4</div>
-                    
-                </div>
-                <div class="statistics">
-                    <a class="item" href="/tags">
-                        <div class="number">82</div>
-                        <div class="label">Tags</div>
-                    </a>
-                    <a class="item" href="/categories">
-                        <div class="number">36</div>
-                        <div class="label">Categories</div>
-                    </a>
-                    <a class="item" href="/archives">
-                        <div class="number">57</div>
-                        <div class="label">Posts</div>
-                    </a>
-                </div>
-            </div>
-        
-
-    </div>
-</div>
-
-            
-
-            <div class="main-content">
-
-                
-                    <div class="home-content-container">
-    <ul class="home-article-list">
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2026/01/30/ethereum_challenge2/">
-                            <img src="/images/Snipaste_2025-12-19_18-25-54.png" alt="ethernaut chall Part.II" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2026/01/30/ethereum_challenge2/">
-                            ethernaut chall Part.II
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            21. Shopview 状态限制
-Сan you get the item from the shop for less than the price asked?
-Things that might help:
-Shop expects to b...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Jan 30 2026 18:43:56 GMT+0800">
-                
-                    2026-01-30
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/blockchain/">blockchain</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/blockchain/security/">security</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/solidity/">solidity</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/ether/">ether</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/security/">security</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/01/30/ethereum_challenge2/">Read more<span class="seo-reader-text">ethernaut chall Part.II</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2026/01/29/ethereum_challenge/">
-                            <img src="/images/Snipaste_2024-08-20_14-14-04.png" alt="ethernaut chall Part.I" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2026/01/29/ethereum_challenge/">
-                            ethernaut chall Part.I
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            0. Hello Ethernaut进入界面，然后打开控制台见如下界面
-
-这道题主要是用来介绍如何使用控制台交互合约以及 MetaMask 交互，按提示可以一步一步完成。
-123456789await contract.info()await con...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Jan 29 2026 00:46:53 GMT+0800">
-                
-                    2026-01-29
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/blockchain/">blockchain</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/blockchain/security/">security</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/solidity/">solidity</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/ether/">ether</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/security/">security</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2026/01/29/ethereum_challenge/">Read more<span class="seo-reader-text">ethernaut chall Part.I</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2025/06/13/CVE-2025-21756/">
-                            <img src="/images/Snipaste_2025-06-12_15-33-19.png" alt="CVE-2025-21756 漏洞复现及利用" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2025/06/13/CVE-2025-21756/">
-                            CVE-2025-21756 漏洞复现及利用
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            CVE-2025-21756https://nvd.nist.gov/vuln/detail/CVE-2025-21756  为漏洞相关描述信息，该漏洞位于 vsock 模块下，原因为transport（实际执行数据传输逻辑的后端实现接口集）在重新分...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Jun 13 2025 11:46:57 GMT+0800">
-                
-                    2025-06-13
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/Linux/">Linux</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Linux/kernel/">kernel</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/linux-kernel/">linux kernel</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/vscok/">vscok</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/06/13/CVE-2025-21756/">Read more<span class="seo-reader-text">CVE-2025-21756 漏洞复现及利用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2025/05/28/Pixel_GPU_Exploit/">
-                            <img src="/images/Snipaste_2025-05-27_22-15-21.png" alt="Mali GPU CVE-2023-48409 分析利用" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2025/05/28/Pixel_GPU_Exploit/">
-                            Mali GPU CVE-2023-48409 分析利用
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            Mali GPU: CVE-2023-48409 分析利用1. Introduction这一部分利用实际上由两个漏洞组成，分别为
-CVE-2023-48409 ：负向溢出导致的越界写
-CVE-2023-26083 ：内存泄露，泄露内核指针
-2. Vu...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed May 28 2025 14:06:52 GMT+0800">
-                
-                    2025-05-28
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/Android/">Android</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel/">kernel</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel/gpu/">gpu</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/mali/">mali</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/android-gpu/">android gpu</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/pixel/">pixel</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/05/28/Pixel_GPU_Exploit/">Read more<span class="seo-reader-text">Mali GPU CVE-2023-48409 分析利用</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2025/05/19/CVE-2025-0282/">
-                            <img src="/images/Snipaste_2025-05-18_18-55-32.png" alt="CVE-2025-0282 复现与分析" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2025/05/19/CVE-2025-0282/">
-                            CVE-2025-0282 复现与分析
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            CVE-2025-0282 复现与分析CVE-2025-0282  是发生在 ivanti 服务器中的一个栈溢出漏洞，CVSS 评分为 9.0，一如既往地，环境搭建还是那么的抽象，在搭建好调试环境之后，漏洞利用就很快了，同时感谢 @blonet 师傅...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon May 19 2025 10:39:41 GMT+0800">
-                
-                    2025-05-19
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/IOT/">IOT</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/iot/">iot</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/ivanti/">ivanti</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/05/19/CVE-2025-0282/">Read more<span class="seo-reader-text">CVE-2025-0282 复现与分析</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2025/03/05/SSLVPN-CVE-2023-27997/">
-                            <img src="/images/Snipaste_2025-03-05_03-27-52.png" alt="Fortigate SSLVPN-CVE-2023-27997" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2025/03/05/SSLVPN-CVE-2023-27997/">
-                            Fortigate SSLVPN-CVE-2023-27997
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            Debug &amp; exploitfortigate 虚拟机的ip地址：192.168.127.133
-测试机（fortigate）booting the kernel的时候，立马回到调试机，执行target remote 192.168.127...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Mar 05 2025 14:49:15 GMT+0800">
-                
-                    2025-03-05
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/IOT/">IOT</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/iot/">iot</a>&nbsp;
-                        </li>
-                    
-                        <li>
-                            | 
-                            <a href="/tags/fortigate/">fortigate</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/03/05/SSLVPN-CVE-2023-27997/">Read more<span class="seo-reader-text">Fortigate SSLVPN-CVE-2023-27997</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2025/02/10/KSMA/">
-                            <img src="/images/Snipaste_2024-11-26_15-13-55.png" alt="KSMA - Kernel Space Mirroring Attack" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2025/02/10/KSMA/">
-                            KSMA - Kernel Space Mirroring Attack
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            Reference：
-blackhat：https://i.blackhat.com/briefings/asia/2018/asia-18-WANG-KSMA-Breaking-Android-kernel-isolation-and-Rootin...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Feb 10 2025 21:42:44 GMT+0800">
-                
-                    2025-02-10
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/Android/">Android</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel-attack/">kernel attack</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel-attack/KSMA/">KSMA</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/netlink/">netlink</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/02/10/KSMA/">Read more<span class="seo-reader-text">KSMA - Kernel Space Mirroring Attack</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2025/02/10/ebpf_study/">
-                            <img src="/images/Snipaste_2024-05-07_01-07-06.png" alt="ebpf Basic Knowledge" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2025/02/10/ebpf_study/">
-                            ebpf Basic Knowledge
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            Reference
-https://arttnba3.cn/2023/05/31/EBPF_0X00/：适合入门了解ebpf 
-https://arthurchiao.art/blog/linux-socket-filtering-aka-bpf-z...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Feb 10 2025 21:26:52 GMT+0800">
-                
-                    2025-02-10
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/Android/">Android</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel/">kernel</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel/ebpf/">ebpf</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/ebpf/">ebpf</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/02/10/ebpf_study/">Read more<span class="seo-reader-text">ebpf Basic Knowledge</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2025/02/10/netlink/">
-                            <img src="/images/Snipaste_2025-02-10_21-17-04.png" alt="Netlink Basic Knowledge" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2025/02/10/netlink/">
-                            Netlink Basic Knowledge
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            一、基础知识1. recv 相关在 Linux 网络编程中，recv() 及其相关函数用于接收数据。除了 recv()，还有多个变体和类似函数，适用于不同的场景，如 阻塞/非阻塞模式、消息边界保留、带外数据等。
-1️⃣ recv()（标准接收函数）
-...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Feb 10 2025 21:14:23 GMT+0800">
-                
-                    2025-02-10
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/Android/">Android</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel/">kernel</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/Android/kernel/netlink/">netlink</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/netlink/">netlink</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2025/02/10/netlink/">Read more<span class="seo-reader-text">Netlink Basic Knowledge</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-                    
-                
-
-                
-                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
-                        <a href="/2024/12/17/codeql_note_p4/">
-                            <img src="/images/Snipaste_2024-12-17_17-13-52.png" alt="codeql_zero_to_hero part4学习" class="w-full h-full object-cover dark:brightness-75 transition-all" />
-                        </a>
-                    </div>
-                
-                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
-                    <h3 class="home-article-title">
-                        <a href="/2024/12/17/codeql_note_p4/">
-                            codeql_zero_to_hero part4学习
-                        </a>
-                    </h3>
-
-                    <div class="home-article-content markdown-body">
-                        
-                            Reference:
-https://github.blog/security/vulnerability-research/codeql-zero-to-hero-part-4-gradio-framework-case-study/ 
-老样子阅读...
-                        
-                    </div>
-
-                    <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Dec 17 2024 21:12:04 GMT+0800">
-                
-                    2024-12-17
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category">
-                <i class="fa-solid fa-folders"></i>&nbsp;
-            <ul>
-                
-                
-                    
-                        
-                        <li>
-                            <a href="/categories/software/">software</a>&nbsp;
-                        </li>
-                    
-                    
-                
-                    
-                        
-                            <li>></li>
-                        
-                        <li>
-                            <a href="/categories/software/static-analysis/">static analysis</a>&nbsp;
-                        </li>
-                    
-                    
-                
-            </ul>
-        </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/tags/codeql/">codeql</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/2024/12/17/codeql_note_p4/">Read more<span class="seo-reader-text">codeql_zero_to_hero part4学习</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-                </div>
-            </li>
-        
+    <ul>
+      <li><svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>China</li>
+      <li><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg><a href="mailto:bsdhenrymartin@gmail.com"><span>Email</span></a></li>
+      <li><svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg><a href="https://github.com/henrymartin262"><span>GitHub</span></a></li>
+      <li><svg viewBox="0 0 24 24"><path d="M4 4h16v2H4zm0 5h16v2H4zm0 5h10v2H4z"/></svg><a href="/blog/">Blog</a></li>
     </ul>
+  </aside>
 
-    <div class="home-paginator px-7 py-5">
-        <div class="paginator">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa-regular fa-angle-right"></i></a>
+  <main>
+    <section>
+      <h2>About Me</h2>
+      <p>I am <strong>Henry Martin</strong>, a security researcher working on <strong>Linux kernel security</strong>, <strong>vulnerability research</strong> and <strong>blockchain security</strong>. I hunt bugs in the upstream kernel, reproduce real-world exploits, and write down what I learn.</p>
+      <div class="highlight">
+        <p>To date I have contributed <strong>32 upstream fixes</strong> to the Linux kernel, <strong>22 of which were assigned CVEs</strong>, covering UAF, OOB and NULL-deref bugs across networking, tracing, wireless and driver subsystems.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Research Interests</h2>
+      <h3>🛡️ Kernel Security</h3>
+      <p>Bug hunting in the upstream Linux kernel, Android GPU driver exploitation (<a href="/2025/05/28/Pixel_GPU_Exploit/">Mali CVE-2023-48409</a>), and kernel heap techniques (<a href="/2024/04/10/Cross-Cache-Attack/">Cross-Cache</a>, <a href="/2024/04/10/Dirty-pagetable-study/">Dirty Pagetable</a>, <a href="/2025/02/10/KSMA/">KSMA</a>).</p>
+      <h3>⛓️ Blockchain Security</h3>
+      <p>Smart contract auditing and on-chain attack analysis (<a href="/2024/07/30/solidity_study/">Solidity</a>, <a href="/2026/01/29/ethereum_challenge/">Ethereum challenges</a>).</p>
+      <h3>🔍 Program Analysis &amp; Fuzzing</h3>
+      <p>Static analysis (<a href="/2024/07/31/1.0_Introduction/">NJU Software Analysis</a>, <a href="/2024/12/11/codeql_note/">CodeQL</a>), symbolic execution (<a href="/2024/09/29/KLEE_note/">KLEE</a>, <a href="/2024/05/11/angr-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">angr</a>) and fuzzing (<a href="/2024/07/21/afl-training/">AFL</a>, <a href="/2024/09/30/UBFuzz/">UBfuzz</a>).</p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      <div class="exp">
+        <div class="logo" style="background:#e1251b">JD</div>
+        <div>
+          <div class="org">JD Security · Dawn Lab <em>（京东安全 獬豸实验室）</em></div>
+          <div class="role">Security Research Intern</div>
+        </div>
+      </div>
+      <div class="exp">
+        <div class="logo" style="background:#0052d9">T</div>
+        <div>
+          <div class="org">Tencent Security · Yunding Lab <em>（腾讯安全 云鼎实验室）</em></div>
+          <div class="role">Security Research Intern</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Honors &amp; Awards</h2>
+      <div class="sub">CTF &amp; Security Competitions</div>
+      <div class="award">
+        <span class="y">2024</span>
+        <span class="name">GeekPwn AVSS <em>· Final</em></span>
+        <span class="rank">🏆 Champion</span>
+      </div>
+      <div class="award">
+        <span class="y">2024</span>
+        <span class="name">Qiangwang Mimic Defense Challenge <em>· Works Track（强网拟态作品赛）</em></span>
+        <span class="rank">1st Prize</span>
+      </div>
+      <div class="award">
+        <span class="y">2024</span>
+        <span class="name">JQCTF <em>（京麒CTF）</em></span>
+        <span class="rank">3rd Prize</span>
+      </div>
+      <div class="sub">Blockchain Hackathons</div>
+      <div class="award">
+        <span class="y">2026</span>
+        <span class="name">0G APAC Hackathon <em>· Excellence Award</em></span>
+        <span class="prize">3,700 USDC</span>
+      </div>
+      <div class="award">
+        <span class="y">2026</span>
+        <span class="name">GWDC Hackathon <em>· 2nd Place</em></span>
+        <span class="prize">2,000 USD</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Linux Kernel CVEs</h2>
+      <div class="cve-year">
+        <span class="cve-y">2026</span>
+        <div class="chips">
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-98371"><span>CVE-2026-98371</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-98123"><span>CVE-2026-98123</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-98076"><span>CVE-2026-98076</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-74694"><span>CVE-2026-74694</span></a>
+        </div>
+      </div>
+      <div class="cve-year">
+        <span class="cve-y">2025</span>
+        <div class="chips">
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38635"><span>CVE-2025-38635</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38541"><span>CVE-2025-38541</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38160"><span>CVE-2025-38160</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38156"><span>CVE-2025-38156</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38155"><span>CVE-2025-38155</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38145"><span>CVE-2025-38145</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38144"><span>CVE-2025-38144</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38143"><span>CVE-2025-38143</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38138"><span>CVE-2025-38138</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38135"><span>CVE-2025-38135</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-38007"><span>CVE-2025-38007</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-37831"><span>CVE-2025-37831</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-37830"><span>CVE-2025-37830</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-37829"><span>CVE-2025-37829</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-37793"><span>CVE-2025-37793</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-37758"><span>CVE-2025-37758</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-22066"><span>CVE-2025-22066</span></a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-22054"><span>CVE-2025-22054</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Selected Writings</h2>
+      <div class="card">
+        <span class="badge">Android Kernel</span>
+        <div>
+          <div class="title"><a href="/2025/05/28/Pixel_GPU_Exploit/" style="color:inherit">Mali GPU CVE-2023-48409 分析利用</a></div>
+          <div class="desc">Pixel 设备 Mali GPU 驱动漏洞的成因分析与完整利用链。</div>
+          <div class="tags"><span class="tag">mali</span><span class="tag">pixel</span><span class="tag">tlstream</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge">Linux Kernel</span>
+        <div>
+          <div class="title"><a href="/2025/06/13/CVE-2025-21756/" style="color:inherit">CVE-2025-21756 漏洞复现及利用</a></div>
+          <div class="desc">vsock 子系统 UAF 漏洞的复现与提权利用。</div>
+          <div class="tags"><span class="tag">linux kernel</span><span class="tag">vsock</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge">CTF · PWN</span>
+        <div>
+          <div class="title"><a href="/2024/04/10/Dirty-pagetable-study/" style="color:inherit">Dirty Pagetable 学习 &amp; 例题</a></div>
+          <div class="desc">从 Cross-Cache 到页表劫持的内核利用技术梳理。</div>
+          <div class="tags"><span class="tag">kernel heap</span><span class="tag">uaf</span><span class="tag">pagetable</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge">Series</span>
+        <div>
+          <div class="title"><a href="/2024/07/31/1.0_Introduction/" style="color:inherit">南大《软件分析》课程笔记（16 篇）</a></div>
+          <div class="desc">IR、数据流分析、指针分析、Datalog、IFDS 全系列。</div>
+          <div class="tags"><span class="tag">static analysis</span><span class="tag">pointer analysis</span></div>
+        </div>
+      </div>
+      <p class="more"><a href="/blog/">查看全部文章 →</a></p>
+    </section>
+  </main>
 </div>
 
-    </div>
-</div>
-
-                    <div class="comment-container pjax"></div>
-                
-
-            </div>
-
-            
-
-        </div>
-
-        <div class="main-content-footer">
-            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
-    <div class="info-container py-3 text-center">
-        
-        <div class="text-center">
-            &copy;
-            
-              <span>2023</span>
-              -
-            
-            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">henry</a>
-        </div>
-        
-            <script data-swup-reload-script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
-                
-                    <span id="busuanzi_container_site_uv" class="lg:!block">
-                        <span class="text-sm">VISITOR COUNT</span>
-                        <span id="busuanzi_value_site_uv"></span>
-                    </span>
-                
-                
-                    <span id="busuanzi_container_site_pv" class="lg:!block">
-                        <span class="text-sm">TOTAL PAGE VIEWS</span>
-                        <span id="busuanzi_value_site_pv"></span>
-                    </span>
-                
-            </div>
-        
-        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
-            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
-            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.6</a></span>
-        </div>
-        
-        
-            <div>
-                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
-            </div>
-        
-        
-            <script data-swup-reload-script>
-                try {
-                    function odometer_init() {
-                    const elements = document.querySelectorAll('.odometer');
-                    elements.forEach(el => {
-                        new Odometer({
-                            el,
-                            format: '( ddd).dd',
-                            duration: 200
-                        });
-                    });
-                    }
-                    odometer_init();
-                } catch (error) {}
-            </script>
-        
-        
-        
-    </div>  
-</footer>
-        </div>
-    </div>
-
-    
-
-    <div class="right-side-tools-container">
-        <div class="side-tools-container">
-    <ul class="hidden-tools-list">
-        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
-            <i class="fa-regular fa-magnifying-glass-plus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
-            <i class="fa-regular fa-magnifying-glass-minus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
-            <i class="fa-regular fa-moon"></i>
-        </li>
-
-        <!-- rss -->
-        
-
-        
-
-        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
-            <i class="fa-regular fa-arrow-down"></i>
-        </li>
-    </ul>
-
-    <ul class="visible-tools-list">
-        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
-            <i class="fa-regular fa-cog fa-spin"></i>
-        </li>
-        
-            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
-                <i class="arrow-up fas fa-arrow-up"></i>
-                <span class="percent"></span>
-            </li>
-        
-        
-    </ul>
-</div>
-
-    </div>
-
-    <div class="image-viewer-container">
-    <img src="">
-</div>
-
-
-    
-
-</main>
-
-
-    
-<script src="/js/libs/Swup.min.js"></script>
-
-<script src="/js/libs/SwupSlideTheme.min.js"></script>
-
-<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
-
-<script src="/js/libs/SwupProgressPlugin.min.js"></script>
-
-<script src="/js/libs/SwupScrollPlugin.min.js"></script>
-
-<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+<footer>© 2026 Henry Martin · Powered by Hexo</footer>
 
 <script>
-    const swup = new Swup({
-        plugins: [
-            new SwupScriptsPlugin({
-                optin: true,
-            }),
-            new SwupProgressPlugin(),
-            new SwupScrollPlugin({
-                offset: 80,
-            }),
-            new SwupSlideTheme({
-                mainElement: ".main-content-body",
-            }),
-            new SwupPreloadPlugin(),
-        ],
-        containers: ["#swup"],
-    });
+  document.getElementById('toggle').onclick = function () {
+    var r = document.documentElement;
+    var t = r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    r.setAttribute('data-theme', t);
+    localStorage.setItem('theme', t);
+  };
 </script>
-
-
-
-
-
-
-
-
-<script src="/js/tools/imageViewer.js" type="module"></script>
-
-<script src="/js/utils.js" type="module"></script>
-
-<script src="/js/main.js" type="module"></script>
-
-<script src="/js/layouts/navbarShrink.js" type="module"></script>
-
-<script src="/js/tools/scrollTopBottom.js" type="module"></script>
-
-<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
-
-<script src="/js/layouts/categoryList.js" type="module"></script>
-
-
-
-
-
-    
-<script src="/js/tools/codeBlock.js" type="module"></script>
-
-
-
-
-    
-<script src="/js/layouts/lazyload.js" type="module"></script>
-
-
-
-
-    
-<script src="/js/tools/runtime.js"></script>
-
-    
-<script src="/js/libs/odometer.min.js"></script>
-
-    
-<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
-
-
-
-
-  
-<script src="/js/libs/Typed.min.js"></script>
-
-  
-<script src="/js/plugins/typed.js" type="module"></script>
-
-
-
-
-
-
-
-<div class="post-scripts" data-swup-reload-script>
-    
-        
-<script src="/js/libs/anime.min.js"></script>
-
-        
-<script src="/js/tools/tocToggle.js" type="module"></script>
-
-<script src="/js/layouts/toc.js" type="module"></script>
-
-<script src="/js/plugins/tabs.js" type="module"></script>
-
-    
-</div>
-
-
-    <div id="aplayer"></div>
-
-<script src="/js/libs/APlayer.min.js"></script>
-
-
-<script src="/js/plugins/aplayer.js"></script>
-
-
 </body>
 </html>

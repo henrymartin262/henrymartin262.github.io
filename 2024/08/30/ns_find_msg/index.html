@@ -13,47 +13,47 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2024/08/30/ns_find_msg/"/>
+    <link rel="canonical" href="https://henrymartin262.github.io/2024/08/30/ns_find_msg/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     
-        <meta name="description" content="EnvFuzz 实战 evince如果对 envfuzz 不了解，可以看我前面的分析文章 。 本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 ev">
+        <meta name="description" content="EnvFuzz 实战 evince如果对 envfuzz 不了解，可以看我前面的分析文章。 本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 evi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EnvFuzz 实战 evince">
-<meta property="og:url" content="http://example.com/2024/08/30/ns_find_msg/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="EnvFuzz 实战 evince如果对 envfuzz 不了解，可以看我前面的分析文章 。 本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 ev">
+<meta property="og:url" content="https://henrymartin262.github.io/2024/08/30/ns_find_msg/index.html">
+<meta property="og:site_name" content="Henry Martin">
+<meta property="og:description" content="EnvFuzz 实战 evince如果对 envfuzz 不了解，可以看我前面的分析文章。 本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 evi">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-20-36.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-24-43.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-54-41.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_18-57-54.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_17-47-22.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_17-48-10.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-29-53.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-34-07.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-46-55.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-08-03.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-29-32.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-33-33.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-37-18.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_20-50-35.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_20-56-46.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-01-33.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-02-12.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_21-11-23.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-18-18.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-20-47.png">
-<meta property="og:image" content="http://example.com/images/Snipaste_2024-08-15_19-15-40.png">
-<meta property="article:published_time" content="2024-08-30T06:02:03.847Z">
-<meta property="article:modified_time" content="2024-08-30T06:06:03.819Z">
-<meta property="article:author" content="John Doe">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_18-20-36.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_18-24-43.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_18-54-41.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_18-57-54.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_17-47-22.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_17-48-10.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_21-29-53.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_21-34-07.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_21-46-55.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_19-08-03.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_19-29-32.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_19-33-33.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_19-37-18.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_20-50-35.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_20-56-46.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_21-01-33.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_21-02-12.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_21-11-23.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_19-18-18.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_19-20-47.png">
+<meta property="og:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_19-15-40.png">
+<meta property="article:published_time" content="2024-08-30T06:02:03.000Z">
+<meta property="article:modified_time" content="2026-11-07T08:41:10.543Z">
+<meta property="article:author" content="henry">
 <meta property="article:tag" content="fuzz">
 <meta property="article:tag" content="envfuzz">
 <meta property="article:tag" content="evince">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/Snipaste_2024-08-15_18-20-36.png">
+<meta name="twitter:image" content="https://henrymartin262.github.io/images/Snipaste_2024-08-15_18-20-36.png">
     
     
     <!--- Icon Part-->
@@ -97,8 +97,8 @@
     <!--- Inject Part-->
     
     <script id="hexo-configurations">
-    window.config = {"hostname":"example.com","root":"/","language":"en"};
-    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
+    window.config = {"hostname":"henrymartin262.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"title_alignment":"left"},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-we3z86.webp","dark":"/images/wallhaven-6degr6.webp"},"title":"Welcome To Henry's Blog","subtitle":{"text":["a pwner from polaris"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/henrymartin262","instagram":"https://instagram.com","zhihu":"https://www.zhihu.com/","twitter":"https://twitter.com","email":"1551022913@qq.cmo"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.6","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Blog":{"path":"/blog/","icon":"fa-regular fa-newspaper"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"About":{"icon":"fa-regular fa-user","submenus":{"Links":"/links/","Github":"https://github.com/henrymartin262","Blog":"https://henrymartin262.github.io"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2023/11/24 11:45:14"};
     window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
     window.data = {"masonry":false};
   </script>
@@ -293,6 +293,22 @@ mjx-container[display="true"] + br {
                             <li class="navbar-item">
                                 <!-- Menu -->
                                 <a class="" 
+                                    href="/blog/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-newspaper"></i>
+                                        
+                                        BLOG
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
                                     href="/archives"  >
                                     
                                         
@@ -364,7 +380,7 @@ mjx-container[display="true"] + br {
                                         </li>
                                     
                                         <li>
-                                        <a target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG
+                                        <a href="https://henrymartin262.github.io">BLOG
                                         </a>
                                         </li>
                                     
@@ -398,6 +414,21 @@ mjx-container[display="true"] + br {
                                     <i class="fa-regular fa-house"></i>
                                 
                                 HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/blog/"  >
+                             
+                                
+                                    <i class="fa-regular fa-newspaper"></i>
+                                
+                                BLOG
                             
                         </a>
                     </li>
@@ -473,7 +504,7 @@ mjx-container[display="true"] + br {
                             </li>
                         
                             <li class="drawer-navbar-item text-base flex justify-center items-center hover:underline active:underline hover:underline-offset-1 rounded-3xl">
-                                <a class="py-0.5" target="_blank" rel="noopener" href="https://henrymartin262.github.io">BLOG</a>
+                                <a class="py-0.5" href="https://henrymartin262.github.io">BLOG</a>
                             </li>
                         
                     
@@ -534,8 +565,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2024-08-30 14:06:03</span>
-            <span class="mobile">2024-08-30 14:06:03</span>
+            <span class="desktop">2026-11-07 16:41:10</span>
+            <span class="mobile">2026-11-07 16:41:10</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -607,7 +638,7 @@ mjx-container[display="true"] + br {
 
 
         <div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-            <h1 id="EnvFuzz-实战-evince"><a href="#EnvFuzz-实战-evince" class="headerlink" title="EnvFuzz 实战 evince"></a>EnvFuzz 实战 evince</h1><p>如果对 envfuzz 不了解，可以看我前面的分析<a class="link" target="_blank" rel="noopener" href="https://henrymartin262.github.io/2024/08/10/envFuzz/">文章 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>。</p>
+            <h1 id="EnvFuzz-实战-evince"><a href="#EnvFuzz-实战-evince" class="headerlink" title="EnvFuzz 实战 evince"></a>EnvFuzz 实战 evince</h1><p>如果对 envfuzz 不了解，可以看我前面的分析<a href="https://henrymartin262.github.io/2024/08/10/envFuzz/">文章</a>。</p>
 <p>本来想着捡捡漏，看看能不能出点比较有价值的洞，结果令人大失所望，再原论文中他们所 fuzz 出来的漏洞大多是在配置文件上出现了类似的解析错误，从而导致程序会出现一些异常。我自己的复现的过程中爆出的洞也大多是这类错误，我这里使用 envfuzz 来将 evince 作为测试对象，来简单复现一下一个关于 evince 配置文件的 crash，修改这个配置文件中的一个字节可以导致空指针。</p>
 <h2 id="SIGSEGV-fdbe-m00854-patch"><a href="#SIGSEGV-fdbe-m00854-patch" class="headerlink" title="SIGSEGV_fdbe_m00854.patch"></a>SIGSEGV_fdbe_m00854.patch</h2><h3 id="nl-find-msg"><a href="#nl-find-msg" class="headerlink" title="_nl_find_msg"></a>_nl_find_msg</h3><p>该函数位于 glibc 中</p>
 <p><strong>patch脚本：</strong></p>
@@ -705,7 +736,7 @@ mjx-container[display="true"] + br {
         
             <li>
                 <strong>Updated at
-                    :</strong> 2024-08-30 14:06:03
+                    :</strong> 2026-11-07 16:41:10
             </li>
         
         <li>
@@ -785,45 +816,6 @@ mjx-container[display="true"] + br {
         
 
 
-        
-            <div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
-                <div class="comments-container pjax">
-    <div id="comment-anchor"></div>
-    <div class="comment-area-title">
-        <i class="fa-solid fa-comments"></i>&nbsp;Comments
-    </div>
-    
-
-        
-            
-    <div id="waline"></div>
-    <script type="module" data-swup-reload-script>
-      import { init } from '/js/libs/waline.mjs';
-
-      function loadWaline() {
-        init({
-          el: '#waline',
-          serverURL: 'https://example.example.com',
-          lang: 'zh-CN',
-          dark: 'body[class~="dark-mode"]',
-          requiredMeta: ['nick', 'mail']
-        });
-      }
-
-      if (typeof swup !== 'undefined') {
-        loadWaline();
-      } else {
-        window.addEventListener('DOMContentLoaded', loadWaline);
-      }
-    </script>
-
-
-
-        
-    
-</div>
-
-            </div>
         
     </div>
 
@@ -926,10 +918,6 @@ mjx-container[display="true"] + br {
         
 
         <!-- go comment -->
-        
-            <li class="go-comment">
-                <i class="fa-regular fa-comments"></i>
-            </li>
         
     </ul>
 </div>
